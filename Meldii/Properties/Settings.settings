@@ -1,0 +1,15 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Meldii.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="SettingSaveLocation" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">%localappdata%\Melder</Value>
+    </Setting>
+    <Setting Name="AddonStorage" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">\Melder\addons</Value>
+    </Setting>
+    <Setting Name="MelderInfoName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">melder_info.ini</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
