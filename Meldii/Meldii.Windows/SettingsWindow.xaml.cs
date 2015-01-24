@@ -63,6 +63,5 @@ namespace Meldii.Windows
             var res = fbd.ShowDialog();
             View.AddonLibaryPath = fbd.SelectedPath;
         }
-        // test
     }
 }

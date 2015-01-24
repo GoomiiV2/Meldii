@@ -25,6 +25,8 @@ namespace Meldii.Views
         public string AddonPage { get; set; } // eg. Fourm post
         public string Patch { get; set; }
         public AddonProviderType ProviderType;
+        public List<string> InstalledFilesList;
+        public List<string> RemoveFilesList;
         #endregion
 
         #region Ui Binding Helpers
@@ -119,6 +121,9 @@ namespace Meldii.Views
         // Arkii: Why did you choose ini Dax :<
         public void ReadFromIni(TextReader reader)
         {
+            InstalledFilesList = new List<string>();
+            RemoveFilesList = new List<string>();
+
             while (reader.Peek() != -1)
             {
                 string line = reader.ReadLine();
@@ -154,8 +159,14 @@ namespace Meldii.Views
                         case "destnation":
                             Destnation = value;
                             break;
-                        case "providerType":
+                        case "providertype":
                             ProviderType = (AddonProviderType)Enum.Parse(typeof(AddonProviderType), value);
+                            break;
+                        case "installed":
+                            InstalledFilesList.Add(value);
+                            break;
+                        case "remove":
+                            RemoveFilesList.Add(value);
                             break;
                     }
                 }

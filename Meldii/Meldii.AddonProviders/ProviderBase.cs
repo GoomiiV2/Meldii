@@ -48,7 +48,7 @@ namespace Meldii.AddonProviders
                                     case "dlurl":
                                         Info.Dlurl = value;
                                         break;
-                                    case "providerType":
+                                    case "providertype":
                                         Info.ProviderType = (AddonProviderType)Enum.Parse(typeof(AddonProviderType), value);
                                         break;
                                 }

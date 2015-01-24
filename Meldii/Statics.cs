@@ -11,6 +11,7 @@ namespace Meldii
     {
         public static string MeldiiAppData = "";
         public static string SettingsPath = "";
+        public static string AddonsFolder = "";
         public static bool IsFirstRun = true;
 
         public static void InitStaticData()
@@ -24,6 +25,8 @@ namespace Meldii
             }
 
             IsFirstRun = !File.Exists(SettingsPath);
+
+            AddonsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"Firefall\Addons");
         }
     }
 }

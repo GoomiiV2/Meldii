@@ -44,6 +44,8 @@ namespace Meldii.AddonProviders
 
             GetLocalAddons();
             CheckAddonsForUpdates();
+            GetMelderInstalledAddons(Path.Combine(Statics.AddonsFolder, "melder_addons")); // Addons
+            GetMelderInstalledAddons(Path.Combine(MeldiiSettings.Self.FirefallInstallPath, "system\\melder_addons")); // Mods
         }
 
         // Genrate a list of addons that we have locally
@@ -61,6 +63,21 @@ namespace Meldii.AddonProviders
                 {
                     MainView.LocalAddons.Add(addon);
                 }
+            }
+        }
+
+        public void GetMelderInstalledAddons(string path)
+        {
+            string[] fileEntries = Directory.GetFiles(path, "*.ini");
+            foreach (string fileName in fileEntries)
+            {
+                using (TextReader reader = File.OpenText(fileName))
+                {
+                    AddonMetaData addon = new AddonMetaData();
+                    addon.ReadFromIni(reader);
+                    GetAddonLocalByNameAndVersion(addon.Name, addon.Version).IsEnabled = true;
+                }
+
             }
         }
 
@@ -127,6 +144,15 @@ namespace Meldii.AddonProviders
             Version newVer = new Version(melderInfo.Version);
 
             return current.CompareTo(newVer) == 0 || current.CompareTo(newVer) == 1;
+        }
+
+        public AddonMetaData GetAddonLocalByNameAndVersion(string name, string version)
+        {
+            AddonMetaData addon = null;
+
+            addon = MainView.LocalAddons.Single(x => x.Name == name && x.Version == version);
+
+            return addon;
         }
 
         private string GetFirefallInstallPath()
