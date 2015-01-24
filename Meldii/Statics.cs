@@ -23,10 +23,7 @@ namespace Meldii
                 Directory.CreateDirectory(MeldiiAppData);
             }
 
-            if (!File.Exists(SettingsPath))
-            {
-                IsFirstRun = true;
-            }
+            IsFirstRun = !File.Exists(SettingsPath);
         }
     }
 }

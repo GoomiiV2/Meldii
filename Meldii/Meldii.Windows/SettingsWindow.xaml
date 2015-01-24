@@ -5,31 +5,35 @@
         ShowMinButton="False"
         ShowMaxRestoreButton="False"
         Closing="CancelEventHandler"
-        Title="Settings" Height="500" Width="300" Icon="/Meldii;component/icon.ico" ResizeMode="NoResize" ShowInTaskbar="False" WindowStartupLocation="CenterOwner">
+        Title="Settings" Height="500" Width="300" Icon="/Meldii;component/icon.ico" ResizeMode="NoResize" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" Loaded="SettingsWindow_Loaded">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="4*"/>
+            <ColumnDefinition Width="17*"/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Expander Grid.Row="0" x:Name="panel1" Header="Medii Settings" Margin="5 5 5 0">
+        <Expander Grid.Row="0" x:Name="panel1" Header="Medii Settings" Margin="5 5 5 0" Grid.ColumnSpan="2">
             <StackPanel Orientation="Vertical">
                 <Label Content="Firefall Install Location:" />
                 <Grid>
-                    <TextBox Text="..." Margin="0,0,50,0" />
-                    <Button Content="Find" Width="45" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+                    <TextBox Text="{Binding FirefallInstall}" Margin="0,0,50,0" />
+                    <Button Content="Find" Width="45" HorizontalAlignment="Right" VerticalAlignment="Top" Click="Btt_FirefallPathFind"/>
                 </Grid>
 
                 <Label Content="Addon Libary Location:" />
                 <Grid>
-                    <TextBox Text="..." Margin="0,0,50,0" />
-                    <Button Content="Find" Width="45" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+                    <TextBox Text="{Binding AddonLibaryPath}" Margin="0,0,50,0" />
+                    <Button Content="Find" Width="45" HorizontalAlignment="Right" VerticalAlignment="Top" Click="Btt_AddonLibFind"/>
                 </Grid>
 
-                <Button Content="Save Settings" Width="auto" VerticalAlignment="Top" Margin="0,5,0,0"/>
+                <Button Content="Save Settings" Width="auto" VerticalAlignment="Top" Margin="0,5,0,0" Click="Btt_SaveSettings"/>
             </StackPanel>
         </Expander>
-        <Expander Grid.Row="1" x:Name="panel2" Header="Addon Sttings">
+        <Expander Grid.Row="1" x:Name="panel2" Header="Addon Sttings" Grid.ColumnSpan="2">
             <StackPanel Orientation="Vertical">
                 <TextBlock Margin="10" Text="Panel2 Text Block" />
             </StackPanel>

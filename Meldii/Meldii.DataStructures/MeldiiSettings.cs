@@ -13,8 +13,8 @@ namespace Meldii.DataStructures
     {
         public static MeldiiSettings Self = new MeldiiSettings();
 
-        public string FirefallInstallPath;
-        public string AddonLibaryPath;
+        public string FirefallInstallPath = "";
+        public string AddonLibaryPath = "";
 
         public void Load()
         {
@@ -23,21 +23,29 @@ namespace Meldii.DataStructures
                 using (FileStream fs = File.Open(Statics.SettingsPath, FileMode.Open))
                 {
                     DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(MeldiiSettings));
-                    serializer.ReadObject(fs);
+                    Self = (MeldiiSettings)serializer.ReadObject(fs);
+                    Debug.WriteLine("AddonLibaryPathAddonLibaryPath: " + Self.AddonLibaryPath);
                 }
             }
             catch (Exception e)
             {
-                Debug.WriteLine("Error laoding settings.json");
+                Debug.WriteLine("Error loading settings.json");
             }
         }
 
         public void Save()
         {
-            using (FileStream fs = File.Open(Statics.SettingsPath, FileMode.Create))
+            try
             {
-                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(MeldiiSettings));
-                serializer.WriteObject(fs, this);
+                using (FileStream fs = File.Open(Statics.SettingsPath, FileMode.Create))
+                {
+                    DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(MeldiiSettings));
+                    serializer.WriteObject(fs, this);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Error saving settings.json");
             }
         }
     }
