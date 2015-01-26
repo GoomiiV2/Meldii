@@ -13,7 +13,7 @@ namespace Meldii.Views
     public class AddonMetaData : INotifyPropertyChanged
     {
         #region Varables
-        public bool IsEnabled { get; set; } // If the addon is in the addon folder
+        public bool _IsEnabled; // If the addon is in the addon folder
         public string Name { get; set; }
         public bool IsAddon; // If its an addon or a mod
         private string _Version; // Current ver
@@ -27,6 +27,7 @@ namespace Meldii.Views
         public AddonProviderType ProviderType;
         public List<string> InstalledFilesList;
         public List<string> RemoveFilesList;
+        public string ZipName { get; set; }
         #endregion
 
         #region Ui Binding Helpers
@@ -103,6 +104,28 @@ namespace Meldii.Views
             {
                 _IsUptoDate = value;
                 Update("IsUptoDate");
+            }
+        }
+
+        public bool IsEnabled
+        {
+            get
+            {
+                return _IsEnabled;
+            }
+
+            set
+            {
+                _IsEnabled = value;
+                Update("IsEnabled");
+
+                if (Statics.AddonManager != null)
+                {
+                    if (_IsEnabled)
+                        Statics.AddonManager.InstallAddon(this);
+                    else
+                        Statics.AddonManager.UninstallAddon(this);
+                }
             }
         } 
 

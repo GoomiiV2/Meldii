@@ -42,6 +42,7 @@ namespace Meldii
             MeldiiSettings.Self.Load();
             DataContext = ViewModel;
             AddonManager = new AddonManager(ViewModel);
+            Statics.AddonManager = AddonManager;
         }
 
         private void Btt_OpenAddonPage_Click(object sender, RoutedEventArgs e)

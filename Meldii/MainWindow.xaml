@@ -50,11 +50,22 @@
                             </Grid.ColumnDefinitions>
                             
                             <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Stretch">
-                                <CheckBox IsChecked="{Binding Path=IsEnabled}"/>
+                                <CheckBox IsChecked="{Binding Path=IsEnabled}">
+                                    <CheckBox.ToolTip>
+                                        <ToolTip>
+                                            <StackPanel>
+                                                <TextBlock FontWeight="Bold">Install or uninstall this addon</TextBlock>
+                                            </StackPanel>
+                                        </ToolTip>
+                                    </CheckBox.ToolTip>
+                                </CheckBox>
                                 <TextBlock Text="{Binding Path=Name}" HorizontalAlignment="Left" Margin="0" />
                                 <TextBlock Text="{Binding Path=UiVersion}" HorizontalAlignment="Left" Margin="5,0,0,0" />
 
-                                <Rectangle Height="10" VerticalAlignment="Center" Margin="10,0,0,0" HorizontalAlignment="Left" Opacity="0.705" Width="10">
+                                <Rectangle Height="10" VerticalAlignment="Center" Margin="10,0,0,0" HorizontalAlignment="Left" Opacity="1" Width="10">
+                                    <Rectangle.Stroke>
+                                        <ImageBrush/>
+                                    </Rectangle.Stroke>
                                     <Rectangle.Fill>
                                         <VisualBrush Visual="{StaticResource appbar_check}" />
                                     </Rectangle.Fill>
@@ -68,11 +79,18 @@
                                             </Style.Triggers>
                                         </Style>
                                     </Rectangle.Style>
+                                    <Rectangle.ToolTip>
+                                        <ToolTip>
+                                            <StackPanel>
+                                                <TextBlock FontWeight="Bold">Addon is uptodate</TextBlock>
+                                            </StackPanel>
+                                        </ToolTip>
+                                    </Rectangle.ToolTip>
                                 </Rectangle>
 
-                                <Rectangle Height="10" VerticalAlignment="Center" Margin="-10,0,0,0" HorizontalAlignment="Left" Opacity="0.705" Width="10">
+                                <Rectangle Height="10" VerticalAlignment="Center" Margin="-10,0,0,0" HorizontalAlignment="Left" Opacity="1" Width="10">
                                     <Rectangle.Fill>
-                                        <VisualBrush Visual="{StaticResource appbar_download}" />
+                                        <VisualBrush Visual="{StaticResource appbar_download_addons}" />
                                     </Rectangle.Fill>
                                     <Rectangle.Style>
                                         <Style TargetType="Rectangle">
@@ -84,6 +102,14 @@
                                             </Style.Triggers>
                                         </Style>
                                     </Rectangle.Style>
+                                    <Rectangle.ToolTip>
+                                        <ToolTip>
+                                            <StackPanel>
+                                                <TextBlock FontWeight="Bold">Addon outdated</TextBlock>
+                                                <TextBlock>A new version of this addon is available</TextBlock>
+                                            </StackPanel>
+                                        </ToolTip>
+                                    </Rectangle.ToolTip>
                                 </Rectangle>
 
                             </StackPanel>

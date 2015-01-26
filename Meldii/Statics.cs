@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Meldii.AddonProviders;
 
 namespace Meldii
 {
@@ -13,6 +14,8 @@ namespace Meldii
         public static string SettingsPath = "";
         public static string AddonsFolder = "";
         public static bool IsFirstRun = true;
+
+        public static AddonManager AddonManager = null;
 
         public static void InitStaticData()
         {

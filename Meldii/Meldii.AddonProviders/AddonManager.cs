@@ -51,6 +51,8 @@ namespace Meldii.AddonProviders
         // Genrate a list of addons that we have locally
         public void GetLocalAddons()
         {
+            MainView.StatusMessage = "Discovering Addon libary";
+
             MainView.LocalAddons.Clear();
 
             string path = MeldiiSettings.Self.AddonLibaryPath;
@@ -68,6 +70,8 @@ namespace Meldii.AddonProviders
 
         public void GetMelderInstalledAddons(string path)
         {
+            MainView.StatusMessage = "Discovering Installed Addons...";
+
             string[] fileEntries = Directory.GetFiles(path, "*.ini");
             foreach (string fileName in fileEntries)
             {
@@ -75,7 +79,10 @@ namespace Meldii.AddonProviders
                 {
                     AddonMetaData addon = new AddonMetaData();
                     addon.ReadFromIni(reader);
-                    GetAddonLocalByNameAndVersion(addon.Name, addon.Version).IsEnabled = true;
+
+                    var FullAddon = GetAddonLocalByNameAndVersion(addon.Name, addon.Version);
+                    FullAddon.IsEnabled = true;
+                    FullAddon.InstalledFilesList = addon.InstalledFilesList;
                 }
 
             }
@@ -132,7 +139,7 @@ namespace Meldii.AddonProviders
                     }
                 );
 
-                MainView.StatusMessage = "All Addons have been checked :3";
+                MainView.StatusMessage = "All Addons have been checked for updates :3";
             }));
             t.IsBackground = true;
             t.Start();
@@ -158,6 +165,25 @@ namespace Meldii.AddonProviders
         private string GetFirefallInstallPath()
         {
             return (string)Registry.GetValue("HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Red 5 Studios\\Firefall_Beta", "InstallLocation", null);
+        }
+
+        // Installing and uninstalling of addons
+        public void InstallAddon(AddonMetaData addon)
+        {
+            MainView.StatusMessage = string.Format("Installing Addon {0}", addon.Name);
+
+            
+
+            MainView.StatusMessage = string.Format("Addon {0} Installed", addon.Name);
+        }
+
+        public void UninstallAddon(AddonMetaData addon)
+        {
+            MainView.StatusMessage = string.Format("Uninstalling Addon {0}", addon.Name);
+
+            
+
+            MainView.StatusMessage = string.Format("Addon {0} Uninstalled", addon.Name);
         }
     }
 }

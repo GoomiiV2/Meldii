@@ -38,7 +38,6 @@ namespace Meldii.Views
         public void OnSelectedAddon(int SelectedIdx)
         {
             SelectedAddon = LocalAddons[SelectedIdx];
-            StatusMessage = "OnSelectedAddon";
         }
 
 
