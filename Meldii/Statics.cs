@@ -91,7 +91,10 @@ namespace Meldii
                 return true;
             }
             else
+            {
+                Debug.WriteLine("IsPathSafe check failed on: {0} is outside the game install or the addons folder", fullPath);
                 return false;
+            }
         }
     }
 }

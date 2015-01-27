@@ -159,6 +159,7 @@ namespace Meldii.AddonProviders
         }
 
         // Installing and uninstalling of addon, could be neater >,>
+        // Refactor plz
         public void InstallAddon(AddonMetaData addon)
         {
             MainView.StatusMessage = string.Format("Installing Addon {0}", addon.Name);
@@ -173,12 +174,28 @@ namespace Meldii.AddonProviders
             ZipFile BackupZip = null;
             if (!addon.IsAddon)
             {
+                BackupZip = new ZipFile();
+
+                // Back up files
+                using (ZipFile zip = ZipFile.Read(addon.ZipName))
+                {
+                    foreach (string file in zip.EntryFileNames)
+                    {
+                        string modFilePath = Path.Combine(dest, file);
+                        if (File.Exists(modFilePath) && Statics.IsPathSafe(modFilePath))
+                        {
+                            BackupZip.AddFile(modFilePath, addon.Destnation);
+                        }
+                    }
+                }
+
                 string backuppath = Statics.GetBackupPathForMod(Path.GetFileNameWithoutExtension(addon.ZipName));
 
                 if (File.Exists(backuppath) && Statics.IsPathSafe(backuppath))
                     File.Delete(backuppath);
 
-                BackupZip = new ZipFile(backuppath);
+                BackupZip.Save(backuppath);
+                BackupZip.Dispose();
             }
 
             // We go over the files one by one so that we can ingore files as we need to
@@ -186,16 +203,6 @@ namespace Meldii.AddonProviders
             {
                 foreach (ZipEntry file in zip)
                 {
-                    // If its a mod back up any files that need backing up
-                    if (!addon.IsAddon)
-                    {
-                        string modFilePath = Path.Combine(dest, file.FileName);
-                        if (File.Exists(modFilePath) && Statics.IsPathSafe(dest))
-                        {
-                            BackupZip.AddFile(modFilePath, addon.Destnation);
-                        }
-                    }
-
                     // Extract the files to their new home
                     // Make sure its not an ignored file
                     var hits = addon.IngoreFileList.Find(x => file.FileName.ToLower().Contains(x.ToLower()));
@@ -209,15 +216,9 @@ namespace Meldii.AddonProviders
                             installedPath = Path.Combine(addon.Destnation, file.FileName);
 
                         addon.InstalledFilesList.Add(installedPath);
-
                     }
                 }
             }
-
-             if (!addon.IsAddon)
-             {
-                 BackupZip.Save();
-             }
 
              addon.WriteToIni(installInfoDest);
 
@@ -252,6 +253,38 @@ namespace Meldii.AddonProviders
 
                 // The info File
                 string infoPath = Path.Combine(Statics.AddonsFolder, "melder_addons", Path.GetFileName(addon.ZipName)+".ini");
+                if (File.Exists(infoPath) && Statics.IsPathSafe(infoPath))
+                {
+                    File.Delete(infoPath);
+                }
+            }
+            else // Mods, remove and then restore backups
+            {
+                foreach (string filePath in addon.InstalledFilesList)
+                {
+                    string modFilePath = Statics.FixPathSlashes(Path.Combine(MeldiiSettings.Self.FirefallInstallPath, "system", filePath));
+                    if (File.Exists(modFilePath) && Statics.IsPathSafe(modFilePath))
+                    {
+                        File.Delete(modFilePath);
+                    }
+                    else if (Directory.Exists(modFilePath) && Statics.IsPathSafe(modFilePath) && Directory.GetFiles(modFilePath).Length == 0) // Make sure it is empty
+                    {
+                        Directory.Delete(modFilePath, true);
+                    }
+                }
+
+                // Restore the backup
+                string backUpFilePath = Statics.GetBackupPathForMod(Path.GetFileNameWithoutExtension(addon.ZipName));
+
+                if (File.Exists(backUpFilePath))
+                {
+                    ZipFile backUp = new ZipFile(backUpFilePath);
+                    backUp.ExtractAll(Path.Combine(MeldiiSettings.Self.FirefallInstallPath, "system"), ExtractExistingFileAction.DoNotOverwrite);
+                    backUp.Dispose();
+                }
+
+                // The info File
+                string infoPath = Path.Combine(Path.Combine(MeldiiSettings.Self.FirefallInstallPath, Statics.ModDataStoreReltivePath), Path.GetFileName(addon.ZipName) + ".ini");
                 if (File.Exists(infoPath) && Statics.IsPathSafe(infoPath))
                 {
                     File.Delete(infoPath);

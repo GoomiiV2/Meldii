@@ -3,4 +3,11 @@
 
 Melder V2
 
-<img src="http://waffo.net/arkii/screens/2015-01-12_12-20-38.png"/>
+<img src="https://raw.githubusercontent.com/GoomiChan/Meldii/master/Media/ss1.png"/>
+
+<b>Features:</b>
+<ul>
+<li>Backwards compatablity with Melder. (Meldii is a drop in replacement)</li>
+<li>Open source, if you care about that sorta thing</li>
+<li>More suport for addon repos, more for the devs then the end users</li>
+</ul>
