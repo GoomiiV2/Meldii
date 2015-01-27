@@ -7,12 +7,12 @@ using System.Windows;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("MeldiiWpf")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Meldii")]
+[assembly: AssemblyDescription("An Addon manager for Firefall")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("MeldiiWpf")]
-[assembly: AssemblyCopyright("Copyright ©  2015")]
+[assembly: AssemblyCompany("Kawaii")]
+[assembly: AssemblyProduct("Meldii")]
+[assembly: AssemblyCopyright("Copyright © Arkii 2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
