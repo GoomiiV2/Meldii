@@ -13,5 +13,6 @@ namespace Meldii.DataStructures
         public string Patch;
         public string Dlurl;
         public AddonProviderType ProviderType;
+        public bool IsNotSuported;
     }
 }

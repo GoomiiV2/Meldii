@@ -123,6 +123,8 @@ namespace Meldii.AddonProviders
                         {
                             addon.AvailableVersion = info.Version;
                             addon.IsUptoDate = IsAddonUptoDate(addon, info);
+                            addon.IsNotSuported = info.IsNotSuported;
+
                             Debug.WriteLine("Addon: {0}, Version: {1}, Patch: {2}, Dlurl: {3}, IsUptodate: {4}", addon.Name, info.Version, info.Patch, info.Dlurl, addon.IsUptoDate);
                         }
                         else

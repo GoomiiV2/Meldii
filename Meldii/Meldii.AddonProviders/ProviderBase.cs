@@ -18,11 +18,26 @@ namespace Meldii.AddonProviders
             try
             {
                 MelderInfo Info = new MelderInfo();
+                Info.IsNotSuported = false;
 
                 WebClient client = new WebClient();
                 string PageData = client.DownloadString(url);
                 if (PageData != null)
                 {
+                    // Check if not suported
+                    string StartTag = "<span class=\"prefix prefixGray\">";
+                    int start = PageData.IndexOf(StartTag);
+                    if (start != -1 && start < PageData.Length)
+                    {
+                        string tag = PageData.Substring(start + StartTag.Length);
+                        int end = tag.IndexOf("</span>");
+                        tag = tag.Substring(0, end);
+                        tag = tag.Replace("\n", "").Replace("\r", "").Trim();
+
+                        Info.IsNotSuported = (tag.Contains("Not Supported"));
+                    }
+
+                    // Melder info
                     int trimStart = PageData.IndexOf("[melder_info]") + "[melder_info]".Length;
                     int trimEnd = PageData.IndexOf("[/melder_info]");
                     string MelderData = PageData.Substring(trimStart, trimEnd - trimStart);
@@ -54,10 +69,12 @@ namespace Meldii.AddonProviders
                                 }
                             }
                         }
+
                         client.Dispose();
                         return Info;
                     }
                 }
+
                 client.Dispose();
                 return null;
             }

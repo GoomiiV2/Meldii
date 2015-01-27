@@ -99,6 +99,9 @@
                                                 <DataTrigger Binding="{Binding Path=IsUptoDate}" Value="False">
                                                     <Setter Property="Visibility"  Value="Visible"/>
                                                 </DataTrigger>
+                                                <DataTrigger Binding="{Binding Path=IsNotSuported}" Value="True">
+                                                    <Setter Property="Visibility"  Value="Hidden"/>
+                                                </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
                                     </Rectangle.Style>
@@ -107,6 +110,35 @@
                                             <StackPanel>
                                                 <TextBlock FontWeight="Bold">Addon outdated</TextBlock>
                                                 <TextBlock>A new version of this addon is available</TextBlock>
+                                            </StackPanel>
+                                        </ToolTip>
+                                    </Rectangle.ToolTip>
+                                </Rectangle>
+
+                                <Rectangle Height="10" VerticalAlignment="Center" HorizontalAlignment="Left" Opacity="1" Width="10">
+                                    <Rectangle.Fill>
+                                        <VisualBrush Visual="{StaticResource notSuported}" />
+                                    </Rectangle.Fill>
+                                    <Rectangle.Style>
+                                        <Style TargetType="Rectangle">
+                                            <Setter Property="Visibility" Value="Hidden" />
+                                            <Setter Property="Margin" Value="10,0,0,0" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Path=IsNotSuported}" Value="True">
+                                                    <Setter Property="Visibility"  Value="Visible"/>
+                                                </DataTrigger>
+                                                
+                                                <DataTrigger Binding="{Binding Path=IsUptoDate}" Value="False">
+                                                    <Setter Property="Margin"  Value="-10,0,0,0"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Rectangle.Style>
+                                    <Rectangle.ToolTip>
+                                        <ToolTip>
+                                            <StackPanel>
+                                                <TextBlock FontWeight="Bold">Not Supported</TextBlock>
+                                                <TextBlock>This addon is no longer suported and may not work</TextBlock>
                                             </StackPanel>
                                         </ToolTip>
                                     </Rectangle.ToolTip>

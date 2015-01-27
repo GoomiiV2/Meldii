@@ -16,6 +16,7 @@ namespace Meldii.Views
     {
         #region Varables
         public bool _IsEnabled; // If the addon is in the addon folder
+        public bool _IsNotSuported = false;
         public string Name { get; set; }
         public bool IsAddon; // If its an addon or a mod
         private string _Version; // Current ver
@@ -100,7 +101,7 @@ namespace Meldii.Views
         {
             get
             {
-                return _IsUptoDate;
+                return _IsUptoDate && !_IsNotSuported;
             }
             
             set 
@@ -129,6 +130,20 @@ namespace Meldii.Views
                     else
                         Statics.AddonManager.UninstallAddon(this);
                 }
+            }
+        }
+
+        public bool IsNotSuported
+        {
+            get
+            {
+                return _IsNotSuported;
+            }
+
+            set
+            {
+                _IsNotSuported = value;
+                Update("IsNotSuported");
             }
         } 
 
