@@ -59,5 +59,15 @@ namespace Meldii.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] Meldii_Updater {
+            get {
+                object obj = ResourceManager.GetObject("Meldii_Updater", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }

@@ -36,6 +36,8 @@ namespace Meldii
         {
             InitializeComponent();
             Statics.InitStaticData();
+
+            SelfUpdater.ThreadUpdateAndCheck();
         }
 
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)

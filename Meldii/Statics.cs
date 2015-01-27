@@ -12,6 +12,10 @@ namespace Meldii
 {
     public class Statics
     {
+        public static string UpdateCheckUrl = "https://raw.githubusercontent.com/GoomiChan/Meldii/master/Release/version.txt";
+        public static string UpdateExeUrl = "https://raw.githubusercontent.com/GoomiChan/Meldii/master/Release/Meldii.exe";
+        public static string UpdaterName = "Meldii.Updater.exe";
+
         public static string MeldiiAppData = "";
         public static string SettingsPath = "";
         public static string AddonsFolder = "";
