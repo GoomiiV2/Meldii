@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using Meldii.AddonProviders;
 
@@ -27,6 +29,7 @@ namespace Meldii.Views
         public AddonProviderType ProviderType;
         public List<string> InstalledFilesList;
         public List<string> RemoveFilesList;
+        public List<string> IngoreFileList;
         public string ZipName { get; set; }
         #endregion
 
@@ -140,12 +143,31 @@ namespace Meldii.Views
         }
         #endregion
 
+        public bool CheckIfAddonOrMod()
+        {
+            Debug.WriteLine("{3}: {0} {1} {2}", RemoveFilesList.Count, Destnation, Destnation == null, Name);
+
+            if (RemoveFilesList != null && RemoveFilesList.Count == 0 && Destnation == null)
+            {
+                IsAddon = true;
+            }
+            else
+            {
+                IsAddon = false;
+            }
+
+            return IsAddon;
+        }
+
         #region Melder Ini Loading and saving
         // Arkii: Why did you choose ini Dax :<
         public void ReadFromIni(TextReader reader)
         {
             InstalledFilesList = new List<string>();
             RemoveFilesList = new List<string>();
+            IngoreFileList = new List<string>();
+            IngoreFileList.Add("melder_info.ini");
+            bool isMultilineDesc = false;
 
             while (reader.Peek() != -1)
             {
@@ -155,6 +177,7 @@ namespace Meldii.Views
                     string[] args = line.Split('=');
                     string name = args[0].Trim().ToLower();
                     string value = args[1].Trim();
+                    isMultilineDesc = false;
 
                     switch (name)
                     {
@@ -176,10 +199,11 @@ namespace Meldii.Views
                             break;
                         case "desc":
                         case "description":
+                            isMultilineDesc = true;
                             Description = value;
                             break;
                         case "dest":
-                        case "destnation":
+                        case "destination":
                             Destnation = value;
                             break;
                         case "providertype":
@@ -191,12 +215,59 @@ namespace Meldii.Views
                         case "remove":
                             RemoveFilesList.Add(value);
                             break;
+                        case "ignore":
+                            IngoreFileList.Add(value);
+                            break;
                     }
                 }
+                else if (isMultilineDesc)
+                {
+                    Description += "\n" + line;
+                }
+            }
+
+            // Fix up some old addons or misconfigured ones
+            if (Destnation != null && Statics.FixPathSlashes(Destnation).Contains(Statics.DefaultAddonLocation) || Destnation == "" )
+            {
+                Destnation = null;
             }
 
             // No ProviderType, assume Firefall fourm download
             ProviderType = AddonProviderType.FirefallFourms;
+            CheckIfAddonOrMod();
+        }
+
+        public void WriteToIni(string path)
+        {
+            using(TextWriter ini = new StreamWriter(File.OpenWrite(path)))
+            {
+                ini.WriteLine(string.Format("; Meldii generated installation info for {0}.\n", Name));
+
+                ini.WriteLine(string.Format("title={0}", Name));
+                ini.WriteLine(string.Format("author={0}", Author));
+                ini.WriteLine(string.Format("version={0}", Version));
+                ini.WriteLine(string.Format("patch={0}", Patch));
+                ini.WriteLine(string.Format("url={0}", AddonPage));
+                ini.WriteLine(string.Format("destination={0}", Destnation));
+                ini.WriteLine(string.Format("description={0}", Description));
+                ini.WriteLine(string.Format("providertype={0}", ProviderType.ToString()));
+
+                foreach (string str in InstalledFilesList)
+                {
+                    ini.WriteLine(string.Format("installed={0}", str));
+                }
+
+                foreach (string str in RemoveFilesList)
+                {
+                    ini.WriteLine(string.Format("remove={0}", str));
+                }
+
+                foreach (string str in IngoreFileList)
+                {
+                    ini.WriteLine(string.Format("ignore={0}", str));
+                }
+
+            }
         }
         #endregion
     }

@@ -37,7 +37,7 @@
         </Grid.ColumnDefinitions>
 
         <Grid Grid.Column="0" Margin="0,1,0,0">
-            <Label Content="Addon List" VerticalAlignment="Top" Margin="0" HorizontalContentAlignment="Center" FontFamily="Verdana" FontWeight="Bold" FontStyle="Italic"/>
+            <Label Content="Addon Libary" VerticalAlignment="Top" Margin="0" HorizontalContentAlignment="Center" FontFamily="Verdana" FontWeight="Bold" FontStyle="Italic"/>
             <Separator Height="3" Margin="10,22,10,0" VerticalAlignment="Top" HorizontalContentAlignment="Stretch"/>
             <ListBox x:Name="AddonList" Margin="10,25" BorderThickness="0,0,0,1" FontFamily="Verdana" AlternationCount="1" Padding="5"
                      ItemsSource="{Binding LocalAddons}" SelectionChanged="AddonList_SelectionChanged" >

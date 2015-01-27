@@ -45,7 +45,7 @@ namespace Meldii.AddonProviders
             GetLocalAddons();
             CheckAddonsForUpdates();
             GetMelderInstalledAddons(Path.Combine(Statics.AddonsFolder, "melder_addons")); // Addons
-            GetMelderInstalledAddons(Path.Combine(MeldiiSettings.Self.FirefallInstallPath, "system\\melder_addons")); // Mods
+            GetMelderInstalledAddons(Path.Combine(MeldiiSettings.Self.FirefallInstallPath, Statics.ModDataStoreReltivePath)); // Mods
         }
 
         // Genrate a list of addons that we have locally
@@ -63,6 +63,7 @@ namespace Meldii.AddonProviders
                 AddonMetaData addon = ParseZipForIni(fileName);
                 if (addon != null)
                 {
+                    addon.ZipName = fileName;
                     MainView.LocalAddons.Add(addon);
                 }
             }
@@ -86,16 +87,6 @@ namespace Meldii.AddonProviders
                 }
 
             }
-        }
-
-        public void CheckIfAddonIsInstalled(AddonMetaData addon)
-        {
-
-        }
-
-        public bool CheckIfAddonIsMod(AddonMetaData AddonData)
-        {
-            return false;
         }
 
         private AddonMetaData ParseZipForIni(string path)
@@ -167,12 +158,68 @@ namespace Meldii.AddonProviders
             return (string)Registry.GetValue("HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Red 5 Studios\\Firefall_Beta", "InstallLocation", null);
         }
 
-        // Installing and uninstalling of addons
+        // Installing and uninstalling of addon, could be neater >,>
         public void InstallAddon(AddonMetaData addon)
         {
             MainView.StatusMessage = string.Format("Installing Addon {0}", addon.Name);
 
-            
+            addon.InstalledFilesList.Clear();
+
+            string dest = addon.IsAddon ? Statics.AddonsFolder : Statics.GetPathForMod(addon.Destnation);
+            string installInfoDest = addon.IsAddon ? Path.Combine(Statics.AddonsFolder, "melder_addons") : Path.Combine(MeldiiSettings.Self.FirefallInstallPath, Statics.ModDataStoreReltivePath);
+            installInfoDest = Path.Combine(installInfoDest, Path.GetFileName(addon.ZipName) + ".ini");
+
+            // Prep for back up
+            ZipFile BackupZip = null;
+            if (!addon.IsAddon)
+            {
+                string backuppath = Statics.GetBackupPathForMod(Path.GetFileNameWithoutExtension(addon.ZipName));
+
+                if (File.Exists(backuppath) && Statics.IsPathSafe(backuppath))
+                    File.Delete(backuppath);
+
+                BackupZip = new ZipFile(backuppath);
+            }
+
+            // We go over the files one by one so that we can ingore files as we need to
+            using (ZipFile zip = ZipFile.Read(addon.ZipName))
+            {
+                foreach (ZipEntry file in zip)
+                {
+                    // If its a mod back up any files that need backing up
+                    if (!addon.IsAddon)
+                    {
+                        string modFilePath = Path.Combine(dest, file.FileName);
+                        if (File.Exists(modFilePath) && Statics.IsPathSafe(dest))
+                        {
+                            BackupZip.AddFile(modFilePath, addon.Destnation);
+                        }
+                    }
+
+                    // Extract the files to their new home
+                    // Make sure its not an ignored file
+                    var hits = addon.IngoreFileList.Find(x => file.FileName.ToLower().Contains(x.ToLower()));
+                    if (hits == null || hits.Length == 0 && Statics.IsPathSafe(dest))
+                    {
+                        file.Extract(dest, ExtractExistingFileAction.OverwriteSilently);
+
+                        string installedPath = file.FileName;
+
+                        if (addon.Destnation != null && !installedPath.Contains(addon.Destnation))
+                            installedPath = Path.Combine(addon.Destnation, file.FileName);
+
+                        addon.InstalledFilesList.Add(installedPath);
+
+                    }
+                }
+            }
+
+             if (!addon.IsAddon)
+             {
+                 BackupZip.Save();
+             }
+
+             addon.WriteToIni(installInfoDest);
 
             MainView.StatusMessage = string.Format("Addon {0} Installed", addon.Name);
         }
@@ -181,7 +228,35 @@ namespace Meldii.AddonProviders
         {
             MainView.StatusMessage = string.Format("Uninstalling Addon {0}", addon.Name);
 
-            
+            // Addon, nice and easy
+            if (addon.IsAddon)
+            {
+                // Remove all the installed files
+                foreach (string filePath in addon.InstalledFilesList)
+                {
+                    string path = filePath;
+
+                    if (path.StartsWith("Addons/")) // Melder added "Addons/" to the start when an addon was put under the my docs location so remove it
+                        path = filePath.Replace("Addons/", "");
+
+                    path = Statics.FixPathSlashes(Path.Combine(Statics.AddonsFolder, filePath));
+                    if (File.Exists(path) && Statics.IsPathSafe(path))
+                    {
+                        File.Delete(path);
+                    }
+                    else if (Directory.Exists(path) && Statics.IsPathSafe(path))
+                    {
+                        Directory.Delete(path, true);
+                    }
+                }
+
+                // The info File
+                string infoPath = Path.Combine(Statics.AddonsFolder, "melder_addons", Path.GetFileName(addon.ZipName)+".ini");
+                if (File.Exists(infoPath) && Statics.IsPathSafe(infoPath))
+                {
+                    File.Delete(infoPath);
+                }
+            }
 
             MainView.StatusMessage = string.Format("Addon {0} Uninstalled", addon.Name);
         }
