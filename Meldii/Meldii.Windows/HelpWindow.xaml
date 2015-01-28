@@ -6,6 +6,7 @@
         ShowMaxRestoreButton="False"
         Closing="CancelEventHandler"
         Title="Help"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
         MinWidth="400" MinHeight="500" Width="400" Height="500" Icon="/Meldii;component/icon.ico" ResizeMode="CanResizeWithGrip" VerticalAlignment="Top" FontFamily="Verdana" WindowStartupLocation="CenterOwner">
     <Grid>
         <Grid.RowDefinitions>
@@ -21,6 +22,8 @@
                     Text="Meldii however also has some extra features that Melder doesn't have and will hopefully serve as a viable replacement." />
                 <TextBlock TextWrapping="Wrap" Margin="10"
                     Text="Meldii was created by Arkii, Melder by RadthorDax." />
+                <TextBlock TextWrapping="Wrap" Margin="10"
+                    Text="{Binding AssemblyVersion}" />
             </StackPanel>
         </Expander>
         <Expander Grid.Row="1" x:Name="panel2" Header="Melder Info Genrator">

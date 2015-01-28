@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -33,6 +35,14 @@ namespace Meldii.Windows
         void CancelEventHandler(object sender, CancelEventArgs e)
         {
             MainWindow.IsHelpWindowOpen = false;
+        }
+
+        public static string AssemblyVersion
+        {
+            get
+            {
+                return "Version: " + FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion;
+            }
         }
     }
 }
