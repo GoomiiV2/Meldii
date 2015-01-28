@@ -20,7 +20,7 @@ namespace Meldii.Views
         public string Name { get; set; }
         public bool IsAddon; // If its an addon or a mod
         private string _Version; // Current ver
-        private string _AvailableVersion; // Newest
+        private string _AvailableVersion = "??"; // Newest
         private bool _IsUptoDate;
         public string Author { get; set; }
         public string Description { get; set; }
@@ -101,14 +101,25 @@ namespace Meldii.Views
         {
             get
             {
-                return _IsUptoDate && !_IsNotSuported;
+                return _IsUptoDate && !_IsNotSuported && _AvailableVersion == "??";
             }
             
             set 
             {
                 _IsUptoDate = value;
                 Update("IsUptoDate");
+                Update("ShouldShowDLIcon");
             }
+        }
+
+        public bool ShouldShowDLIcon
+        {
+            get
+            {
+                return _AvailableVersion != "??";
+            }
+
+            set { }
         }
 
         public bool IsEnabled
