@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using Meldii.AddonProviders;
 
 namespace Meldii.Views
@@ -101,7 +102,7 @@ namespace Meldii.Views
         {
             get
             {
-                return _IsUptoDate && !_IsNotSuported && _AvailableVersion == "??";
+                return _IsUptoDate && !_IsNotSuported;
             }
             
             set 
@@ -156,7 +157,12 @@ namespace Meldii.Views
                 _IsNotSuported = value;
                 Update("IsNotSuported");
             }
-        } 
+        }
+
+        public void DownloadUpdate(object sender, MouseButtonEventArgs e)
+        {
+
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void Update(String propertyName)

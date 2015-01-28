@@ -7,8 +7,10 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
+using Meldii.AddonProviders;
 
 namespace Meldii.Views
 {
@@ -19,6 +21,7 @@ namespace Meldii.Views
         private string _StatusMessage;
         public string StatusMessage { get { return _StatusMessage; } set { _StatusMessage = value; NotifyPropertyChanged("StatusMessage"); } }
 
+        public int SelectedAddonIndex = -1;
         public AddonMetaData _SelectedAddon;
         public AddonMetaData SelectedAddon { get { return _SelectedAddon; } set { _SelectedAddon = value; NotifyPropertyChanged("SelectedAddon"); } }
 
@@ -37,7 +40,27 @@ namespace Meldii.Views
 
         public void OnSelectedAddon(int SelectedIdx)
         {
+            SelectedAddonIndex = SelectedIdx;
             SelectedAddon = LocalAddons[SelectedIdx];
+        }
+
+        public void UpdateAddon()
+        {
+            if (SelectedAddonIndex >= 0 && SelectedAddonIndex < LocalAddons.Count)
+            {
+                AddonManager.Self.UpdateAddon(SelectedAddon);
+            }
+        }
+
+        public async void AddonDeleteFromLibrary()
+        {
+            if (SelectedAddonIndex >= 0 && SelectedAddonIndex < LocalAddons.Count)
+            {
+                if (await MainWindow.ShowMessageDialogYesNo("Are you sure?", string.Format("This will delete {0} Version: {1} from your addon Library.", SelectedAddon.Name, SelectedAddon.Version)))
+                {
+                    AddonManager.Self.DeleteAddonFromLibrary(SelectedAddon);
+                }
+            }
         }
 
 

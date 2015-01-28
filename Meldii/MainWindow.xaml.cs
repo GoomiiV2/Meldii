@@ -15,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
 using Meldii.AddonProviders;
 using Meldii.DataStructures;
 using Meldii.Views;
@@ -27,6 +28,8 @@ namespace Meldii
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
+        public static MainWindow Self = null;
+
         MainViewModel ViewModel = new MainViewModel();
         AddonManager AddonManager = null;
         public bool IsSettingsWindowOpen = false;
@@ -34,6 +37,8 @@ namespace Meldii
 
         public MainWindow()
         {
+            Self = this;
+
             InitializeComponent();
             Statics.InitStaticData();
 
@@ -71,6 +76,36 @@ namespace Meldii
                 settingsWindow.Show();
                 IsHelpWindowOpen = true;
             }
+        }
+
+        private void AddonDownloadUpdate(object sender, MouseButtonEventArgs e)
+        {
+            ViewModel.UpdateAddon();
+        }
+
+        private void AddonDeleteFromLibrary(object sender, MouseButtonEventArgs e)
+        {
+            ViewModel.AddonDeleteFromLibrary();
+        }
+
+        public static async Task<bool> ShowMessageDialogYesNo(string title, string message)
+        {
+            Task<bool> value = Self._ShowMessageDialogYesNo(title, message);
+            return await value;
+        }
+
+        private async Task<bool> _ShowMessageDialogYesNo(string title, string message)
+        {
+            MetroDialogOptions.ColorScheme = true ? MetroDialogColorScheme.Accented : MetroDialogColorScheme.Theme;
+            var mySettings = new MetroDialogSettings()
+            {
+                AffirmativeButtonText = "Yes",
+                NegativeButtonText = "No",
+                ColorScheme = true ? MetroDialogColorScheme.Accented : MetroDialogColorScheme.Theme
+            };
+            MessageDialogResult result = await this.ShowMessageAsync(title, message,
+            MessageDialogStyle.AffirmativeAndNegative, mySettings);
+            return (result == MessageDialogResult.Affirmative);
         }
 
         private void AddonList_SelectionChanged(object sender, SelectionChangedEventArgs e)

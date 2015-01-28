@@ -26,11 +26,14 @@ namespace Meldii.AddonProviders
 
     public class AddonManager
     {
+        public static AddonManager Self = null;
         private MainViewModel MainView = null;
         private Dictionary<AddonProviderType, ProviderBase> Providers = new Dictionary<AddonProviderType, ProviderBase>();
 
         public AddonManager(MainViewModel _MainView)
         {
+            Self = this;
+
             MainView = _MainView;
             Providers.Add(AddonProviderType.FirefallFourms, new FirefallFourms());
 
@@ -343,5 +346,16 @@ namespace Meldii.AddonProviders
 
             MainView.StatusMessage = string.Format("Addon {0} Uninstalled", addon.Name);
         }
+
+        public void UpdateAddon(AddonMetaData addon)
+        {
+            MessageBox.Show("UpdateAddon");
+        }
+
+        public void DeleteAddonFromLibrary(AddonMetaData addon)
+        {
+            MessageBox.Show("DeleteAddonFromLibrary");
+        }
+
     }
 }

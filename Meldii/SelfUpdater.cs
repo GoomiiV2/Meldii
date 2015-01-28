@@ -42,7 +42,7 @@ namespace Meldii
            Process.Start(Statics.UpdaterName, Statics.UpdateExeUrl);
         }
 
-        public static void ThreadUpdateAndCheck()
+        public async static void ThreadUpdateAndCheck()
         {
             Thread updateCheck = new Thread(() => 
             {
@@ -54,6 +54,7 @@ namespace Meldii
 
                 if (IsUpdateAvailable())
                 {
+
                     if (MessageBox.Show("Download Update?", "Melii update available", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
                     {
                         Update();
