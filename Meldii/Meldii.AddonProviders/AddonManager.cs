@@ -57,15 +57,22 @@ namespace Meldii.AddonProviders
 
             string path = MeldiiSettings.Self.AddonLibaryPath;
 
-            string[] fileEntries = Directory.GetFiles(path, "*.zip");
-            foreach (string fileName in fileEntries)
+            if (Directory.Exists(path))
             {
-                AddonMetaData addon = ParseZipForIni(fileName);
-                if (addon != null)
+                string[] fileEntries = Directory.GetFiles(path, "*.zip");
+                foreach (string fileName in fileEntries)
                 {
-                    addon.ZipName = fileName;
-                    MainView.LocalAddons.Add(addon);
+                    AddonMetaData addon = ParseZipForIni(fileName);
+                    if (addon != null)
+                    {
+                        addon.ZipName = fileName;
+                        MainView.LocalAddons.Add(addon);
+                    }
                 }
+            }
+            else
+            {
+                Directory.CreateDirectory(path);
             }
         }
 
@@ -73,20 +80,33 @@ namespace Meldii.AddonProviders
         {
             MainView.StatusMessage = "Discovering Installed Addons...";
 
-            string[] fileEntries = Directory.GetFiles(path, "*.ini");
-            foreach (string fileName in fileEntries)
+            if (Directory.Exists(path))
             {
-                using (TextReader reader = File.OpenText(fileName))
+                string[] fileEntries = Directory.GetFiles(path, "*.ini");
+                foreach (string fileName in fileEntries)
                 {
-                    AddonMetaData addon = new AddonMetaData();
-                    addon.ReadFromIni(reader);
+                    using (TextReader reader = File.OpenText(fileName))
+                    {
+                        AddonMetaData addon = new AddonMetaData();
+                        addon.ReadFromIni(reader);
 
-                    var FullAddon = GetAddonLocalByNameAndVersion(addon.Name, addon.Version);
-                    FullAddon.IsEnabled = true;
-                    FullAddon.InstalledFilesList = addon.InstalledFilesList;
+                        var FullAddon = GetAddonLocalByNameAndVersion(addon.Name, addon.Version);
+
+                        if (FullAddon != null)
+                        {
+                            FullAddon.IsEnabled = true;
+                            FullAddon.InstalledFilesList = addon.InstalledFilesList;
+                        }
+                    }
+
                 }
-
             }
+            else
+            {
+                Directory.CreateDirectory(path);
+            }
+
+            MainView.StatusMessage = "Done :3";
         }
 
         private AddonMetaData ParseZipForIni(string path)
@@ -150,7 +170,10 @@ namespace Meldii.AddonProviders
         {
             AddonMetaData addon = null;
 
-            addon = MainView.LocalAddons.Single(x => x.Name == name && x.Version == version);
+            if (MainView.LocalAddons != null && MainView.LocalAddons.Count != 0)
+            {
+                addon = MainView.LocalAddons.Single(x => x.Name == name && x.Version == version);
+            }
 
             return addon;
         }

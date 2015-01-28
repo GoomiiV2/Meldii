@@ -14,7 +14,7 @@
             <Button Click="Btt_OpenSettings">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Margin="0 0 4 0" VerticalAlignment="Center" Text="Settings" />
-                    <Rectangle Width="16" Height="16" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                    <Rectangle Width="16" Height="16" Margin="0 2 0 0" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" VerticalAlignment="Top">
                         <Rectangle.OpacityMask>
                             <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_settings}" />
                         </Rectangle.OpacityMask>
@@ -37,7 +37,7 @@
         </Grid.ColumnDefinitions>
 
         <Grid Grid.Column="0" Margin="0,1,0,0">
-            <Label Content="Addon Libary" VerticalAlignment="Top" Margin="0" HorizontalContentAlignment="Center" FontFamily="Verdana" FontWeight="Bold" FontStyle="Italic"/>
+            <Label Content="Addon Libary" VerticalAlignment="Top" Margin="0" HorizontalContentAlignment="Center" FontFamily="Verdana" FontWeight="Bold"/>
             <Separator Height="3" Margin="10,22,10,0" VerticalAlignment="Top" HorizontalContentAlignment="Stretch"/>
             <ListBox x:Name="AddonList" Margin="10,25" BorderThickness="0,0,0,1" FontFamily="Verdana" AlternationCount="1" Padding="5"
                      ItemsSource="{Binding LocalAddons}" SelectionChanged="AddonList_SelectionChanged" >
@@ -154,7 +154,7 @@
         </Grid>
         <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Margin="0,25" Width="3"/>
         <Grid Grid.Column="2" Margin="0,1,0,0">
-            <Label Content="Addon Details" VerticalAlignment="Top" Margin="0" HorizontalContentAlignment="Center" MaxWidth="200" VerticalContentAlignment="Center" FontFamily="Verdana" FontWeight="Bold" FontStyle="Italic"/>
+            <Label Content="Addon Details" VerticalAlignment="Top" Margin="0" HorizontalContentAlignment="Center" MaxWidth="200" VerticalContentAlignment="Center" FontFamily="Verdana" FontWeight="Bold"/>
             <Separator Height="3" Margin="10,22,10,0" VerticalAlignment="Top" HorizontalContentAlignment="Stretch"/>
             <Label Content="{Binding SelectedAddon.UiNameAndVersion}" Margin="10,30,10,0" VerticalAlignment="Top" Height="25" FontFamily="Verdana"/>
             <Label Content="{Binding SelectedAddon.UiAuthor}" Margin="10,50,10,0" VerticalAlignment="Top" Height="25" FontFamily="Verdana"/>
