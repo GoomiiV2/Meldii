@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Meldii
 {
@@ -15,7 +16,26 @@ namespace Meldii
         public static void Main()
         {
             AppDomain.CurrentDomain.AssemblyResolve += OnResolveAssembly;
+            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(ErrorHandler);
             App.Main();
+        }
+
+        static void ErrorHandler(object sender, UnhandledExceptionEventArgs args)
+        {
+            Exception e = (Exception)args.ExceptionObject;
+            MessageBox.Show(e.StackTrace, e.Message);
+
+            string[] lines = 
+            {
+                "Source: " + e.Source,
+                "Target: " + e.TargetSite,
+                "Message: " + e.Message,
+                "\n",
+                e.StackTrace,
+                "\n"
+            };
+
+            System.IO.File.WriteAllLines(@"Meldii Errors make Arkii sad.txt", lines);
         }
 
         private static Assembly OnResolveAssembly(object sender, ResolveEventArgs args)

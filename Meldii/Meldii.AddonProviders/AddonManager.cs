@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -133,29 +134,53 @@ namespace Meldii.AddonProviders
         {
             MainView.StatusMessage = "Checking Addons for updates......";
 
-            Thread t = new Thread(new ThreadStart(delegate
+            try
             {
-                Parallel.ForEach(MainView.LocalAddons, new ParallelOptions { MaxDegreeOfParallelism = 8 },
-                    addon =>
-                    {
-                        var info = Providers[addon.ProviderType].GetMelderInfo(addon.AddonPage);
-                        if (info != null)
+                Thread t = new Thread(new ThreadStart(delegate
+                {
+                    var exceptions = new ConcurrentQueue<Exception>();
+                    Parallel.ForEach(MainView.LocalAddons, new ParallelOptions { MaxDegreeOfParallelism = 8 },
+                        addon =>
                         {
-                            addon.AvailableVersion = info.Version;
-                            addon.IsUptoDate = IsAddonUptoDate(addon, info);
-                            addon.IsNotSuported = info.IsNotSuported;
+                            try
+                            {
+                                var info = Providers[addon.ProviderType].GetMelderInfo(addon.AddonPage);
+                                if (info != null)
+                                {
+                                    addon.AvailableVersion = info.Version;
+                                    addon.IsUptoDate = IsAddonUptoDate(addon, info);
+                                    addon.IsNotSuported = info.IsNotSuported;
 
-                            Debug.WriteLine("Addon: {0}, Version: {1}, Patch: {2}, Dlurl: {3}, IsUptodate: {4}", addon.Name, info.Version, info.Patch, info.Dlurl, addon.IsUptoDate);
+                                    Debug.WriteLine("Addon: {0}, Version: {1}, Patch: {2}, Dlurl: {3}, IsUptodate: {4}", addon.Name, info.Version, info.Patch, info.Dlurl, addon.IsUptoDate);
+                                }
+                                else
+                                    addon.AvailableVersion = "??";
+                            }
+                            catch (Exception e)
+                            {
+                                exceptions.Enqueue(e);
+                            }
                         }
-                        else
-                            addon.AvailableVersion = "??";
-                    }
-                );
+                    );
 
-                MainView.StatusMessage = "All Addons have been checked for updates :3";
-            }));
-            t.IsBackground = true;
-            t.Start();
+                    if (exceptions.Count > 0) throw new AggregateException(exceptions);
+
+                    MainView.StatusMessage = "All Addons have been checked for updates :3";
+                }));
+
+                t.IsBackground = true;
+                t.Start();
+            }
+            catch (AggregateException ae)
+            {
+                foreach (var ex in ae.InnerExceptions)
+                {
+                    if (ex is ArgumentException)
+                        throw ex;
+                    else
+                        throw ex;
+                }
+            }
         }
 
         public bool IsAddonUptoDate(AddonMetaData addon, MelderInfo melderInfo)
@@ -172,7 +197,7 @@ namespace Meldii.AddonProviders
 
             if (MainView.LocalAddons != null && MainView.LocalAddons.Count != 0)
             {
-                addon = MainView.LocalAddons.Single(x => x.Name == name && x.Version == version);
+                addon = MainView.LocalAddons.FirstOrDefault(x => x.Name == name && x.Version == version);
             }
 
             return addon;
