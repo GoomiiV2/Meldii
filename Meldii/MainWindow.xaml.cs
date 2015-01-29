@@ -96,6 +96,14 @@ namespace Meldii
             }
         }
 
+        public static async void ShowDownlaodError()
+        {
+            if (await MainWindow.ShowMessageBox("Download Error", "There was an error when trying to download from the fourms, please try again later."))
+            {
+
+            }
+        }
+
         public static async Task<bool> ShowMessageDialogYesNo(string title, string message)
         {
             Task<bool> value = Self._ShowMessageDialogYesNo(title, message);
@@ -113,6 +121,25 @@ namespace Meldii
             };
             MessageDialogResult result = await this.ShowMessageAsync(title, message,
             MessageDialogStyle.AffirmativeAndNegative, mySettings);
+            return (result == MessageDialogResult.Affirmative);
+        }
+
+        public static async Task<bool> ShowMessageBox(string title, string message)
+        {
+            Task<bool> value = Self._ShowMessageBox(title, message);
+            return await value;
+        }
+
+        private async Task<bool> _ShowMessageBox(string title, string message)
+        {
+            MetroDialogOptions.ColorScheme = true ? MetroDialogColorScheme.Accented : MetroDialogColorScheme.Theme;
+            var mySettings = new MetroDialogSettings()
+            {
+                AffirmativeButtonText = "Ok",
+                ColorScheme = true ? MetroDialogColorScheme.Accented : MetroDialogColorScheme.Theme
+            };
+            MessageDialogResult result = await this.ShowMessageAsync(title, message,
+            MessageDialogStyle.Affirmative, mySettings);
             return (result == MessageDialogResult.Affirmative);
         }
 

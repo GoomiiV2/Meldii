@@ -23,6 +23,8 @@
                 <TextBlock TextWrapping="Wrap" Margin="10"
                     Text="Meldii was created by Arkii, Melder by RadthorDax." />
                 <TextBlock TextWrapping="Wrap" Margin="10"
+                    Text="Big thanks to Jotaro and Varixai for all their help in tracking down bugs!" />
+                <TextBlock TextWrapping="Wrap" Margin="10"
                     Text="{Binding AssemblyVersion}" />
             </StackPanel>
         </Expander>

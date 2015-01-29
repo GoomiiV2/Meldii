@@ -25,7 +25,7 @@ namespace Meldii.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("%localappdata%\\Melder")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Meldii")]
         public string SettingSaveLocation {
             get {
                 return ((string)(this["SettingSaveLocation"]));
@@ -47,6 +47,30 @@ namespace Meldii.Properties {
         public string MelderInfoName {
             get {
                 return ((string)(this["MelderInfoName"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://login.firefall.com/login")]
+        public string FirefallFourmsLoginURL {
+            get {
+                return ((string)(this["FirefallFourmsLoginURL"]));
+            }
+            set {
+                this["FirefallFourmsLoginURL"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://www.firefallthegame.com/community/attachments/")]
+        public string FirefallFourmsAttachURL {
+            get {
+                return ((string)(this["FirefallFourmsAttachURL"]));
+            }
+            set {
+                this["FirefallFourmsAttachURL"] = value;
             }
         }
     }
