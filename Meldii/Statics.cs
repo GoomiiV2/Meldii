@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using Meldii.AddonProviders;
 using Meldii.DataStructures;
+using Microsoft.Win32;
 
 namespace Meldii
 {
@@ -29,6 +32,9 @@ namespace Meldii
             "\\gui\\UISets\\",
             "\\gui\\components\\LoginUI\\"
         };
+        public static string MelderProtcolRegex = "melder://(.*?)/(.*?):(.*)";
+
+        public static string OneClickAddonToInstall = null; // the url of a forum attachment to install
 
         public static AddonManager AddonManager = null;
 
@@ -119,6 +125,45 @@ namespace Meldii
                     stream.Close();
             }
             return false;
+        }
+
+        public static void EnableMelderProtocol()
+        {
+            if (Registry.ClassesRoot.OpenSubKey("melder") == null || (string)Registry.ClassesRoot.OpenSubKey("melder").OpenSubKey("shell").OpenSubKey("open").OpenSubKey("command").GetValue("") != "\"" + Assembly.GetExecutingAssembly().Location + "\" \"%1\"")
+            {
+                try
+                {
+                    MessageBox.Show("EnableMelderProtocol");
+
+                    RegistryKey key = Registry.ClassesRoot.CreateSubKey("melder");
+                    key.SetValue("", "URL:Melder Protocol");
+                    key.SetValue("URL Protocol", "");
+                    key.CreateSubKey("DefaultIcon").SetValue("", "Meldii.exe,1");
+                    key.CreateSubKey("shell").CreateSubKey("open").CreateSubKey("command").SetValue("", "\"" + Assembly.GetExecutingAssembly().Location + "\" \"%1\"");
+                    key.Close();
+                }
+                catch (Exception e)
+                {
+
+                }
+            }
+        }
+
+        public static void DisableMelderProtocol()
+        {
+            if (Registry.ClassesRoot.OpenSubKey("melder") != null)
+            {
+                try
+                {
+                    MessageBox.Show("EnableMelderProtocol");
+
+                    Registry.ClassesRoot.DeleteSubKeyTree("melder");
+                }
+                catch (Exception e)
+                {
+
+                }
+            }
         }
     }
 }

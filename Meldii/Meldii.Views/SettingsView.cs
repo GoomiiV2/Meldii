@@ -14,17 +14,13 @@ namespace Meldii.Views
     {
         private string _FirefallInstall;
         private string _AddonLibaryPath;
+        private bool _IsMelderProtcolEnabled;
 
         public SettingsView()
         {
             FirefallInstall = MeldiiSettings.Self.FirefallInstallPath;
             AddonLibaryPath = MeldiiSettings.Self.AddonLibaryPath;
-        }
-
-        public void UpdateSettings()
-        {
-            FirefallInstall = MeldiiSettings.Self.FirefallInstallPath;
-            AddonLibaryPath = MeldiiSettings.Self.AddonLibaryPath;
+            IsMelderProtcolEnabled = MeldiiSettings.Self.IsMelderProtcolEnabled;
         }
 
         // Ui binding hooks
@@ -50,18 +46,39 @@ namespace Meldii.Views
             }
         }
 
+        public bool IsMelderProtcolEnabled
+        {
+            get { return _IsMelderProtcolEnabled; }
+
+            set
+            {
+                _IsMelderProtcolEnabled = value;
+                NotifyPropertyChanged("AddonLibaryPath");
+            }
+        }
+
         public void SaveSettings()
         {
             bool hasAddonLibFolderChanged = (MeldiiSettings.Self.AddonLibaryPath != _AddonLibaryPath);
 
             MeldiiSettings.Self.FirefallInstallPath = _FirefallInstall;
             MeldiiSettings.Self.AddonLibaryPath = _AddonLibaryPath;
+            MeldiiSettings.Self.IsMelderProtcolEnabled = _IsMelderProtcolEnabled;
             MeldiiSettings.Self.Save();
 
             if (hasAddonLibFolderChanged)
             {
                 AddonManager.Self.GetLocalAddons();
                 AddonManager.Self.SetupFolderWatchers();
+            }
+
+            if (MeldiiSettings.Self.IsMelderProtcolEnabled)
+            {
+                Statics.EnableMelderProtocol();
+            }
+            else
+            {
+                Statics.DisableMelderProtocol();
             }
         }
 

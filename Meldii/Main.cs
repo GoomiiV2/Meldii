@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -13,11 +14,44 @@ namespace Meldii
     public class Program
     {
         [STAThreadAttribute]
-        public static void Main()
+        public static void Main(string[] arguments)
         {
+            string args = "";
+            for (int i = 0; i < arguments.Length; i++)
+                args += arguments[i] + " ";
+            args = args.Trim();
+
+            ParseProtcol(args);
+
             AppDomain.CurrentDomain.AssemblyResolve += OnResolveAssembly;
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(ErrorHandler);
             App.Main();
+        }
+
+        static void ParseProtcol(string args)
+        {
+            try
+            {
+                Match match = Regex.Match(args, Statics.MelderProtcolRegex);
+                if (match.Success)
+                {
+                    string action = match.Groups[1].Value;
+                    string provider = match.Groups[2].Value;
+                    string url = match.Groups[3].Value;
+
+                    if (action == "download")
+                    {
+                        if (provider == "forum")
+                        {
+                            Statics.OneClickAddonToInstall = url;
+                        }
+                    }
+                }
+            }
+            catch(Exception e)
+            {
+
+            }
         }
 
         static void ErrorHandler(object sender, UnhandledExceptionEventArgs args)

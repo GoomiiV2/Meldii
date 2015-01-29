@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using System.Windows;
+using Meldii.DataStructures;
 using Meldii.Views;
 
 namespace Meldii.AddonProviders
@@ -20,6 +21,7 @@ namespace Meldii.AddonProviders
         private static string crsfTokenRegex = "(?:\r|\n|.)+<input id=\"lt\" name=\"lt\" type=\"hidden\" value=\"(.*?)\" />(?:\r|\n|.)+";
         private static int maxRetrys = 3;
         private int retrys = 0;
+        private string downloadsName = ""; // hack for one clcik downlaods
 
         public FirefallFourms()
         {
@@ -113,7 +115,17 @@ namespace Meldii.AddonProviders
             {
                 WebClient Dlii = new WebClient();
                 Dlii.Headers.Add(HttpRequestHeader.Cookie, CookieJar);
+
                 Dlii.DownloadFile(url, filePath);
+
+                // Glorious hack for the motherland!
+                string header = Dlii.ResponseHeaders["Content-Disposition"] ?? string.Empty;
+                int index = header.LastIndexOf("filename=", StringComparison.OrdinalIgnoreCase);
+                if (addonName == null && index > -1)
+                {
+                    addonName = header.Substring(index).Replace("filename=", "").Replace("\"", ""); ;
+                    downloadsName = addonName;
+                }
             }
             catch (WebException e)
             {
@@ -146,6 +158,17 @@ namespace Meldii.AddonProviders
 
             if (DownloadFile(dlurl, dest, addon.Name))
                 CopyUpdateToLibrary(addon.ZipName, dest);
+        }
+
+        public override void DownloadAddon(string url)
+        {
+            string dlurl = Properties.Settings.Default.FirefallFourmsAttachURL + url;
+
+            if (DownloadFile(dlurl, Path.Combine(tempDlDir, "oneClickDl.zip"), null))
+            {
+                string dest = Path.Combine(tempDlDir, downloadsName);
+                CopyUpdateToLibrary(Path.Combine(MeldiiSettings.Self.AddonLibaryPath, downloadsName), Path.Combine(tempDlDir, "oneClickDl.zip"));
+            }
         }
     }
 }

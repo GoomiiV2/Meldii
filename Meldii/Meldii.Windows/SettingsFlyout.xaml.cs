@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Meldii.Views;
 
 namespace Meldii.Windows
 {
@@ -21,6 +22,8 @@ namespace Meldii.Windows
     /// </summary>
     public partial class SettingsFlyout : System.Windows.Controls.UserControl
     {
+        private SettingsView View = null;
+
         public SettingsFlyout()
         {
             InitializeComponent();
@@ -28,23 +31,28 @@ namespace Meldii.Windows
 
         private void Btt_SaveSettings(object sender, RoutedEventArgs e)
         {
-            //View.SaveSettings();
+            View.SaveSettings();
         }
 
         private void Btt_FirefallPathFind(object sender, RoutedEventArgs e)
         {
             FolderBrowserDialog fbd = new FolderBrowserDialog();
-            //fbd.SelectedPath = View.FirefallInstall;
+            fbd.SelectedPath = View.FirefallInstall;
             var res = fbd.ShowDialog();
-            //View.FirefallInstall = fbd.SelectedPath;
+            View.FirefallInstall = fbd.SelectedPath;
         }
 
         private void Btt_AddonLibFind(object sender, RoutedEventArgs e)
         {
             FolderBrowserDialog fbd = new FolderBrowserDialog();
-           // fbd.SelectedPath = View.AddonLibaryPath;
+           fbd.SelectedPath = View.AddonLibaryPath;
             var res = fbd.ShowDialog();
-            //View.AddonLibaryPath = fbd.SelectedPath;
+            View.AddonLibaryPath = fbd.SelectedPath;
+        }
+
+        private void UserControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            View = (SettingsView)DataContext;
         }
     }
 }

@@ -62,26 +62,11 @@ namespace Meldii
         private void Btt_OpenSettings(object sender, RoutedEventArgs e)
         {
             this.ToggleFlyout(0);
-
-            /*if (!IsSettingsWindowOpen)
-            {
-                SettingsWindow settingsWindow = new SettingsWindow(this);
-                settingsWindow.Show();
-                IsSettingsWindowOpen = true;
-            }*/
         }
 
         private void Btt_OpenHelp(object sender, RoutedEventArgs e)
         {
             this.ToggleFlyout(1);
-
-            /*
-            if (!IsHelpWindowOpen)
-            {
-                HelpWindow settingsWindow = new HelpWindow(this);
-                settingsWindow.Show();
-                IsHelpWindowOpen = true;
-            }*/
         }
 
         private void AddonDownloadUpdate(object sender, MouseButtonEventArgs e)

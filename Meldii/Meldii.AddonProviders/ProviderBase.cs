@@ -16,7 +16,12 @@ namespace Meldii.AddonProviders
     public class ProviderBase
     {
         protected string tempDlDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Properties.Settings.Default.TempStorageLoc);
-        
+
+        public ProviderBase()
+        {
+            Directory.CreateDirectory(tempDlDir);
+        }
+
         public MelderInfo GetMelderInfo(string url)
         {
             try
@@ -94,9 +99,16 @@ namespace Meldii.AddonProviders
 
         }
 
+        public virtual void DownloadAddon(string url)
+        {
+            
+        }
+
         public virtual void CopyUpdateToLibrary(string oldFile, string newFile)
         {
-            File.Delete(oldFile);
+            if (File.Exists(oldFile))
+                File.Delete(oldFile);
+
             File.Move(newFile, oldFile);
         }
     }

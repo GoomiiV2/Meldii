@@ -55,6 +55,12 @@ namespace Meldii.AddonProviders
             GetMelderInstalledAddons(Path.Combine(Statics.AddonsFolder, "melder_addons")); // Addons
             GetMelderInstalledAddons(Path.Combine(MeldiiSettings.Self.FirefallInstallPath, Statics.ModDataStoreReltivePath)); // Mods
             SetupFolderWatchers();
+
+            if (Statics.OneClickAddonToInstall != null)
+            {
+                Providers[AddonProviderType.FirefallFourms].DownloadAddon(Statics.OneClickAddonToInstall);
+                App.Current.Shutdown();
+            }
         }
 
         // Genrate a list of addons that we have locally
