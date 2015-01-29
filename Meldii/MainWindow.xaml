@@ -127,7 +127,7 @@
                                         </Rectangle.ToolTip>
                                     </Rectangle>
 
-                                    <Rectangle Height="10" VerticalAlignment="Center" Margin="-10,0,0,0" HorizontalAlignment="Left" Opacity="1" Width="10">
+                                    <Rectangle Height="10" VerticalAlignment="Center" Margin="-10,0,0,0" HorizontalAlignment="Left" Opacity="1" Width="10" MouseDown="AddonDownloadUpdate">
                                         <Rectangle.Fill>
                                             <VisualBrush Visual="{StaticResource appbar_download_addons}" />
                                         </Rectangle.Fill>
