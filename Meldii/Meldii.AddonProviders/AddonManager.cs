@@ -29,6 +29,9 @@ namespace Meldii.AddonProviders
         public static AddonManager Self = null;
         private MainViewModel MainView = null;
         private Dictionary<AddonProviderType, ProviderBase> Providers = new Dictionary<AddonProviderType, ProviderBase>();
+        private System.Object AddonsToUpdateLock = new System.Object();
+        private List<AddonMetaData> AddonsToUpdate = new List<AddonMetaData>();
+        private List<string> AddonsToRenableAfterUpdate = new List<string>();
         FileSystemWatcher AddonLibaryWatcher = null;
 
         public AddonManager(MainViewModel _MainView)
@@ -145,6 +148,7 @@ namespace Meldii.AddonProviders
                     addon.AvailableVersion = info.Version;
                     addon.IsUptoDate = IsAddonUptoDate(addon, info);
                     addon.IsNotSuported = info.IsNotSuported;
+                    addon.DownloadURL = info.Dlurl;
 
                     Debug.WriteLine("Addon: {0}, Version: {1}, Patch: {2}, Dlurl: {3}, IsUptodate: {4}", addon.Name, info.Version, info.Patch, info.Dlurl, addon.IsUptoDate);
                 }
@@ -370,9 +374,57 @@ namespace Meldii.AddonProviders
             MainView.StatusMessage = string.Format("Addon {0} Uninstalled", addon.Name);
         }
 
+        // Add it to the list
         public void UpdateAddon(AddonMetaData addon)
         {
-            MessageBox.Show("Not Yet :>");
+            lock (AddonsToUpdateLock)
+            {
+                AddonsToUpdate.Add(addon);
+            }
+            DoAddonUpdates();
+        }
+
+        public void DoAddonUpdates()
+        {
+            Thread t = new Thread(new ThreadStart(delegate
+            {
+                lock (AddonsToUpdateLock)
+                {
+                foreach (AddonMetaData addon in AddonsToUpdate)
+                {
+                    _UpdateAddon(addon);
+                }
+
+                AddonsToUpdate.Clear();
+                }
+            }));
+
+            t.IsBackground = true;
+            t.Start();
+        }
+
+        // Do the real updating
+        public bool _UpdateAddon(AddonMetaData addon)
+        {
+            if (addon.DownloadURL != null && new Version(addon.Version) < new Version(addon.AvailableVersion))
+            {
+                bool isInstalled = addon.IsEnabled;
+                if (isInstalled)
+                {
+                    addon.IsEnabled = false; // The observable takes care of the actions
+                    AddonsToRenableAfterUpdate.Add(addon.Name);
+                }
+
+                Providers[addon.ProviderType].Update(addon);
+
+                //if (isInstalled)
+                    //addon.IsEnabled = isInstalled;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public void DeleteAddonFromLibrary(int SelectedAddonIndex)
@@ -432,6 +484,13 @@ namespace Meldii.AddonProviders
                 {
                     MainView.LocalAddons.Add(addon);
                 });
+
+                // Should we reenable this addon?
+                if (AddonsToRenableAfterUpdate.Contains(addon.Name))
+                {
+                    addon.IsEnabled = true;
+                    AddonsToRenableAfterUpdate.Remove(addon.Name);
+                }
 
                 GetAddonUpdateInfo(addon);
             }

@@ -15,7 +15,10 @@
       <Value Profile="(Default)">https://login.firefall.com/login</Value>
     </Setting>
     <Setting Name="FirefallFourmsAttachURL" Type="System.String" Scope="User">
-      <Value Profile="(Default)">http://www.firefallthegame.com/community/attachments/</Value>
+      <Value Profile="(Default)">http://forums.firefall.com/community/attachments/</Value>
+    </Setting>
+    <Setting Name="TempStorageLoc" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Meldii\temp</Value>
     </Setting>
   </Settings>
 </SettingsFile>

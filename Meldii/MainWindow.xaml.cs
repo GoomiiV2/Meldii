@@ -96,9 +96,9 @@ namespace Meldii
             }
         }
 
-        public static async void ShowDownlaodError()
+        public static async void ShowAlert(string title, string msg)
         {
-            if (await MainWindow.ShowMessageBox("Download Error", "There was an error when trying to download from the fourms, please try again later."))
+            if (await MainWindow.ShowMessageBox(title, msg))
             {
 
             }

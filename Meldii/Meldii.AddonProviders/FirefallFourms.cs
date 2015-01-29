@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using System.Windows;
+using Meldii.Views;
 
 namespace Meldii.AddonProviders
 {
@@ -106,7 +107,7 @@ namespace Meldii.AddonProviders
             File.WriteAllText(cookieSaveLoc, CookieJar);
         }
 
-        public void DownloadFile(string url, string filePath)
+        public bool DownloadFile(string url, string filePath, string addonName)
         {
             try
             {
@@ -121,16 +122,29 @@ namespace Meldii.AddonProviders
                     CookieJar = null;
                     Login();
                     retrys++;
-                    DownloadFile(url, filePath);
+                    return DownloadFile(url, filePath, addonName);
                 }
                 else
                 {
                     App.Current.Dispatcher.BeginInvoke((Action)delegate()
                     {
-                        MainWindow.ShowDownlaodError();
+                        MainWindow.ShowAlert("Download Error", string.Format("There was an error when trying to download from the fourms, please try again later.\n\nIf the error presists then the addon author more than likely has messed up the melder info in the thread so go bug them about it!\n\nAddon: {0}\nUrl: {1}", addonName, url));
                     });
+
+                    return false;
                 }
             }
+
+            return true;
+        }
+
+        public override void Update(AddonMetaData addon)
+        {
+            string dlurl = Properties.Settings.Default.FirefallFourmsAttachURL + addon.DownloadURL;
+            string dest = Path.Combine(tempDlDir, addon.Name + ".zip");
+
+            if (DownloadFile(dlurl, dest, addon.Name))
+                CopyUpdateToLibrary(addon.ZipName, dest);
         }
     }
 }

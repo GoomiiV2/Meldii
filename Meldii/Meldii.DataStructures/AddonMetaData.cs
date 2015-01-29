@@ -34,6 +34,7 @@ namespace Meldii.Views
         public List<string> IngoreFileList;
         public string ZipName { get; set; }
         public bool IsPendingDelete = false;
+        public string DownloadURL = null;
         #endregion
 
         #region Ui Binding Helpers

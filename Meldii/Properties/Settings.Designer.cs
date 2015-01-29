@@ -64,13 +64,25 @@ namespace Meldii.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://www.firefallthegame.com/community/attachments/")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://forums.firefall.com/community/attachments/")]
         public string FirefallFourmsAttachURL {
             get {
                 return ((string)(this["FirefallFourmsAttachURL"]));
             }
             set {
                 this["FirefallFourmsAttachURL"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Meldii\\temp")]
+        public string TempStorageLoc {
+            get {
+                return ((string)(this["TempStorageLoc"]));
+            }
+            set {
+                this["TempStorageLoc"] = value;
             }
         }
     }

@@ -1,18 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using Meldii.DataStructures;
+using Meldii.Views;
 
 namespace Meldii.AddonProviders
 {
     // Arkii: SpaceX launch just went btw 10/01/2015
     public class ProviderBase
     {
+        protected string tempDlDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Properties.Settings.Default.TempStorageLoc);
+        
         public MelderInfo GetMelderInfo(string url)
         {
             try
@@ -83,6 +87,17 @@ namespace Meldii.AddonProviders
                 Debug.WriteLine(e.Message);
             }
             return null;
+        }
+
+        public virtual void Update(AddonMetaData addon)
+        {
+
+        }
+
+        public virtual void CopyUpdateToLibrary(string oldFile, string newFile)
+        {
+            File.Delete(oldFile);
+            File.Move(newFile, oldFile);
         }
     }
 }
