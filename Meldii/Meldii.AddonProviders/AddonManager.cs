@@ -498,6 +498,7 @@ namespace Meldii.AddonProviders
                     AddonsToRenableAfterUpdate.Remove(addon.Name);
                 }
 
+                MainView.SortAddonList();
                 GetAddonUpdateInfo(addon);
             }
         }

@@ -11,13 +11,14 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
+using Common.WPF;
 using Meldii.AddonProviders;
 
 namespace Meldii.Views
 {
     public class MainViewModel : INotifyPropertyChanged
     {
-        public ObservableCollection<AddonMetaData> LocalAddons { get; set; }
+        public SortableObservableCollection<AddonMetaData> LocalAddons { get; set; }
 
         private string _StatusMessage;
         public string StatusMessage { get { return _StatusMessage; } set { _StatusMessage = value; NotifyPropertyChanged("StatusMessage"); } }
@@ -34,7 +35,16 @@ namespace Meldii.Views
             SettingsView = new SettingsView();
 
             StatusMessage = "Checking for new addon updates.....";
-            LocalAddons = new ObservableCollection<AddonMetaData>();
+            LocalAddons = new SortableObservableCollection<AddonMetaData>();
+        }
+
+
+        public void SortAddonList()
+        {
+            App.Current.Dispatcher.BeginInvoke((Action)delegate()
+            {
+                LocalAddons.Sort(x => x.Name, ListSortDirection.Ascending);
+            });
         }
 
         public bool IsPendingVersionCheck

@@ -68,7 +68,7 @@ namespace Meldii
                     File.Delete(Statics.UpdaterName);
                 }
 
-                if (IsUpdateAvailable() || true)
+                if (IsUpdateAvailable())
                 {
                     App.Current.Dispatcher.BeginInvoke((Action)delegate()
                     {

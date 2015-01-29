@@ -133,8 +133,6 @@ namespace Meldii
             {
                 try
                 {
-                    MessageBox.Show("EnableMelderProtocol");
-
                     RegistryKey key = Registry.ClassesRoot.CreateSubKey("melder");
                     key.SetValue("", "URL:Melder Protocol");
                     key.SetValue("URL Protocol", "");
@@ -155,8 +153,6 @@ namespace Meldii
             {
                 try
                 {
-                    MessageBox.Show("EnableMelderProtocol");
-
                     Registry.ClassesRoot.DeleteSubKeyTree("melder");
                 }
                 catch (Exception e)
