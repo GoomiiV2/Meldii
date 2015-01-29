@@ -134,7 +134,6 @@ namespace Meldii.Views
             set
             {
                 _IsEnabled = value;
-                Update("IsEnabled");
 
                 if (Statics.AddonManager != null)
                 {
@@ -143,6 +142,8 @@ namespace Meldii.Views
                     else
                         Statics.AddonManager.UninstallAddon(this);
                 }
+
+                Update("IsEnabled");
             }
         }
 

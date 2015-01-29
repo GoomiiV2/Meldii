@@ -121,7 +121,7 @@ namespace Meldii.AddonProviders
             {
                 foreach (ZipEntry file in zip)
                 {
-                    if (file.FileName.ToUpper() == Properties.Settings.Default.MelderInfoName.ToUpper())
+                    if (file.FileName.ToUpper().Contains(Properties.Settings.Default.MelderInfoName.ToUpper()))
                     {
                         TextReader reader = new StreamReader(file.OpenReader());
 
@@ -133,6 +133,24 @@ namespace Meldii.AddonProviders
             }
             return null;
 
+        }
+
+        private void GetAddonUpdateInfo(AddonMetaData addon)
+        {
+            var info = Providers[addon.ProviderType].GetMelderInfo(addon.AddonPage);
+            if (addon != null && !addon.IsPendingDelete)
+            {
+                if (info != null)
+                {
+                    addon.AvailableVersion = info.Version;
+                    addon.IsUptoDate = IsAddonUptoDate(addon, info);
+                    addon.IsNotSuported = info.IsNotSuported;
+
+                    Debug.WriteLine("Addon: {0}, Version: {1}, Patch: {2}, Dlurl: {3}, IsUptodate: {4}", addon.Name, info.Version, info.Patch, info.Dlurl, addon.IsUptoDate);
+                }
+                else
+                    addon.AvailableVersion = "??";
+            }
         }
 
         public void CheckAddonsForUpdates()
@@ -154,20 +172,7 @@ namespace Meldii.AddonProviders
                             {
                                 if (addon != null && !addon.IsPendingDelete)
                                 {
-                                    var info = Providers[addon.ProviderType].GetMelderInfo(addon.AddonPage);
-                                    if (addon != null && !addon.IsPendingDelete)
-                                    {
-                                        if (info != null)
-                                        {
-                                            addon.AvailableVersion = info.Version;
-                                            addon.IsUptoDate = IsAddonUptoDate(addon, info);
-                                            addon.IsNotSuported = info.IsNotSuported;
-
-                                            Debug.WriteLine("Addon: {0}, Version: {1}, Patch: {2}, Dlurl: {3}, IsUptodate: {4}", addon.Name, info.Version, info.Patch, info.Dlurl, addon.IsUptoDate);
-                                        }
-                                        else
-                                            addon.AvailableVersion = "??";
-                                    }
+                                    GetAddonUpdateInfo(addon);
                                 }
                             }
                             catch (Exception e)
@@ -227,7 +232,7 @@ namespace Meldii.AddonProviders
         // Refactor plz
         public void InstallAddon(AddonMetaData addon)
         {
-            if (addon.IsEnabled)
+            if (!addon.IsEnabled)
                 return;
 
             MainView.StatusMessage = string.Format("Installing Addon {0}", addon.Name);
@@ -290,13 +295,12 @@ namespace Meldii.AddonProviders
 
             addon.WriteToIni(installInfoDest);
 
-            addon.IsEnabled = true;
             MainView.StatusMessage = string.Format("Addon {0} Installed", addon.Name);
         }
 
         public void UninstallAddon(AddonMetaData addon)
         {
-            if (!addon.IsEnabled)
+            if (addon.IsEnabled)
                 return;
 
             MainView.StatusMessage = string.Format("Uninstalling Addon {0}", addon.Name);
@@ -363,13 +367,12 @@ namespace Meldii.AddonProviders
                 }
             }
 
-            addon.IsEnabled = false;
             MainView.StatusMessage = string.Format("Addon {0} Uninstalled", addon.Name);
         }
 
         public void UpdateAddon(AddonMetaData addon)
         {
-            MessageBox.Show("UpdateAddon");
+            MessageBox.Show("Not Yet :>");
         }
 
         public void DeleteAddonFromLibrary(int SelectedAddonIndex)
@@ -429,6 +432,8 @@ namespace Meldii.AddonProviders
                 {
                     MainView.LocalAddons.Add(addon);
                 });
+
+                GetAddonUpdateInfo(addon);
             }
         }
 
