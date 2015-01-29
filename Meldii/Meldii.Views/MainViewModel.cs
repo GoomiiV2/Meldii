@@ -24,12 +24,27 @@ namespace Meldii.Views
         public int SelectedAddonIndex = -1;
         public AddonMetaData _SelectedAddon;
         public AddonMetaData SelectedAddon { get { return _SelectedAddon; } set { _SelectedAddon = value; NotifyPropertyChanged("SelectedAddon"); } }
-
+        public bool _IsPendingVersionCheck = true;
 
         public MainViewModel()
         {
             StatusMessage = "Checking for new addon updates.....";
             LocalAddons = new ObservableCollection<AddonMetaData>();
+        }
+
+
+        public bool IsPendingVersionCheck
+        {
+            get
+            {
+                return _IsPendingVersionCheck;
+            }
+
+            set
+            {
+                _IsPendingVersionCheck = value;
+                NotifyPropertyChanged("IsPendingVersionCheck");
+            }
         }
 
         public void OnOpenAddonPage()
@@ -41,7 +56,10 @@ namespace Meldii.Views
         public void OnSelectedAddon(int SelectedIdx)
         {
             SelectedAddonIndex = SelectedIdx;
-            SelectedAddon = LocalAddons[SelectedIdx];
+            if (SelectedIdx >= 0 && SelectedIdx < LocalAddons.Count)
+            {
+                SelectedAddon = LocalAddons[SelectedIdx];
+            }
         }
 
         public void UpdateAddon()
@@ -58,7 +76,7 @@ namespace Meldii.Views
             {
                 if (await MainWindow.ShowMessageDialogYesNo("Are you sure?", string.Format("This will delete {0} Version: {1} from your addon Library.", SelectedAddon.Name, SelectedAddon.Version)))
                 {
-                    AddonManager.Self.DeleteAddonFromLibrary(SelectedAddon);
+                    AddonManager.Self.DeleteAddonFromLibrary(SelectedAddonIndex);
                 }
             }
         }

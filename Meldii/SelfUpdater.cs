@@ -40,9 +40,15 @@ namespace Meldii
             output.Close();
 
            Process.Start(Statics.UpdaterName, Statics.UpdateExeUrl);
+
+           App.Current.Dispatcher.Invoke((Action)delegate()
+           {
+               Application.Current.Shutdown();
+           });
+
         }
 
-        public async static void ThreadUpdateAndCheck()
+        public static void ThreadUpdateAndCheck()
         {
             Thread updateCheck = new Thread(() => 
             {
@@ -54,18 +60,12 @@ namespace Meldii
 
                 if (IsUpdateAvailable())
                 {
-
-                    if (MessageBox.Show("Download Update?", "Melii update available", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
+                    App.Current.Dispatcher.BeginInvoke((Action)delegate()
                     {
-                        Update();
-
-                        App.Current.Dispatcher.BeginInvoke((Action)delegate()
-                        {
-                            Application.Current.Shutdown();
-                        });
-                    }
+                        MainWindow.UpdatePromt();
+                    });
                 }
-            });
+           });
 
             updateCheck.IsBackground = true;
             updateCheck.Start();

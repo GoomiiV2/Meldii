@@ -24,7 +24,6 @@ namespace Meldii
         {
             Exception e = (Exception)args.ExceptionObject;
             MessageBox.Show(e.StackTrace, e.Message);
-
             string[] lines = 
             {
                 "Source: " + e.Source,

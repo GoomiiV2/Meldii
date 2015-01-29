@@ -41,8 +41,6 @@ namespace Meldii
 
             InitializeComponent();
             Statics.InitStaticData();
-
-            SelfUpdater.ThreadUpdateAndCheck();
         }
 
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
@@ -51,6 +49,8 @@ namespace Meldii
             DataContext = ViewModel;
             AddonManager = new AddonManager(ViewModel);
             Statics.AddonManager = AddonManager;
+
+            SelfUpdater.ThreadUpdateAndCheck();
         }
 
         private void Btt_OpenAddonPage_Click(object sender, RoutedEventArgs e)
@@ -86,6 +86,14 @@ namespace Meldii
         private void AddonDeleteFromLibrary(object sender, MouseButtonEventArgs e)
         {
             ViewModel.AddonDeleteFromLibrary();
+        }
+
+        public static async void UpdatePromt()
+        {
+            if (await MainWindow.ShowMessageDialogYesNo("Download Update?", "Melii update available"))
+            {
+                SelfUpdater.Update();
+            }
         }
 
         public static async Task<bool> ShowMessageDialogYesNo(string title, string message)

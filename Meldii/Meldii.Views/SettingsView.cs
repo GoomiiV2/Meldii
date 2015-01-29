@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using Meldii.AddonProviders;
 using Meldii.DataStructures;
 
 namespace Meldii.Views
@@ -45,9 +46,17 @@ namespace Meldii.Views
 
         public void SaveSettings()
         {
+            bool hasAddonLibFolderChanged = (MeldiiSettings.Self.AddonLibaryPath != _AddonLibaryPath);
+
             MeldiiSettings.Self.FirefallInstallPath = _FirefallInstall;
             MeldiiSettings.Self.AddonLibaryPath = _AddonLibaryPath;
             MeldiiSettings.Self.Save();
+
+            if (hasAddonLibFolderChanged)
+            {
+                AddonManager.Self.GetLocalAddons();
+                AddonManager.Self.SetupFolderWatchers();
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

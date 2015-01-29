@@ -29,6 +29,7 @@ namespace Meldii.AddonProviders
         public static AddonManager Self = null;
         private MainViewModel MainView = null;
         private Dictionary<AddonProviderType, ProviderBase> Providers = new Dictionary<AddonProviderType, ProviderBase>();
+        FileSystemWatcher AddonLibaryWatcher = null;
 
         public AddonManager(MainViewModel _MainView)
         {
@@ -50,6 +51,7 @@ namespace Meldii.AddonProviders
             CheckAddonsForUpdates();
             GetMelderInstalledAddons(Path.Combine(Statics.AddonsFolder, "melder_addons")); // Addons
             GetMelderInstalledAddons(Path.Combine(MeldiiSettings.Self.FirefallInstallPath, Statics.ModDataStoreReltivePath)); // Mods
+            SetupFolderWatchers();
         }
 
         // Genrate a list of addons that we have locally
@@ -142,31 +144,41 @@ namespace Meldii.AddonProviders
                 Thread t = new Thread(new ThreadStart(delegate
                 {
                     var exceptions = new ConcurrentQueue<Exception>();
+
+                    MainView.IsPendingVersionCheck = true;
+
                     Parallel.ForEach(MainView.LocalAddons, new ParallelOptions { MaxDegreeOfParallelism = 8 },
                         addon =>
                         {
                             try
                             {
-                                var info = Providers[addon.ProviderType].GetMelderInfo(addon.AddonPage);
-                                if (info != null)
+                                if (addon != null && !addon.IsPendingDelete)
                                 {
-                                    addon.AvailableVersion = info.Version;
-                                    addon.IsUptoDate = IsAddonUptoDate(addon, info);
-                                    addon.IsNotSuported = info.IsNotSuported;
+                                    var info = Providers[addon.ProviderType].GetMelderInfo(addon.AddonPage);
+                                    if (addon != null && !addon.IsPendingDelete)
+                                    {
+                                        if (info != null)
+                                        {
+                                            addon.AvailableVersion = info.Version;
+                                            addon.IsUptoDate = IsAddonUptoDate(addon, info);
+                                            addon.IsNotSuported = info.IsNotSuported;
 
-                                    Debug.WriteLine("Addon: {0}, Version: {1}, Patch: {2}, Dlurl: {3}, IsUptodate: {4}", addon.Name, info.Version, info.Patch, info.Dlurl, addon.IsUptoDate);
+                                            Debug.WriteLine("Addon: {0}, Version: {1}, Patch: {2}, Dlurl: {3}, IsUptodate: {4}", addon.Name, info.Version, info.Patch, info.Dlurl, addon.IsUptoDate);
+                                        }
+                                        else
+                                            addon.AvailableVersion = "??";
+                                    }
                                 }
-                                else
-                                    addon.AvailableVersion = "??";
                             }
                             catch (Exception e)
                             {
-                                exceptions.Enqueue(e);
+                                //exceptions.Enqueue(e);
                             }
                         }
                     );
 
-                    if (exceptions.Count > 0) throw new AggregateException(exceptions);
+                    MainView.IsPendingVersionCheck = false;
+                    //if (exceptions.Count > 0) throw new AggregateException(exceptions);
 
                     MainView.StatusMessage = "All Addons have been checked for updates :3";
                 }));
@@ -174,15 +186,15 @@ namespace Meldii.AddonProviders
                 t.IsBackground = true;
                 t.Start();
             }
-            catch (AggregateException ae)
+            catch (Exception e /*AggregateException ae*/)
             {
-                foreach (var ex in ae.InnerExceptions)
+                /*foreach (var ex in ae.InnerExceptions)
                 {
                     if (ex is ArgumentException)
                         throw ex;
                     else
                         throw ex;
-                }
+                }*/
             }
         }
 
@@ -215,6 +227,9 @@ namespace Meldii.AddonProviders
         // Refactor plz
         public void InstallAddon(AddonMetaData addon)
         {
+            if (addon.IsEnabled)
+                return;
+
             MainView.StatusMessage = string.Format("Installing Addon {0}", addon.Name);
 
             addon.InstalledFilesList.Clear();
@@ -273,13 +288,17 @@ namespace Meldii.AddonProviders
                 }
             }
 
-             addon.WriteToIni(installInfoDest);
+            addon.WriteToIni(installInfoDest);
 
+            addon.IsEnabled = true;
             MainView.StatusMessage = string.Format("Addon {0} Installed", addon.Name);
         }
 
         public void UninstallAddon(AddonMetaData addon)
         {
+            if (!addon.IsEnabled)
+                return;
+
             MainView.StatusMessage = string.Format("Uninstalling Addon {0}", addon.Name);
 
             // Addon, nice and easy
@@ -344,6 +363,7 @@ namespace Meldii.AddonProviders
                 }
             }
 
+            addon.IsEnabled = false;
             MainView.StatusMessage = string.Format("Addon {0} Uninstalled", addon.Name);
         }
 
@@ -352,10 +372,95 @@ namespace Meldii.AddonProviders
             MessageBox.Show("UpdateAddon");
         }
 
-        public void DeleteAddonFromLibrary(AddonMetaData addon)
+        public void DeleteAddonFromLibrary(int SelectedAddonIndex)
         {
-            MessageBox.Show("DeleteAddonFromLibrary");
+            AddonMetaData addon = MainView.LocalAddons[SelectedAddonIndex];
+
+            if (addon != null)
+            {
+                if (addon.IsEnabled)
+                {
+                    UninstallAddon(addon);
+                }
+
+                if (File.Exists(addon.ZipName))
+                {
+                    MainView.StatusMessage = string.Format("Removed {0} Ver. {1} from the addon library", addon.Name, addon.Version);
+                    File.Delete(addon.ZipName);
+                    // Let the file watcher take care of updating the list?
+                }
+            }
         }
 
+        // File watching for the addon lib folder, auto magicly update the list
+        public void SetupFolderWatchers()
+        {
+            if (MeldiiSettings.Self.AddonLibaryPath != null && MeldiiSettings.Self.AddonLibaryPath != "" && MeldiiSettings.Self.AddonLibaryPath != " ")
+            {
+                if (AddonLibaryWatcher != null)
+                {
+                    AddonLibaryWatcher = null;
+                }
+
+                AddonLibaryWatcher = new FileSystemWatcher();
+                AddonLibaryWatcher.Path = MeldiiSettings.Self.AddonLibaryPath;
+                AddonLibaryWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
+                AddonLibaryWatcher.Filter = "*.zip";
+                AddonLibaryWatcher.Created += new FileSystemEventHandler(WatcherAdd);
+                AddonLibaryWatcher.Deleted += new FileSystemEventHandler(WatcherRemove);
+
+                AddonLibaryWatcher.EnableRaisingEvents = true;
+            }
+        }
+
+        private void WatcherAdd(object source, FileSystemEventArgs e)
+        {
+            // Yo block untill its not in use! 
+            while (Statics.IsFileLocked(new FileInfo(e.FullPath)))
+            {
+                Thread.Sleep(500);
+            }
+
+            AddonMetaData addon = ParseZipForIni(e.FullPath);
+            if (addon != null)
+            {
+                addon.ZipName = e.FullPath;
+                App.Current.Dispatcher.Invoke((Action)delegate 
+                {
+                    MainView.LocalAddons.Add(addon);
+                });
+            }
+        }
+
+        private void WatcherRemove(object source, FileSystemEventArgs e)
+        {
+            AddonMetaData addon = null;
+
+            if (MainView.LocalAddons != null && MainView.LocalAddons.Count != 0)
+            {
+                addon = MainView.LocalAddons.First(x => x.ZipName == e.FullPath);
+
+                if (addon != null)
+                {
+                    addon.IsPendingDelete = true;
+
+                    // wpf oh you be crazy sometime with execptions
+                    App.Current.Dispatcher.BeginInvoke((Action)delegate
+                    {
+                        if (MainView.LocalAddons.Contains(addon))
+                        {
+                            int idx = MainView.LocalAddons.IndexOf(addon);
+                            if (idx != -1 && idx < MainView.LocalAddons.Count)
+                            {
+                                addon = null;
+                                addon = MainView.LocalAddons[idx];
+                                addon = null;
+                                MainView.LocalAddons.RemoveAt(idx);
+                            }
+                        }
+                    });
+                }
+            }
+        }
     }
 }

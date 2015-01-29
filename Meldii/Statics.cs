@@ -100,5 +100,25 @@ namespace Meldii
                 return false;
             }
         }
+
+        // http://stackoverflow.com/a/5238116
+        public static bool IsFileLocked(FileInfo file)
+        {
+            FileStream stream = null;
+            try
+            {
+                stream = file.Open(FileMode.Open, FileAccess.ReadWrite, FileShare.None);
+            }
+            catch (IOException)
+            {
+                return true;
+            }
+            finally
+            {
+                if (stream != null)
+                    stream.Close();
+            }
+            return false;
+        }
     }
 }

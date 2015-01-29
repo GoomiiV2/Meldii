@@ -33,6 +33,7 @@ namespace Meldii.Views
         public List<string> RemoveFilesList;
         public List<string> IngoreFileList;
         public string ZipName { get; set; }
+        public bool IsPendingDelete = false;
         #endregion
 
         #region Ui Binding Helpers
@@ -157,11 +158,6 @@ namespace Meldii.Views
                 _IsNotSuported = value;
                 Update("IsNotSuported");
             }
-        }
-
-        public void DownloadUpdate(object sender, MouseButtonEventArgs e)
-        {
-
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
