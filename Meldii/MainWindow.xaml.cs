@@ -30,7 +30,7 @@ namespace Meldii
     {
         public static MainWindow Self = null;
 
-        MainViewModel ViewModel = new MainViewModel();
+        MainViewModel ViewModel = null;
         AddonManager AddonManager = null;
         public bool IsSettingsWindowOpen = false;
         public bool IsHelpWindowOpen = false;
@@ -41,11 +41,12 @@ namespace Meldii
 
             InitializeComponent();
             Statics.InitStaticData();
+            MeldiiSettings.Self.Load();
+            ViewModel = new MainViewModel();
         }
 
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            MeldiiSettings.Self.Load();
             DataContext = ViewModel;
             AddonManager = new AddonManager(ViewModel);
             Statics.AddonManager = AddonManager;
@@ -60,22 +61,27 @@ namespace Meldii
 
         private void Btt_OpenSettings(object sender, RoutedEventArgs e)
         {
-            if (!IsSettingsWindowOpen)
+            this.ToggleFlyout(0);
+
+            /*if (!IsSettingsWindowOpen)
             {
                 SettingsWindow settingsWindow = new SettingsWindow(this);
                 settingsWindow.Show();
                 IsSettingsWindowOpen = true;
-            }
+            }*/
         }
 
         private void Btt_OpenHelp(object sender, RoutedEventArgs e)
         {
+            this.ToggleFlyout(1);
+
+            /*
             if (!IsHelpWindowOpen)
             {
                 HelpWindow settingsWindow = new HelpWindow(this);
                 settingsWindow.Show();
                 IsHelpWindowOpen = true;
-            }
+            }*/
         }
 
         private void AddonDownloadUpdate(object sender, MouseButtonEventArgs e)
@@ -146,6 +152,16 @@ namespace Meldii
         private void AddonList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ViewModel.OnSelectedAddon(AddonList.SelectedIndex);
+        }
+
+        private void ToggleFlyout(int index)
+        {
+            var flyout = this.Flyouts.Items[index] as Flyout;
+            if (flyout == null)
+            {
+                return;
+            }
+            flyout.IsOpen = !flyout.IsOpen;
         }
     }
 }

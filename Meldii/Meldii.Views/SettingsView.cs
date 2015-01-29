@@ -17,8 +17,14 @@ namespace Meldii.Views
 
         public SettingsView()
         {
-            _FirefallInstall = MeldiiSettings.Self.FirefallInstallPath;
-            _AddonLibaryPath = MeldiiSettings.Self.AddonLibaryPath;
+            FirefallInstall = MeldiiSettings.Self.FirefallInstallPath;
+            AddonLibaryPath = MeldiiSettings.Self.AddonLibaryPath;
+        }
+
+        public void UpdateSettings()
+        {
+            FirefallInstall = MeldiiSettings.Self.FirefallInstallPath;
+            AddonLibaryPath = MeldiiSettings.Self.AddonLibaryPath;
         }
 
         // Ui binding hooks

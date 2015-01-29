@@ -117,6 +117,7 @@ namespace Meldii.AddonProviders
             }
             catch (WebException e)
             {
+                // Most likey our session has expired so relogin
                 if (e.Message == "The remote server returned an error: (403) Forbidden." && retrys < maxRetrys)
                 {
                     CookieJar = null;

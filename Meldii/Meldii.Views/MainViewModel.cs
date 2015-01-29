@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -26,12 +27,15 @@ namespace Meldii.Views
         public AddonMetaData SelectedAddon { get { return _SelectedAddon; } set { _SelectedAddon = value; NotifyPropertyChanged("SelectedAddon"); } }
         public bool _IsPendingVersionCheck = true;
 
+        public SettingsView _SettingsView;
+        public SettingsView SettingsView { get { return _SettingsView; } set { _SettingsView = value; NotifyPropertyChanged("SettingsView"); } }
         public MainViewModel()
         {
+            SettingsView = new SettingsView();
+
             StatusMessage = "Checking for new addon updates.....";
             LocalAddons = new ObservableCollection<AddonMetaData>();
         }
-
 
         public bool IsPendingVersionCheck
         {
@@ -81,6 +85,13 @@ namespace Meldii.Views
             }
         }
 
+        public static string AssemblyVersion
+        {
+            get
+            {
+                return "Version: " + FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion;
+            }
+        }
 
         // Gah
         public event PropertyChangedEventHandler PropertyChanged;
