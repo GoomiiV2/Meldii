@@ -160,7 +160,7 @@
     <None Include="bin\Release\Meldii.Updater.exe" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Meldii.Updater.exe" />
+    <Content Include="Resources\Meldii.Updater.exe" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterResolveReferences">

@@ -16,39 +16,25 @@ namespace Meldii.Updater
 
         static void Main(string[] args)
         {
-            if (args.Length >= 1)
+            Thread.Sleep(2000);
+
+            // Remove Meldii
+            if (File.Exists(MeldiiName))
             {
-                string url = args[0];
-
-                Console.WriteLine("---- Meldii updater ----\n");
-                Console.WriteLine("Waiting for Meldii to close...");
-
-                Thread.Sleep(5000);
-
-                // Remove Meldii
-                if (File.Exists(MeldiiName))
+                try
                 {
-                    try
-                    {
-                        File.Delete(MeldiiName);
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine("Error trying to remove "+MeldiiName);
-                        return;
-                    }
+                    File.Delete(MeldiiName);
                 }
-
-                using (WebClient Client = new WebClient())
+                catch (Exception e)
                 {
-                    Console.WriteLine("Downloading Update");
-                    Client.DownloadFile(url, MeldiiName);
-                    Console.WriteLine("Update downloaded :>");
+                    Console.WriteLine("Error trying to remove "+MeldiiName);
+                    return;
                 }
-
-                Console.WriteLine("Starting Medlii now");
-                Process.Start("Meldii.exe");
             }
+
+            File.Move("Meldii_New.exe", MeldiiName);
+
+            Process.Start(MeldiiName);
         }
     }
 }

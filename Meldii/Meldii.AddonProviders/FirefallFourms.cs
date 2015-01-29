@@ -141,7 +141,7 @@ namespace Meldii.AddonProviders
                 {
                     App.Current.Dispatcher.BeginInvoke((Action)delegate()
                     {
-                        MainWindow.ShowAlert("Download Error", string.Format("There was an error when trying to download from the fourms, please try again later.\n\nIf the error presists then the addon author more than likely has messed up the melder info in the thread so go bug them about it!\n\nAddon: {0}\nUrl: {1}", addonName, url));
+                        MainWindow.ShowAlert("Download Error", string.Format("There was an error when trying to download from the forums, please try again later.\n\nIf the error presists then the addon author more than likely has messed up the melder info in the thread so go bug them about it!\n\nAddon: {0}\nUrl: {1}", addonName, url));
                     });
 
                     return false;
@@ -163,11 +163,16 @@ namespace Meldii.AddonProviders
         public override void DownloadAddon(string url)
         {
             string dlurl = Properties.Settings.Default.FirefallFourmsAttachURL + url;
+            string dlPath = Path.Combine(tempDlDir, "oneClickDl.zip");
 
-            if (DownloadFile(dlurl, Path.Combine(tempDlDir, "oneClickDl.zip"), null))
+            // Lazy way to cope with alot of downloads at once
+            if (File.Exists(dlPath))
+                dlPath += new Random().Next(10);
+
+            if (DownloadFile(dlurl, dlPath, null))
             {
                 string dest = Path.Combine(tempDlDir, downloadsName);
-                CopyUpdateToLibrary(Path.Combine(MeldiiSettings.Self.AddonLibaryPath, downloadsName), Path.Combine(tempDlDir, "oneClickDl.zip"));
+                CopyUpdateToLibrary(Path.Combine(MeldiiSettings.Self.AddonLibaryPath, downloadsName), dlPath);
             }
         }
     }

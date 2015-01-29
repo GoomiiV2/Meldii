@@ -83,6 +83,8 @@ namespace Meldii
         {
             if (await MainWindow.ShowMessageDialogYesNo("Download Update?", "Melii update available"))
             {
+                var controller = await MainWindow.Self.ShowProgressAsync("Please wait...", "Downloading Meldii update\nMeldii will restart when it is done");
+
                 SelfUpdater.Update();
             }
         }

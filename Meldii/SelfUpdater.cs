@@ -34,18 +34,28 @@ namespace Meldii
         // Start the updater
         public static void Update()
         {
-            Stream output = File.OpenWrite(Statics.UpdaterName);
-            output.Write(Meldii.Properties.Resources.Meldii_Updater, 0, Meldii.Properties.Resources.Meldii_Updater.Length);
-            output.Flush();
-            output.Close();
+            Thread Update = new Thread(() =>
+            {
+                Stream output = File.OpenWrite(Statics.UpdaterName);
+                output.Write(Meldii.Properties.Resources.Meldii_Updater, 0, Meldii.Properties.Resources.Meldii_Updater.Length);
+                output.Flush();
+                output.Close();
 
-           Process.Start(Statics.UpdaterName, Statics.UpdateExeUrl);
+                using (WebClient Client = new WebClient())
+                {
+                    Client.DownloadFile(Statics.UpdateExeUrl, "Meldii_New.exe");
+                }
 
-           App.Current.Dispatcher.Invoke((Action)delegate()
-           {
-               Application.Current.Shutdown();
-           });
+                Process.Start(Statics.UpdaterName);
 
+                App.Current.Dispatcher.Invoke((Action)delegate()
+                {
+                    Application.Current.Shutdown();
+                });
+            });
+
+            Update.IsBackground = true;
+            Update.Start();
         }
 
         public static void ThreadUpdateAndCheck()
@@ -58,7 +68,7 @@ namespace Meldii
                     File.Delete(Statics.UpdaterName);
                 }
 
-                if (IsUpdateAvailable())
+                if (IsUpdateAvailable() || true)
                 {
                     App.Current.Dispatcher.BeginInvoke((Action)delegate()
                     {
