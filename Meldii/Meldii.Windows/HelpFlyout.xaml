@@ -1,0 +1,36 @@
+﻿<UserControl x:Class="Meldii.Windows.HelpFlyout"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="400">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Width="Auto" Height="Auto" Margin="0 0 0 15">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Expander Grid.Row="0" x:Name="panel1" Header="About" Margin="5 5 5 0">
+                <StackPanel Orientation="Vertical">
+                    <TextBlock TextWrapping="Wrap" Margin="10"
+                    Text="Meldii is an addon manager for Firefall designed to be backwards compatable with the orignal Melder by RadthorDax." />
+                    <TextBlock TextWrapping="Wrap" Margin="10,0"
+                    Text="Meldii however also has some extra features that Melder doesn't have and will hopefully serve as a viable replacement." />
+                    <TextBlock TextWrapping="Wrap" Margin="10"
+                    Text="Meldii was created by Arkii, Melder by RadthorDax." />
+                    <TextBlock TextWrapping="Wrap" Margin="10"
+                    Text="Big thanks to Jotaro and Varixai for all their help in tracking down bugs!" />
+                    <TextBlock TextWrapping="Wrap" Margin="10"
+                    Text="{Binding AssemblyVersion}" />
+                </StackPanel>
+            </Expander>
+            <Expander Grid.Row="1" x:Name="panel2" Header="Melder Info Genrator">
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Margin="10" Text="Panel2 Text Block" />
+                </StackPanel>
+            </Expander>
+        </Grid>
+    </ScrollViewer>
+</UserControl>
