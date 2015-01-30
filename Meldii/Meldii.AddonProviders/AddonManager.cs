@@ -43,7 +43,7 @@ namespace Meldii.AddonProviders
             Self = this;
 
             MainView = _MainView;
-            Providers.Add(AddonProviderType.FirefallForums, new FirefallFourms());
+            Providers.Add(AddonProviderType.FirefallForums, new FirefallForums());
 
             if (Statics.IsFirstRun)
             {

@@ -11,10 +11,10 @@
     <Setting Name="MelderInfoName" Type="System.String" Scope="Application">
       <Value Profile="(Default)">melder_info.ini</Value>
     </Setting>
-    <Setting Name="FirefallFourmsLoginURL" Type="System.String" Scope="User">
+    <Setting Name="FirefallForumsLoginURL" Type="System.String" Scope="User">
       <Value Profile="(Default)">https://login.firefall.com/login</Value>
     </Setting>
-    <Setting Name="FirefallFourmsAttachURL" Type="System.String" Scope="User">
+    <Setting Name="FirefallForumsAttachURL" Type="System.String" Scope="User">
       <Value Profile="(Default)">http://forums.firefall.com/community/attachments/</Value>
     </Setting>
     <Setting Name="TempStorageLoc" Type="System.String" Scope="User">

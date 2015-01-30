@@ -53,24 +53,24 @@ namespace Meldii.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("https://login.firefall.com/login")]
-        public string FirefallFourmsLoginURL {
+        public string FirefallForumsLoginURL {
             get {
-                return ((string)(this["FirefallFourmsLoginURL"]));
+                return ((string)(this["FirefallForumsLoginURL"]));
             }
             set {
-                this["FirefallFourmsLoginURL"] = value;
+                this["FirefallForumsLoginURL"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("http://forums.firefall.com/community/attachments/")]
-        public string FirefallFourmsAttachURL {
+        public string FirefallForumsAttachURL {
             get {
-                return ((string)(this["FirefallFourmsAttachURL"]));
+                return ((string)(this["FirefallForumsAttachURL"]));
             }
             set {
-                this["FirefallFourmsAttachURL"] = value;
+                this["FirefallForumsAttachURL"] = value;
             }
         }
         

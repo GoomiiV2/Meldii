@@ -14,7 +14,7 @@ using Meldii.Views;
 
 namespace Meldii.AddonProviders
 {
-    public class FirefallFourms : ProviderBase
+    public class FirefallForums : ProviderBase
     {
         private string CookieJar = null;
         private string cookieSaveLoc = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Properties.Settings.Default.SettingSaveLocation, "CookieMonster.Cookie");
@@ -23,7 +23,7 @@ namespace Meldii.AddonProviders
         private int retrys = 0;
         private string downloadsName = ""; // hack for one clcik downlaods
 
-        public FirefallFourms()
+        public FirefallForums()
         {
             LoadCookies();
             Login();
@@ -43,7 +43,7 @@ namespace Meldii.AddonProviders
         {
             // Get the csf token
             WebClient client = new WebClient();
-            string PageData = client.DownloadString(Properties.Settings.Default.FirefallFourmsLoginURL);
+            string PageData = client.DownloadString(Properties.Settings.Default.FirefallForumsLoginURL);
             string crsfToken = "";
 
             Match match = Regex.Match(PageData, crsfTokenRegex);
@@ -52,7 +52,7 @@ namespace Meldii.AddonProviders
                 crsfToken = match.Groups[1].Value;
             }
 
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Properties.Settings.Default.FirefallFourmsLoginURL);
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Properties.Settings.Default.FirefallForumsLoginURL);
             request.Method = "POST";
             request.ContentType = "application/x-www-form-urlencoded";
             request.AllowAutoRedirect = false;
@@ -153,7 +153,7 @@ namespace Meldii.AddonProviders
 
         public override void Update(AddonMetaData addon)
         {
-            string dlurl = Properties.Settings.Default.FirefallFourmsAttachURL + addon.DownloadURL;
+            string dlurl = Properties.Settings.Default.FirefallForumsAttachURL + addon.DownloadURL;
             string dest = Path.Combine(tempDlDir, addon.Name + ".zip");
 
             if (DownloadFile(dlurl, dest, addon.Name))
@@ -162,7 +162,7 @@ namespace Meldii.AddonProviders
 
         public override void DownloadAddon(string url)
         {
-            string dlurl = Properties.Settings.Default.FirefallFourmsAttachURL + url;
+            string dlurl = Properties.Settings.Default.FirefallForumsAttachURL + url;
             string dlPath = Path.Combine(tempDlDir, "oneClickDl.zip");
 
             // Lazy way to cope with alot of downloads at once
