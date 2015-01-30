@@ -26,5 +26,8 @@
     <Setting Name="MI_HostImgURL" Type="System.String" Scope="User">
       <Value Profile="(Default)">http://astrekassociation.com/images/melder.png</Value>
     </Setting>
+    <Setting Name="Useragent" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Meldii Addon Manager (Hi Tc :3c)</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

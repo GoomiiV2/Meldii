@@ -30,6 +30,8 @@ namespace Meldii.AddonProviders
                 Info.IsNotSuported = false;
 
                 WebClient client = new WebClient();
+                client.Headers["User-Agent"] = Properties.Settings.Default.Useragent;
+
                 string PageData = client.DownloadString(url);
                 if (PageData != null)
                 {

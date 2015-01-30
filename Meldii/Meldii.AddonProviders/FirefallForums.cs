@@ -114,6 +114,7 @@ namespace Meldii.AddonProviders
             try
             {
                 WebClient Dlii = new WebClient();
+                Dlii.Headers["User-Agent"] = Properties.Settings.Default.Useragent;
                 Dlii.Headers.Add(HttpRequestHeader.Cookie, CookieJar);
 
                 Dlii.DownloadFile(url, filePath);

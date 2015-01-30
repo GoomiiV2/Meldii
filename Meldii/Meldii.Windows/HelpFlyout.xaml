@@ -52,7 +52,7 @@
                         <TextBox.ToolTip>
                             <ToolTip>
                                 <StackPanel>
-                                    <TextBlock FontWeight="Bold">The last digits of the fourm attachment url</TextBlock>
+                                    <TextBlock FontWeight="Bold">The last digits of the forum attachment url</TextBlock>
                                 </StackPanel>
                             </ToolTip>
                         </TextBox.ToolTip>

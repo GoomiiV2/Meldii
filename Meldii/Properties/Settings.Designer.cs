@@ -109,5 +109,17 @@ namespace Meldii.Properties {
                 this["MI_HostImgURL"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Meldii Addon Manager (Hi Tc :3c)")]
+        public string Useragent {
+            get {
+                return ((string)(this["Useragent"]));
+            }
+            set {
+                this["Useragent"] = value;
+            }
+        }
     }
 }

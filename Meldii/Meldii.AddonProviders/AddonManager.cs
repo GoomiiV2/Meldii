@@ -455,7 +455,7 @@ namespace Meldii.AddonProviders
             }
         }
 
-        public void DeleteAddonFromLibrary(int SelectedAddonIndex)
+        public async void DeleteAddonFromLibrary(int SelectedAddonIndex)
         {
             AddonMetaData addon = MainView.LocalAddons[SelectedAddonIndex];
 
@@ -463,7 +463,10 @@ namespace Meldii.AddonProviders
             {
                 if (addon.IsEnabled)
                 {
-                    UninstallAddon(addon);
+                    bool result = await MainWindow.ShowMessageDialogYesNo("Do you want to uninstall this addon?", string.Format("Select yes to uninstall and delete {0} from the library", addon.Name));
+                    
+                    if (result)
+                        UninstallAddon(addon);
                 }
 
                 if (File.Exists(addon.ZipName))
