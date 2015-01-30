@@ -421,7 +421,9 @@ namespace Meldii.AddonProviders
                     AddonsToRenableAfterUpdate.Add(addon.Name);
                 }
 
+                addon.IsUpdating = true;
                 Providers[addon.ProviderType].Update(addon);
+                addon.IsUpdating = false;
 
                 //if (isInstalled)
                     //addon.IsEnabled = isInstalled;

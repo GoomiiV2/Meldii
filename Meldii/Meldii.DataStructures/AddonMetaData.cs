@@ -35,6 +35,7 @@ namespace Meldii.Views
         public string ZipName { get; set; }
         public bool IsPendingDelete = false;
         public string DownloadURL = null;
+        public bool _IsUpdating = false;
         #endregion
 
         #region Ui Binding Helpers
@@ -159,6 +160,20 @@ namespace Meldii.Views
             {
                 _IsNotSuported = value;
                 Update("IsNotSuported");
+            }
+        }
+
+        public bool IsUpdating
+        {
+            get
+            {
+                return _IsUpdating;
+            }
+
+            set
+            {
+                _IsUpdating = value;
+                Update("IsUpdating");
             }
         }
 

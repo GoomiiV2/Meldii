@@ -76,7 +76,45 @@
             </Grid.ColumnDefinitions>
 
             <Grid Grid.Column="0" Margin="0,1,0,0">
-                <Label Content="Addon Library" VerticalAlignment="Top" Margin="0" HorizontalContentAlignment="Center" FontFamily="Verdana" FontWeight="Bold"/>
+
+                <DockPanel VerticalAlignment="Top" HorizontalAlignment="Center">
+                    <DockPanel VerticalAlignment="Top" HorizontalAlignment="Center" MouseDown="Btt_OpenAddonLibrary_Click">
+                    <Label Content="Addon Library" VerticalAlignment="Top" Margin="0" FontFamily="Verdana" FontWeight="Bold" HorizontalAlignment="Center"/>
+                    <Rectangle VerticalAlignment="Center" Margin="0" HorizontalAlignment="Left" Opacity="1" Visibility="Visible" Width="12" Height="12">
+                        <Rectangle.Stroke>
+                            <ImageBrush/>
+                        </Rectangle.Stroke>
+                        <Rectangle.Fill>
+                            <VisualBrush Visual="{StaticResource appbar_folder_open}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                        <DockPanel.ToolTip>
+                            <ToolTip>
+                                <StackPanel>
+                                    <TextBlock FontWeight="Bold"><Run Text="Open Addon library"/></TextBlock>
+                                </StackPanel>
+                            </ToolTip>
+                        </DockPanel.ToolTip>
+                    </DockPanel>
+
+                    <Rectangle VerticalAlignment="Center" Margin="5,0,0,0" HorizontalAlignment="Left" Opacity="1" Visibility="Visible" Width="12" Height="12"  MouseDown="Btt_OpenAddonIndex_Click">
+                        <Rectangle.Stroke>
+                            <ImageBrush/>
+                        </Rectangle.Stroke>
+                        <Rectangle.Fill>
+                            <VisualBrush Visual="{StaticResource appbar_information_circle}" Stretch="Uniform" />
+                        </Rectangle.Fill>
+                        <Rectangle.ToolTip>
+                            <ToolTip>
+                                <StackPanel>
+                                    <TextBlock FontWeight="Bold"><Run Text="Open the Addon Index"/></TextBlock>
+                                </StackPanel>
+                            </ToolTip>
+                        </Rectangle.ToolTip>
+                    </Rectangle>
+                </DockPanel>
+                
                 <Separator Height="3" Margin="10,22,10,0" VerticalAlignment="Top" HorizontalContentAlignment="Stretch"/>
                 <ListBox x:Name="AddonList" Margin="10,25" BorderThickness="0,0,0,1" FontFamily="Verdana" AlternationCount="1" Padding="5"
                      ItemsSource="{Binding LocalAddons}" SelectionChanged="AddonList_SelectionChanged" >
@@ -101,91 +139,118 @@
                                     <TextBlock Text="{Binding Path=Name}" HorizontalAlignment="Left" Margin="0" />
                                     <TextBlock Text="{Binding Path=UiVersion}" HorizontalAlignment="Left" Margin="5,0,0,0" />
 
-                                    <Rectangle Height="10" VerticalAlignment="Center" Margin="10,0,0,0" HorizontalAlignment="Left" Opacity="1" Width="10">
-                                        <Rectangle.Stroke>
-                                            <ImageBrush/>
-                                        </Rectangle.Stroke>
-                                        <Rectangle.Fill>
-                                            <VisualBrush Visual="{StaticResource appbar_check}" />
-                                        </Rectangle.Fill>
-                                        <Rectangle.Style>
-                                            <Style TargetType="Rectangle">
-                                                <Setter Property="Visibility" Value="Hidden" />
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding Path=IsUptoDate}" Value="True">
-                                                        <Setter Property="Visibility"  Value="Visible"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Rectangle.Style>
-                                        <Rectangle.ToolTip>
-                                            <ToolTip>
-                                                <StackPanel>
-                                                    <TextBlock FontWeight="Bold">Addon is uptodate</TextBlock>
-                                                </StackPanel>
-                                            </ToolTip>
-                                        </Rectangle.ToolTip>
-                                    </Rectangle>
+                                    <DockPanel>
+                                        <Rectangle Height="10" VerticalAlignment="Center" Margin="5,0,0,0" HorizontalAlignment="Left" Opacity="1" Width="10">
+                                            <Rectangle.Stroke>
+                                                <ImageBrush/>
+                                            </Rectangle.Stroke>
+                                            <Rectangle.Fill>
+                                                <VisualBrush Visual="{StaticResource appbar_check}" />
+                                            </Rectangle.Fill>
+                                            <Rectangle.Style>
+                                                <Style TargetType="Rectangle">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Path=IsUptoDate}" Value="True">
+                                                            <Setter Property="Visibility"  Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Rectangle.Style>
+                                            <Rectangle.ToolTip>
+                                                <ToolTip>
+                                                    <StackPanel>
+                                                        <TextBlock FontWeight="Bold">Addon is uptodate</TextBlock>
+                                                    </StackPanel>
+                                                </ToolTip>
+                                            </Rectangle.ToolTip>
+                                        </Rectangle>
 
-                                    <Rectangle Height="10" VerticalAlignment="Center" Margin="-10,0,0,0" HorizontalAlignment="Left" Opacity="1" Width="10" MouseDown="AddonDownloadUpdate">
-                                        <Rectangle.Fill>
-                                            <VisualBrush Visual="{StaticResource appbar_download_addons}" />
-                                        </Rectangle.Fill>
-                                        <Rectangle.Style>
-                                            <Style TargetType="Rectangle">
-                                                <Setter Property="Visibility" Value="Hidden" />
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding Path=IsUptoDate}" Value="False">
-                                                        <Setter Property="Visibility"  Value="Visible"/>
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding Path=IsNotSuported}" Value="True">
-                                                        <Setter Property="Visibility"  Value="Hidden"/>
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding Path=ShouldShowDLIcon}" Value="False">
-                                                        <Setter Property="Visibility"  Value="Hidden"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Rectangle.Style>
-                                        <Rectangle.ToolTip>
-                                            <ToolTip>
-                                                <StackPanel>
-                                                    <TextBlock FontWeight="Bold">Addon outdated</TextBlock>
-                                                    <TextBlock>A new version of this addon is available</TextBlock>
-                                                </StackPanel>
-                                            </ToolTip>
-                                        </Rectangle.ToolTip>
-                                    </Rectangle>
+                                        <Rectangle Height="10" VerticalAlignment="Center" Margin="5,0,0,0" HorizontalAlignment="Left" Opacity="1" Width="10" MouseDown="AddonDownloadUpdate">
+                                            <Rectangle.Fill>
+                                                <VisualBrush Visual="{StaticResource appbar_download_addons}" />
+                                            </Rectangle.Fill>
+                                            <Rectangle.Style>
+                                                <Style TargetType="Rectangle">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Path=IsUptoDate}" Value="False">
+                                                            <Setter Property="Visibility"  Value="Visible"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Path=IsNotSuported}" Value="True">
+                                                            <Setter Property="Visibility"  Value="Collapsed"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Path=ShouldShowDLIcon}" Value="False">
+                                                            <Setter Property="Visibility"  Value="Collapsed"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Rectangle.Style>
+                                            <Rectangle.ToolTip>
+                                                <ToolTip>
+                                                    <StackPanel>
+                                                        <TextBlock FontWeight="Bold">Addon outdated</TextBlock>
+                                                        <TextBlock>A new version of this addon is available</TextBlock>
+                                                    </StackPanel>
+                                                </ToolTip>
+                                            </Rectangle.ToolTip>
+                                        </Rectangle>
 
-                                    <Rectangle Height="10" VerticalAlignment="Center" HorizontalAlignment="Left" Opacity="1" Width="10">
-                                        <Rectangle.Fill>
-                                            <VisualBrush Visual="{StaticResource notSuported}" />
-                                        </Rectangle.Fill>
-                                        <Rectangle.Style>
-                                            <Style TargetType="Rectangle">
-                                                <Setter Property="Visibility" Value="Hidden" />
-                                                <Setter Property="Margin" Value="10,0,0,0" />
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding Path=IsNotSuported}" Value="True">
-                                                        <Setter Property="Visibility"  Value="Visible"/>
-                                                    </DataTrigger>
+                                        <Rectangle Height="10" VerticalAlignment="Center" HorizontalAlignment="Left" Opacity="1" Width="10">
+                                            <Rectangle.Fill>
+                                                <VisualBrush Visual="{StaticResource notSuported}" />
+                                            </Rectangle.Fill>
+                                            <Rectangle.Style>
+                                                <Style TargetType="Rectangle">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                    <Setter Property="Margin" Value="5,0,0,0" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Path=IsNotSuported}" Value="True">
+                                                            <Setter Property="Visibility"  Value="Visible"/>
+                                                        </DataTrigger>
 
-                                                    <DataTrigger Binding="{Binding Path=IsUptoDate}" Value="False">
-                                                        <Setter Property="Margin"  Value="-10,0,0,0"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Rectangle.Style>
-                                        <Rectangle.ToolTip>
-                                            <ToolTip>
-                                                <StackPanel>
-                                                    <TextBlock FontWeight="Bold">Not Supported</TextBlock>
-                                                    <TextBlock>This addon is no longer suported and may not work</TextBlock>
-                                                </StackPanel>
-                                            </ToolTip>
-                                        </Rectangle.ToolTip>
-                                    </Rectangle>
+                                                        <DataTrigger Binding="{Binding Path=IsUptoDate}" Value="False">
+                                                            <Setter Property="Margin"  Value="5,0,0,0"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Rectangle.Style>
+                                            <Rectangle.ToolTip>
+                                                <ToolTip>
+                                                    <StackPanel>
+                                                        <TextBlock FontWeight="Bold">Not Supported</TextBlock>
+                                                        <TextBlock>This addon is no longer suported and may not work</TextBlock>
+                                                    </StackPanel>
+                                                </ToolTip>
+                                            </Rectangle.ToolTip>
+                                        </Rectangle>
 
+                                        <Rectangle Height="10" VerticalAlignment="Center" HorizontalAlignment="Left" Opacity="1" Width="10">
+                                            <Rectangle.Fill>
+                                                <VisualBrush Visual="{StaticResource appbar_clock}" />
+                                            </Rectangle.Fill>
+                                            <Rectangle.Style>
+                                                <Style TargetType="Rectangle">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                    <Setter Property="Margin" Value="5,0,0,0" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Path=IsUpdating}" Value="True">
+                                                            <Setter Property="Visibility"  Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Rectangle.Style>
+                                            <Rectangle.ToolTip>
+                                                <ToolTip>
+                                                    <StackPanel>
+                                                        <TextBlock FontWeight="Bold">Updating....</TextBlock>
+                                                        <TextBlock>Please hang on</TextBlock>
+                                                    </StackPanel>
+                                                </ToolTip>
+                                            </Rectangle.ToolTip>
+                                        </Rectangle>
+                                    </DockPanel>
+                                    
                                 </StackPanel>
                                 <TextBlock Grid.Column="1" Text="{Binding Path=Author}" HorizontalAlignment="Right" Margin="0,0,10,0"/>
                                 <Grid.ContextMenu>

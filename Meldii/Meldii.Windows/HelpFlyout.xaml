@@ -12,7 +12,7 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <Expander Grid.Row="0" x:Name="panel1" Header="About" Margin="5 5 5 0">
+            <Expander Grid.Row="0" x:Name="panel1" Header="About" Margin="5 5 5 0" IsExpanded="True">
                 <StackPanel Orientation="Vertical">
                     <TextBlock TextWrapping="Wrap" Margin="10"
                     Text="Meldii is an addon manager for Firefall designed to be backwards compatable with the orignal Melder by RadthorDax." />

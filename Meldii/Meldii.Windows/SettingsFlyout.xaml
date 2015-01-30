@@ -16,7 +16,7 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <Expander Grid.Row="0" x:Name="panel1" Header="Medii Settings" Margin="5 5 5 0" Grid.ColumnSpan="2">
+            <Expander Grid.Row="0" x:Name="panel1" Header="Medii Settings" Margin="5 5 5 0" Grid.ColumnSpan="2" IsExpanded="True">
                 <StackPanel Orientation="Vertical">
                     <Label Content="Firefall Install Location:" />
                     <Grid>

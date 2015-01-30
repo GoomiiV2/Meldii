@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -77,6 +78,19 @@ namespace Meldii
         private void AddonDeleteFromLibrary(object sender, MouseButtonEventArgs e)
         {
             ViewModel.AddonDeleteFromLibrary();
+        }
+
+        private void Btt_OpenAddonLibrary_Click(object sender, RoutedEventArgs e)
+        {
+            if (MeldiiSettings.Self.AddonLibaryPath != null || MeldiiSettings.Self.AddonLibaryPath != "" || MeldiiSettings.Self.AddonLibaryPath != " ")
+            {
+                Process.Start(MeldiiSettings.Self.AddonLibaryPath);
+            }
+        }
+
+        private void Btt_OpenAddonIndex_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start("http://forums.firefall.com/community/threads/addon-index-current-addons-mods-and-dev-resources.2625421/");
         }
 
         public static async void UpdatePromt()
