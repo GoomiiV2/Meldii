@@ -294,7 +294,6 @@
                                             <TextBlock Margin="-5 0 0 0" Text="Download Update"/>
                                         </StackPanel>
 
-                                        <!-- more work than it is bloody woth
                                         <StackPanel Orientation="Horizontal" MouseDown="AddonDeleteFromLibrary">
                                             <Rectangle Height="12" Margin="-25 0 0 0" VerticalAlignment="Center" HorizontalAlignment="Left" Opacity="1" Width="12">
                                                 <Rectangle.Fill>
@@ -302,18 +301,8 @@
                                                 </Rectangle.Fill>
                                             </Rectangle>
                                             <TextBlock Margin="-5 0 0 0" Text="Delete from addon library"/>
-                                            <StackPanel.Style>
-                                                <Style TargetType="StackPanel">
-                                                    <Setter Property="Visibility" Value="Collapsed" />
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=IsPendingVersionCheck}" Value="False">
-                                                            <Setter Property="Visibility"  Value="Visible"/>
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </StackPanel.Style>
                                         </StackPanel>
-                                        -->
+                                        
                                     </ContextMenu>
                                 </Grid.ContextMenu>
 

@@ -179,7 +179,9 @@ namespace Meldii.AddonProviders
 
                     MainView.IsPendingVersionCheck = true;
 
-                    Parallel.ForEach(MainView.LocalAddons, new ParallelOptions { MaxDegreeOfParallelism = 8 },
+                    var addons = MainView.LocalAddons.ToArray();
+
+                    Parallel.ForEach(addons, new ParallelOptions { MaxDegreeOfParallelism = 8 },
                         addon =>
                         {
                             try
