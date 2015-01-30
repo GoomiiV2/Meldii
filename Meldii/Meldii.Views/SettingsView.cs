@@ -37,7 +37,7 @@ namespace Meldii.Views
 
         public string AddonLibaryPath
         {
-            get { return MeldiiSettings.Self.AddonLibaryPath; }
+            get { return _AddonLibaryPath; }
 
             set
             {
@@ -69,6 +69,7 @@ namespace Meldii.Views
             if (hasAddonLibFolderChanged)
             {
                 AddonManager.Self.GetLocalAddons();
+                AddonManager.Self.CheckAddonsForUpdates();
                 AddonManager.Self.SetupFolderWatchers();
             }
 

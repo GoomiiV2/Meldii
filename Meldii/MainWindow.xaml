@@ -80,22 +80,34 @@
                 <DockPanel VerticalAlignment="Top" HorizontalAlignment="Center">
                     <DockPanel VerticalAlignment="Top" HorizontalAlignment="Center" MouseDown="Btt_OpenAddonLibrary_Click">
                     <Label Content="Addon Library" VerticalAlignment="Top" Margin="0" FontFamily="Verdana" FontWeight="Bold" HorizontalAlignment="Center"/>
-                    <Rectangle VerticalAlignment="Center" Margin="0" HorizontalAlignment="Left" Opacity="1" Visibility="Visible" Width="12" Height="12">
-                        <Rectangle.Stroke>
-                            <ImageBrush/>
-                        </Rectangle.Stroke>
-                        <Rectangle.Fill>
-                            <VisualBrush Visual="{StaticResource appbar_folder_open}"/>
-                        </Rectangle.Fill>
-                    </Rectangle>
-
+                        <Rectangle VerticalAlignment="Center" Margin="0" HorizontalAlignment="Left" Opacity="1" Visibility="Visible" Width="12" Height="12">
+                            <Rectangle.Stroke>
+                                <ImageBrush/>
+                            </Rectangle.Stroke>
+                            <Rectangle.Fill>
+                                <VisualBrush Visual="{StaticResource appbar_folder_open}"/>
+                            </Rectangle.Fill>
+                        </Rectangle>
                         <DockPanel.ToolTip>
-                            <ToolTip>
-                                <StackPanel>
-                                    <TextBlock FontWeight="Bold"><Run Text="Open Addon library"/></TextBlock>
-                                </StackPanel>
-                            </ToolTip>
-                        </DockPanel.ToolTip>
+                        <ToolTip>
+                            <StackPanel>
+                                <TextBlock FontWeight="Bold"><Run Text="Open Addon library"/></TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </DockPanel.ToolTip>
+                        <DockPanel.Resources>
+                            <Style TargetType="{x:Type DockPanel}">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Cursor" Value="Hand" />
+                                    </Trigger>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#26FFFFFF"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DockPanel.Resources>
                     </DockPanel>
 
                     <Rectangle VerticalAlignment="Center" Margin="5,0,0,0" HorizontalAlignment="Left" Opacity="1" Visibility="Visible" Width="12" Height="12"  MouseDown="Btt_OpenAddonIndex_Click">
@@ -112,6 +124,15 @@
                                 </StackPanel>
                             </ToolTip>
                         </Rectangle.ToolTip>
+                        <Rectangle.Resources>
+                            <Style TargetType="{x:Type Rectangle}">
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Cursor" Value="Hand" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Rectangle.Resources>
                     </Rectangle>
                 </DockPanel>
                 
@@ -194,6 +215,15 @@
                                                     </StackPanel>
                                                 </ToolTip>
                                             </Rectangle.ToolTip>
+                                            <Rectangle.Resources>
+                                                <Style TargetType="{x:Type Rectangle}">
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter Property="Cursor" Value="Hand" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Rectangle.Resources>
                                         </Rectangle>
 
                                         <Rectangle Height="10" VerticalAlignment="Center" HorizontalAlignment="Left" Opacity="1" Width="10">

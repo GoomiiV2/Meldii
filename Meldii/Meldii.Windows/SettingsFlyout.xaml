@@ -36,7 +36,7 @@
 
                     <CheckBox Content="Enable Melder One Click Downloads" IsChecked="{Binding IsMelderProtcolEnabled}" VerticalAlignment="Top" Margin="0,5,5,0"/>
 
-                    <Button Content="Save Settings" Width="auto" VerticalAlignment="Top" Margin="0,5,0,0" Click="Btt_SaveSettings"/>
+                    <Button Content="Save Settings" Width="auto" VerticalAlignment="Top" Margin="0,10,0,0" Click="Btt_SaveSettings"/>
                 </StackPanel>
             </Expander>
             <!-- <Expander Grid.Row="1" x:Name="panel2" Header="Addon Sttings" Grid.ColumnSpan="2">
