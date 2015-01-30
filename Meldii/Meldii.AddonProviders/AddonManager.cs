@@ -19,7 +19,7 @@ namespace Meldii.AddonProviders
     public enum AddonProviderType
     {
         [Description("Firefall Forums Attachment")]
-        FirefallFourms/*,
+        FirefallForums/*,
         [Description("A Github Repo")]
         GitHub,
         [Description("A Bitbucket Repo")]
@@ -43,7 +43,7 @@ namespace Meldii.AddonProviders
             Self = this;
 
             MainView = _MainView;
-            Providers.Add(AddonProviderType.FirefallFourms, new FirefallFourms());
+            Providers.Add(AddonProviderType.FirefallForums, new FirefallFourms());
 
             if (Statics.IsFirstRun)
             {
@@ -62,7 +62,7 @@ namespace Meldii.AddonProviders
 
             if (Statics.OneClickAddonToInstall != null)
             {
-                Providers[AddonProviderType.FirefallFourms].DownloadAddon(Statics.OneClickAddonToInstall);
+                Providers[AddonProviderType.FirefallForums].DownloadAddon(Statics.OneClickAddonToInstall);
                 App.Current.Shutdown();
             }
         }

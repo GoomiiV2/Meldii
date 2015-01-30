@@ -16,7 +16,7 @@ namespace Meldii.Views
     {
         private string _MI_AddonVersion = "1.0";
         private string _MI_FirefallPatch = Statics.GetFirefallPatchData().build;
-        private AddonProviderType _MI_Provider = AddonProviderType.FirefallFourms;
+        private AddonProviderType _MI_Provider = AddonProviderType.FirefallForums;
         private string _MI_Result = "";
         private string _MI_DLURL = "";
 
@@ -91,6 +91,8 @@ namespace Meldii.Views
             {
                 return GetMedlerInfo();
             }
+
+            set { _MI_Result = value;  }
         }
 
 
@@ -100,6 +102,8 @@ namespace Meldii.Views
             {
                 return "Version: " + FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion;
             }
+
+            set { }
         }
 
         public string GetMedlerInfo()

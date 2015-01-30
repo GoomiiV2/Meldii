@@ -278,7 +278,7 @@ namespace Meldii.Views
             }
 
             // No ProviderType, assume Firefall fourm download
-            ProviderType = AddonProviderType.FirefallFourms;
+            ProviderType = AddonProviderType.FirefallForums;
             CheckIfAddonOrMod();
         }
 

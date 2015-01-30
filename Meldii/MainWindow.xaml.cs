@@ -95,7 +95,7 @@ namespace Meldii
 
         public static async void UpdatePromt()
         {
-            if (await MainWindow.ShowMessageDialogYesNo("Download Update?", "Melii update available"))
+            if (await MainWindow.ShowMessageDialogYesNo("Meldii update available", "Download Update?"))
             {
                 var controller = await MainWindow.Self.ShowProgressAsync("Please wait...", "Downloading Meldii update\nMeldii will restart when it is done");
 
