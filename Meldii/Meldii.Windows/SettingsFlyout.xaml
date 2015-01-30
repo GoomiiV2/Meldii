@@ -26,8 +26,12 @@
 
                     <Label Content="Addon Libary Location:" />
                     <Grid>
-                        <TextBox Text="{Binding AddonLibaryPath}" Margin="0,0,50,0" />
-                        <Button Content="Find" Width="45" HorizontalAlignment="Right" VerticalAlignment="Top" Click="Btt_AddonLibFind"/>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="20*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Text="{Binding AddonLibaryPath}" Margin="0,0,50,0" Grid.ColumnSpan="2" />
+                        <Button Content="Find" Width="45" HorizontalAlignment="Right" VerticalAlignment="Top" Click="Btt_AddonLibFind" Grid.Column="1"/>
                     </Grid>
 
                     <CheckBox Content="Enable Melder One Click Downloads" IsChecked="{Binding IsMelderProtcolEnabled}" VerticalAlignment="Top" Margin="0,5,5,0"/>
@@ -35,11 +39,9 @@
                     <Button Content="Save Settings" Width="auto" VerticalAlignment="Top" Margin="0,5,0,0" Click="Btt_SaveSettings"/>
                 </StackPanel>
             </Expander>
-            <Expander Grid.Row="1" x:Name="panel2" Header="Addon Sttings" Grid.ColumnSpan="2">
-                <StackPanel Orientation="Vertical">
-                    <TextBlock Margin="10" Text="Panel2 Text Block" />
-                </StackPanel>
-            </Expander>
+            <!-- <Expander Grid.Row="1" x:Name="panel2" Header="Addon Sttings" Grid.ColumnSpan="2">
+                
+            </Expander> -->
         </Grid>
     </ScrollViewer>
 </UserControl>

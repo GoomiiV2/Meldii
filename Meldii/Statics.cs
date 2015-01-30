@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using Meldii.AddonProviders;
+using Meldii.DataStructures;
 using Meldii.DataStructures;
 using Microsoft.Win32;
 
@@ -18,6 +20,7 @@ namespace Meldii
         public static string UpdateCheckUrl = "https://raw.githubusercontent.com/GoomiChan/Meldii/master/Release/version.txt";
         public static string UpdateExeUrl = "https://raw.githubusercontent.com/GoomiChan/Meldii/master/Release/Meldii.exe";
         public static string UpdaterName = "Meldii.Updater.exe";
+        public static FirefallPatchData FirefallPatchData = null;
 
         public static string MeldiiAppData = "";
         public static string SettingsPath = "";
@@ -51,6 +54,7 @@ namespace Meldii
             IsFirstRun = !File.Exists(SettingsPath);
 
             AddonsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"Firefall\Addons");
+            GetFirefallPatchData();
         }
 
         public static string FixPathSlashes(string str)
@@ -160,6 +164,32 @@ namespace Meldii
 
                 }
             }
+        }
+
+        public static FirefallPatchData GetFirefallPatchData()
+        {
+            if (FirefallPatchData == null)
+            {
+                using (WebClient wc = new WebClient())
+                {
+                    using (Stream s = GenerateStreamFromString(wc.DownloadString("http://operator.firefallthegame.com/api/v1/products/Firefall_Beta")))
+                    {
+                        FirefallPatchData = FirefallPatchData.Create(s);
+                    }
+                }
+            }
+
+            return FirefallPatchData;
+        }
+
+        public static Stream GenerateStreamFromString(string s)
+        {
+            MemoryStream stream = new MemoryStream();
+            StreamWriter writer = new StreamWriter(stream);
+            writer.Write(s);
+            writer.Flush();
+            stream.Position = 0;
+            return stream;
         }
     }
 }

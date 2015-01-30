@@ -51,8 +51,8 @@
                 Header="Help"
                 Position="Right"
                 AnimateOpacity="True">
-                
-                <p:HelpFlyout>
+
+                <p:HelpFlyout DataContext="{Binding HelpViewa}">
                     
                 </p:HelpFlyout>
                 

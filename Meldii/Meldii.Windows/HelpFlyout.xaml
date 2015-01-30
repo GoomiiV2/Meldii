@@ -3,8 +3,21 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:AddonPEnum="clr-namespace:Meldii.AddonProviders"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             xmlns:local="clr-namespace:Meldii"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="400">
+
+    <UserControl.Resources>
+        <ObjectDataProvider x:Key="enumValues"
+   MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="AddonPEnum:AddonProviderType"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </UserControl.Resources>
+    
     <ScrollViewer VerticalScrollBarVisibility="Auto" Width="Auto" Height="Auto" Margin="0 0 0 15">
         <Grid>
             <Grid.RowDefinitions>
@@ -28,7 +41,24 @@
             </Expander>
             <Expander Grid.Row="1" x:Name="panel2" Header="Melder Info Genrator">
                 <StackPanel Orientation="Vertical">
-                    <TextBlock Margin="10" Text="Panel2 Text Block" />
+                    <Label Content="Addon Version:" />
+                    <TextBox Text="{Binding Path=MI_AddonVersion}" Margin="5,0,0,5" />
+                    <Label Content="Firefall Patch Version:" />
+                    <TextBox Text="{Binding MI_FirefallPatch}" Margin="5,0,0,5" />
+                    <Label Content="Addon Provider:" />
+                    <ComboBox SelectedValue="{Binding MI_Provider}" ItemsSource="{Binding Source={StaticResource enumValues}}" Margin="5,0,0,5" />
+                    <Label Content="Download URL:" />
+                    <TextBox Text="{Binding MI_DLURL}" Margin="5,0,0,5">
+                        <TextBox.ToolTip>
+                            <ToolTip>
+                                <StackPanel>
+                                    <TextBlock FontWeight="Bold">The last digits of the fourm attachment url</TextBlock>
+                                </StackPanel>
+                            </ToolTip>
+                        </TextBox.ToolTip>
+                    </TextBox>
+                    <Label Content="Melder Info (Copy and paste into your fourm post) :" />
+                    <TextBox Text="{Binding MI_Result}" Margin="5,0,0,5" />
                 </StackPanel>
             </Expander>
         </Grid>

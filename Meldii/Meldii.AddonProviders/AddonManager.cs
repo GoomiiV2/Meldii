@@ -18,10 +18,14 @@ namespace Meldii.AddonProviders
 {
     public enum AddonProviderType
     {
-        FirefallFourms,
+        [Description("Firefall Forums Attachment")]
+        FirefallFourms/*,
+        [Description("A Github Repo")]
         GitHub,
+        [Description("A Bitbucket Repo")]
         BitBucket,
-        DirectDownload
+        [Description("A direct Download")]
+        DirectDownload*/
     }
 
     public class AddonManager

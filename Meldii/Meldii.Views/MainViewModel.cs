@@ -30,8 +30,12 @@ namespace Meldii.Views
 
         public SettingsView _SettingsView;
         public SettingsView SettingsView { get { return _SettingsView; } set { _SettingsView = value; NotifyPropertyChanged("SettingsView"); } }
+
+        public HelpView _HelpView;
+        public HelpView HelpViewa { get { return _HelpView; } set { _HelpView = value; NotifyPropertyChanged("HelpViewa"); } }
         public MainViewModel()
         {
+            HelpViewa = new HelpView();
             SettingsView = new SettingsView();
 
             StatusMessage = "Checking for new addon updates.....";
@@ -92,14 +96,6 @@ namespace Meldii.Views
                 {
                     AddonManager.Self.DeleteAddonFromLibrary(SelectedAddonIndex);
                 }
-            }
-        }
-
-        public static string AssemblyVersion
-        {
-            get
-            {
-                return "Version: " + FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion;
             }
         }
 

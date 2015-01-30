@@ -20,5 +20,11 @@
     <Setting Name="TempStorageLoc" Type="System.String" Scope="User">
       <Value Profile="(Default)">Meldii\temp</Value>
     </Setting>
+    <Setting Name="MI_HostURL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://astrekassociation.com/melder.php</Value>
+    </Setting>
+    <Setting Name="MI_HostImgURL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://astrekassociation.com/images/melder.png</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

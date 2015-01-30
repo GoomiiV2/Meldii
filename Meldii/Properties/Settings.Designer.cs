@@ -85,5 +85,29 @@ namespace Meldii.Properties {
                 this["TempStorageLoc"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://astrekassociation.com/melder.php")]
+        public string MI_HostURL {
+            get {
+                return ((string)(this["MI_HostURL"]));
+            }
+            set {
+                this["MI_HostURL"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://astrekassociation.com/images/melder.png")]
+        public string MI_HostImgURL {
+            get {
+                return ((string)(this["MI_HostImgURL"]));
+            }
+            set {
+                this["MI_HostImgURL"] = value;
+            }
+        }
     }
 }
