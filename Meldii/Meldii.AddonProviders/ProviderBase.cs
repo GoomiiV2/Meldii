@@ -15,7 +15,7 @@ namespace Meldii.AddonProviders
     // Arkii: SpaceX launch just went btw 10/01/2015
     public class ProviderBase
     {
-        protected string tempDlDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Properties.Settings.Default.TempStorageLoc);
+        public static string tempDlDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Properties.Settings.Default.TempStorageLoc);
 
         public ProviderBase()
         {

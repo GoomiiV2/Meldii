@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -44,6 +46,9 @@ namespace Meldii
             Statics.InitStaticData();
             MeldiiSettings.Self.Load();
             ViewModel = new MainViewModel();
+
+            this.AddHandler(MetroWindow.DragOverEvent, new DragEventHandler(OnFileDragOver), true);
+            this.AddHandler(MetroWindow.DropEvent, new DragEventHandler(OnFileDrop), true);
         }
 
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
@@ -78,6 +83,50 @@ namespace Meldii
         private void AddonDeleteFromLibrary(object sender, MouseButtonEventArgs e)
         {
             ViewModel.AddonDeleteFromLibrary();
+        }
+
+        private void OnFileDragOver(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effects = DragDropEffects.All;
+            }
+            else
+            {
+                e.Effects = DragDropEffects.None;
+            }
+            e.Handled = false;
+        }
+
+        private async void OnFileDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] docPath = (string[])e.Data.GetData(DataFormats.FileDrop);
+
+                var controller = await MainWindow.Self.ShowProgressAsync("Please wait...", "Copying addons to library");
+
+                Thread t = new Thread(new ThreadStart(delegate
+                {
+                    foreach (string file in docPath)
+                    {
+                        try
+                        {
+                            if (System.IO.Path.GetExtension(file) == ".zip")
+                                File.Copy(file, System.IO.Path.Combine(MeldiiSettings.Self.AddonLibaryPath, System.IO.Path.GetFileName(file)));
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
+                    }
+
+                    controller.CloseAsync();
+                }));
+
+                t.IsBackground = true;
+                t.Start();
+            }
         }
 
         private void Btt_OpenAddonLibrary_Click(object sender, RoutedEventArgs e)

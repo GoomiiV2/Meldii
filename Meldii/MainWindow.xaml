@@ -4,6 +4,7 @@
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:p="clr-namespace:Meldii.Windows"
         x:Class="Meldii.MainWindow"
+        AllowDrop="True"
         Icon="icon.ico"
         Title="Meldii"
         Height="400" Width="800" MinHeight="400" MinWidth="800"

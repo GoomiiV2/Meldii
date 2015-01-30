@@ -116,7 +116,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Meldii.AddonProviders\AddonManager.cs" />
-    <Compile Include="Meldii.AddonProviders\FirefallFourms.cs" />
+    <Compile Include="Meldii.AddonProviders\FirefallForums.cs" />
     <Compile Include="Meldii.AddonProviders\ProviderBase.cs" />
     <Compile Include="Meldii.DataStructures\AddonMetaData.cs" />
     <Compile Include="Meldii.DataStructures\MelderInfo.cs" />

@@ -221,10 +221,17 @@ namespace Meldii.AddonProviders
 
         public bool IsAddonUptoDate(AddonMetaData addon, MelderInfo melderInfo)
         {
-            Version current = new Version(addon.Version);
-            Version newVer = new Version(melderInfo.Version);
+            try
+            {
+                Version current = new Version(addon.Version);
+                Version newVer = new Version(melderInfo.Version);
 
-            return current.CompareTo(newVer) == 0 || current.CompareTo(newVer) == 1;
+                return current.CompareTo(newVer) == 0 || current.CompareTo(newVer) == 1;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
         }
 
         public AddonMetaData GetAddonLocalByNameAndVersion(string name, string version)
