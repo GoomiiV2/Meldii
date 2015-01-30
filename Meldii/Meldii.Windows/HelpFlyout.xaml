@@ -57,7 +57,7 @@
                             </ToolTip>
                         </TextBox.ToolTip>
                     </TextBox>
-                    <Label Content="Melder Info (Copy and paste into your fourm post) :" />
+                    <Label Content="Melder Info (Copy and paste into your forum post) :" />
                     <TextBox Text="{Binding MI_Result}" Margin="5,0,0,5" />
                 </StackPanel>
             </Expander>
