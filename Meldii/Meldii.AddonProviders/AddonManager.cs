@@ -255,9 +255,6 @@ namespace Meldii.AddonProviders
         // Refactor plz
         public void InstallAddon(AddonMetaData addon)
         {
-            if (!addon.IsEnabled)
-                return;
-
             MainView.StatusMessage = string.Format("Installing Addon {0}", addon.Name);
 
             addon.InstalledFilesList.Clear();
@@ -323,9 +320,6 @@ namespace Meldii.AddonProviders
 
         public void UninstallAddon(AddonMetaData addon)
         {
-            if (addon.IsEnabled)
-                return;
-
             MainView.StatusMessage = string.Format("Uninstalling Addon {0}", addon.Name);
 
             // Addon, nice and easy
@@ -400,6 +394,7 @@ namespace Meldii.AddonProviders
             {
                 AddonsToUpdate.Add(addon);
             }
+
             DoAddonUpdates();
         }
 
@@ -409,12 +404,12 @@ namespace Meldii.AddonProviders
             {
                 lock (AddonsToUpdateLock)
                 {
-                foreach (AddonMetaData addon in AddonsToUpdate)
-                {
-                    _UpdateAddon(addon);
-                }
+                    foreach (AddonMetaData addon in AddonsToUpdate)
+                    {
+                        _UpdateAddon(addon);
+                    }
 
-                AddonsToUpdate.Clear();
+                    AddonsToUpdate.Clear();
                 }
             }));
 
@@ -425,25 +420,37 @@ namespace Meldii.AddonProviders
         // Do the real updating
         public bool _UpdateAddon(AddonMetaData addon)
         {
-            if (addon.DownloadURL != null && new Version(addon.Version) < new Version(addon.AvailableVersion))
+            try
             {
-                bool isInstalled = addon.IsEnabled;
-                if (isInstalled)
+                if (addon.DownloadURL != null && new Version(addon.Version) < new Version(addon.AvailableVersion))
                 {
-                    addon.IsEnabled = false; // The observable takes care of the actions
-                    AddonsToRenableAfterUpdate.Add(addon.Name);
-                }
+                    bool isInstalled = addon.IsEnabled;
+                    if (isInstalled)
+                    {
+                        addon.IsEnabled = false; // The observable takes care of the actions
+                        AddonsToRenableAfterUpdate.Add(addon.Name);
+                    }
 
-                addon.IsUpdating = true;
-                Providers[addon.ProviderType].Update(addon);
-                addon.IsUpdating = false;
+                    addon.IsUpdating = true;
+                    Providers[addon.ProviderType].Update(addon);
+                    addon.IsUpdating = false;
 
-                //if (isInstalled)
+                    //if (isInstalled)
                     //addon.IsEnabled = isInstalled;
-                return true;
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
-            else
+            catch (Exception e)
             {
+                App.Current.Dispatcher.Invoke((Action)delegate 
+                {
+                    MainWindow.ShowAlert("Addon Update Error", "There was an error updating this addon "+ addon.Name);
+                });
+
                 return false;
             }
         }
