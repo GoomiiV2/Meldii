@@ -1,0 +1,47 @@
+﻿<UserControl x:Class="Meldii.Windows.SettingsFlyout"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="400" DataContextChanged="UserControl_DataContextChanged">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Width="Auto" Height="Auto" Margin="0 0 0 15">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition Width="17*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Expander Grid.Row="0" x:Name="panel1" Header="Meldii Settings" Margin="5 5 5 0" Grid.ColumnSpan="2" IsExpanded="True">
+                <StackPanel Orientation="Vertical">
+                    <Label Content="Firefall Install Location:" />
+                    <Grid>
+                        <TextBox Text="{Binding FirefallInstall}" Margin="0,0,50,0" />
+                        <Button Content="Find" Width="45" HorizontalAlignment="Right" VerticalAlignment="Top" Click="Btt_FirefallPathFind"/>
+                    </Grid>
+
+                    <Label Content="Addon Library Location:" />
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="20*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Text="{Binding AddonLibaryPath}" Margin="0,0,50,0" Grid.ColumnSpan="2" />
+                        <Button Content="Find" Width="45" HorizontalAlignment="Right" VerticalAlignment="Top" Click="Btt_AddonLibFind" Grid.Column="1"/>
+                    </Grid>
+
+                    <CheckBox Content="Enable Melder One Click Downloads" IsChecked="{Binding IsMelderProtcolEnabled}" VerticalAlignment="Top" Margin="0,5,5,0"/>
+
+                    <Button Content="Save Settings" Width="auto" VerticalAlignment="Top" Margin="0,10,0,0" Click="Btt_SaveSettings"/>
+                </StackPanel>
+            </Expander>
+            <!-- <Expander Grid.Row="1" x:Name="panel2" Header="Addon Sttings" Grid.ColumnSpan="2">
+                
+            </Expander> -->
+        </Grid>
+    </ScrollViewer>
+</UserControl>

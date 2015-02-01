@@ -69,6 +69,7 @@ namespace Meldii.Views
             if (hasAddonLibFolderChanged)
             {
                 AddonManager.Self.GetLocalAddons();
+                AddonManager.Self.GetInstalledAddons();
                 AddonManager.Self.CheckAddonsForUpdates();
                 AddonManager.Self.SetupFolderWatchers();
             }

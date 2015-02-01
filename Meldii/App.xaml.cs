@@ -20,6 +20,7 @@ namespace Meldii
             MessageBox.Show(e.Exception.StackTrace, e.Exception.Message);
             string[] lines = 
             {
+                ".Net Runtime Version: " + Environment.Version.ToString(),
                 "Source: " + e.Exception.Source,
                 "Target: " + e.Exception.TargetSite,
                 "Message: " + e.Exception.Message,

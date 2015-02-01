@@ -56,8 +56,7 @@ namespace Meldii.AddonProviders
 
             GetLocalAddons();
             CheckAddonsForUpdates();
-            GetMelderInstalledAddons(Path.Combine(Statics.AddonsFolder, "melder_addons")); // Addons
-            GetMelderInstalledAddons(Path.Combine(MeldiiSettings.Self.FirefallInstallPath, Statics.ModDataStoreReltivePath)); // Mods
+            GetInstalledAddons();
             SetupFolderWatchers();
 
             if (Statics.OneClickAddonToInstall != null)
@@ -65,6 +64,12 @@ namespace Meldii.AddonProviders
                 Providers[AddonProviderType.FirefallForums].DownloadAddon(Statics.OneClickAddonToInstall);
                 App.Current.Shutdown();
             }
+        }
+
+        public void GetInstalledAddons()
+        {
+            GetMelderInstalledAddons(Path.Combine(Statics.AddonsFolder, "melder_addons")); // Addons
+            GetMelderInstalledAddons(Path.Combine(MeldiiSettings.Self.FirefallInstallPath, Statics.ModDataStoreReltivePath)); // Mods
         }
 
         // Genrate a list of addons that we have locally
