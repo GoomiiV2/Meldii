@@ -36,7 +36,8 @@ namespace Meldii.AddonProviders
         private System.Object AddonsToUpdateLock = new System.Object();
         private List<AddonMetaData> AddonsToUpdate = new List<AddonMetaData>();
         private List<string> AddonsToRenableAfterUpdate = new List<string>();
-        FileSystemWatcher AddonLibaryWatcher = null;
+        private FileSystemWatcher AddonLibaryWatcher = null;
+        private int AddonsToBeUpdatedCount = 0;
 
         public AddonManager(MainViewModel _MainView)
         {
@@ -50,8 +51,6 @@ namespace Meldii.AddonProviders
                 MeldiiSettings.Self.FirefallInstallPath = GetFirefallInstallPath();
                 MeldiiSettings.Self.AddonLibaryPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + Properties.Settings.Default.AddonStorage;
                 MeldiiSettings.Self.Save();
-
-                // Migrate some melder data?
             }
 
             GetLocalAddons();
@@ -59,6 +58,7 @@ namespace Meldii.AddonProviders
             GetInstalledAddons();
             SetupFolderWatchers();
 
+            // Kinda hacky, has no suport for other addon providers, assumes forums
             if (Statics.OneClickAddonToInstall != null)
             {
                 Providers[AddonProviderType.FirefallForums].DownloadAddon(Statics.OneClickAddonToInstall);
@@ -129,8 +129,6 @@ namespace Meldii.AddonProviders
             {
                 Directory.CreateDirectory(path);
             }
-
-            MainView.StatusMessage = "Done :3";
         }
 
         private AddonMetaData ParseZipForIni(string path)
@@ -166,6 +164,12 @@ namespace Meldii.AddonProviders
                     addon.DownloadURL = info.Dlurl;
 
                     Debug.WriteLine("Addon: {0}, Version: {1}, Patch: {2}, Dlurl: {3}, IsUptodate: {4}", addon.Name, info.Version, info.Patch, info.Dlurl, addon.IsUptoDate);
+
+                    if (!addon.IsUptoDate)
+                    {
+                        AddonsToBeUpdatedCount++;
+                        MainView.StatusMessage = string.Format("{0} Addons need to be updated", AddonsToBeUpdatedCount);
+                    }
                 }
                 else
                     addon.AvailableVersion = "??";
@@ -206,7 +210,7 @@ namespace Meldii.AddonProviders
                     MainView.IsPendingVersionCheck = false;
                     //if (exceptions.Count > 0) throw new AggregateException(exceptions);
 
-                    MainView.StatusMessage = "All Addons have been checked for updates :3";
+                    MainView.StatusMessage = string.Format("All Addons have been checked for updates, {0} can be updated", AddonsToBeUpdatedCount);
                 }));
 
                 t.IsBackground = true;
