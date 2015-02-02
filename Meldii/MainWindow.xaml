@@ -148,7 +148,7 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
 
-                                <Rectangle Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Transparent" Panel.ZIndex="2">
+                                <Rectangle Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Transparent" Panel.ZIndex="2" Margin="20,0,0,0">
                                     <Rectangle.ContextMenu>
                                         <ContextMenu>
                                             <StackPanel Orientation="Horizontal" MouseDown="AddonDownloadUpdate">
