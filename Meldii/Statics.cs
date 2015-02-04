@@ -53,6 +53,13 @@ namespace Meldii
 
             IsFirstRun = !File.Exists(SettingsPath);
 
+            if (Statics.IsFirstRun)
+            {
+                MeldiiSettings.Self.FirefallInstallPath = GetFirefallInstallPath();
+                MeldiiSettings.Self.AddonLibaryPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + Properties.Settings.Default.AddonStorage;
+                MeldiiSettings.Self.Save();
+            }
+
             AddonsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"Firefall\Addons");
             GetFirefallPatchData();
         }
@@ -71,6 +78,13 @@ namespace Meldii
                 "system",
                 addonDest
             });
+        }
+
+        public static bool IsFirefallInstallValid(string path)
+        {
+            string fp = Path.Combine(path, "system", "bin", "FirefallClient.exe");
+            return File.Exists(fp);
+
         }
 
         // Get the path to the addons fiels backup
@@ -190,6 +204,16 @@ namespace Meldii
             writer.Flush();
             stream.Position = 0;
             return stream;
+        }
+
+        public static string GetFirefallInstallPath()
+        {
+            string ffpath = (string)Registry.GetValue("HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Red 5 Studios\\Firefall_Beta", "InstallLocation", null);
+
+            if (ffpath == null) // No reg entry
+                ffpath = "";
+
+            return ffpath;
         }
     }
 }

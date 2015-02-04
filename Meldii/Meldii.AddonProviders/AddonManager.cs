@@ -46,13 +46,6 @@ namespace Meldii.AddonProviders
             MainView = _MainView;
             Providers.Add(AddonProviderType.FirefallForums, new FirefallForums());
 
-            if (Statics.IsFirstRun)
-            {
-                MeldiiSettings.Self.FirefallInstallPath = GetFirefallInstallPath();
-                MeldiiSettings.Self.AddonLibaryPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + Properties.Settings.Default.AddonStorage;
-                MeldiiSettings.Self.Save();
-            }
-
             GetLocalAddons();
             CheckAddonsForUpdates();
             GetInstalledAddons();
@@ -202,13 +195,12 @@ namespace Meldii.AddonProviders
                             }
                             catch (Exception e)
                             {
-                                //exceptions.Enqueue(e);
+
                             }
                         }
                     );
 
                     MainView.IsPendingVersionCheck = false;
-                    //if (exceptions.Count > 0) throw new AggregateException(exceptions);
 
                     MainView.StatusMessage = string.Format("All Addons have been checked for updates, {0} can be updated", AddonsToBeUpdatedCount);
                 }));
@@ -216,15 +208,9 @@ namespace Meldii.AddonProviders
                 t.IsBackground = true;
                 t.Start();
             }
-            catch (Exception e /*AggregateException ae*/)
+            catch (Exception e)
             {
-                /*foreach (var ex in ae.InnerExceptions)
-                {
-                    if (ex is ArgumentException)
-                        throw ex;
-                    else
-                        throw ex;
-                }*/
+
             }
         }
 
@@ -255,15 +241,20 @@ namespace Meldii.AddonProviders
             return addon;
         }
 
-        private string GetFirefallInstallPath()
-        {
-            return (string)Registry.GetValue("HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Red 5 Studios\\Firefall_Beta", "InstallLocation", null);
-        }
-
         // Installing and uninstalling of addon, could be neater >,>
         // Refactor plz
         public void InstallAddon(AddonMetaData addon)
         {
+            // Check we have a path for the Firefall install
+            if (!Statics.IsFirefallInstallValid(MeldiiSettings.Self.FirefallInstallPath))
+            {
+                MainWindow.ShowAlert("Error: Invalid path to Firefall install!",
+                    string.Format("\"{0}\" is not a valid Firefall install\nPlease go to settings and set the path to your Firefall install",
+                    MeldiiSettings.Self.FirefallInstallPath));
+
+                return;
+            }
+
             MainView.StatusMessage = string.Format("Installing Addon {0}", addon.Name);
 
             addon.InstalledFilesList.Clear();
@@ -472,7 +463,7 @@ namespace Meldii.AddonProviders
             {
                 if (addon.IsEnabled)
                 {
-                    bool result = await MainWindow.ShowMessageDialogYesNo("Do you want to uninstall this addon?", string.Format("Select yes to uninstall and delete {0} from the library", addon.Name));
+                    bool result = await MainWindow.ShowMessageDialogYesNo("Do you want to uninstall this addon?", string.Format("The addon has been removed from the library but is still installed\n Select yes to uninstall the addon or no to keep it installed", addon.Name));
                     
                     if (result)
                         UninstallAddon(addon);
