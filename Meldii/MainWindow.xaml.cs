@@ -45,6 +45,11 @@ namespace Meldii
             InitializeComponent();
             Statics.InitStaticData();
             MeldiiSettings.Self.Load();
+
+            // Admin Check
+            if (Statics.NeedAdmin())
+                Statics.RunAsAdmin(Statics.LaunchArgs);
+
             ViewModel = new MainViewModel();
 
             this.AddHandler(MetroWindow.DragOverEvent, new DragEventHandler(OnFileDragOver), true);

@@ -20,6 +20,7 @@ namespace Meldii
         public static string UpdateCheckUrl = "https://raw.githubusercontent.com/GoomiChan/Meldii/master/Release/version.txt";
         public static string UpdateExeUrl = "https://raw.githubusercontent.com/GoomiChan/Meldii/master/Release/Meldii.exe";
         public static string UpdaterName = "Meldii.Updater.exe";
+        public static string LaunchArgs = "";
         public static FirefallPatchData FirefallPatchData = null;
 
         public static string MeldiiAppData = "";
@@ -215,5 +216,41 @@ namespace Meldii
 
             return ffpath;
         }
+
+        public static bool NeedAdmin()
+        {
+            try
+            {
+                if (IsFirefallInstallValid(MeldiiSettings.Self.FirefallInstallPath))
+                {
+                    string path = Path.Combine(MeldiiSettings.Self.FirefallInstallPath, "Meldii Admin Check.test");
+                    File.WriteAllText(path, "Medlii admin check");
+                    File.Delete(path);
+                    return false;
+                }
+            }
+            catch (Exception e)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public static void RunAsAdmin(string args)
+        {
+            try
+            {
+                ProcessStartInfo info = new ProcessStartInfo("Meldii.exe", args);
+                info.Verb = "runas";
+                Process.Start(info);
+
+                App.Current.Dispatcher.Invoke((Action)delegate()
+                {
+                    Application.Current.Shutdown();
+                });
+            }
+            catch { }
+        }
+
     }
 }

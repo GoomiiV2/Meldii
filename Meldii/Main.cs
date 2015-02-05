@@ -21,6 +21,8 @@ namespace Meldii
                 args += arguments[i] + " ";
             args = args.Trim();
 
+            Statics.LaunchArgs = args;
+
             ParseProtcol(args);
 
             AppDomain.CurrentDomain.AssemblyResolve += OnResolveAssembly;
