@@ -259,7 +259,7 @@ namespace Meldii.AddonProviders
 
             addon.InstalledFilesList.Clear();
 
-            string dest = addon.IsAddon ? Statics.AddonsFolder : Statics.GetPathForMod(addon.Destnation);
+            string dest = addon.IsAddon ? Statics.AddonsFolder : Statics.GetPathForMod(addon.Destination);
             string installInfoDest = addon.IsAddon ? Path.Combine(Statics.AddonsFolder, "melder_addons") : Path.Combine(MeldiiSettings.Self.FirefallInstallPath, Statics.ModDataStoreReltivePath);
             installInfoDest = Path.Combine(installInfoDest, Path.GetFileName(addon.ZipName) + ".ini");
 
@@ -277,7 +277,7 @@ namespace Meldii.AddonProviders
                         string modFilePath = Path.Combine(dest, file);
                         if (File.Exists(modFilePath) && Statics.IsPathSafe(modFilePath))
                         {
-                            BackupZip.AddFile(modFilePath, addon.Destnation);
+                            BackupZip.AddFile(modFilePath, addon.Destination);
                         }
                     }
                 }
@@ -305,8 +305,8 @@ namespace Meldii.AddonProviders
 
                         string installedPath = file.FileName;
 
-                        if (addon.Destnation != null && !installedPath.Contains(addon.Destnation))
-                            installedPath = Path.Combine(addon.Destnation, file.FileName);
+                        if (addon.Destination != null && !installedPath.Contains(addon.Destination))
+                            installedPath = Path.Combine(addon.Destination, file.FileName);
 
                         addon.InstalledFilesList.Add(installedPath);
                     }

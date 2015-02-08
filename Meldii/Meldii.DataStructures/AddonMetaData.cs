@@ -25,7 +25,7 @@ namespace Meldii.Views
         private bool _IsUptoDate;
         public string Author { get; set; }
         public string Description { get; set; }
-        public string Destnation { get; set; }
+        public string Destination { get; set; }
         public string AddonPage { get; set; } // eg. Fourm post
         public string Patch { get; set; }
         public AddonProviderType ProviderType;
@@ -190,9 +190,9 @@ namespace Meldii.Views
 
         public bool CheckIfAddonOrMod()
         {
-            Debug.WriteLine("{3}: {0} {1} {2}", RemoveFilesList.Count, Destnation, Destnation == null, Name);
+            Debug.WriteLine("{3}: {0} {1} {2}", RemoveFilesList.Count, Destination, Destination == null, Name);
 
-            if (RemoveFilesList != null && RemoveFilesList.Count == 0 && Destnation == null)
+            if (RemoveFilesList != null && RemoveFilesList.Count == 0 && Destination == null)
             {
                 IsAddon = true;
             }
@@ -249,7 +249,7 @@ namespace Meldii.Views
                             break;
                         case "dest":
                         case "destination":
-                            Destnation = value;
+                            Destination = value;
                             break;
                         case "providertype":
                             try { ProviderType = (AddonProviderType)Enum.Parse(typeof(AddonProviderType), value); }
@@ -273,9 +273,9 @@ namespace Meldii.Views
             }
 
             // Fix up some old addons or misconfigured ones
-            if (Destnation != null && Statics.FixPathSlashes(Destnation).Contains(Statics.DefaultAddonLocation) || Destnation == "" )
+            if (Destination != null && Statics.FixPathSlashes(Destination).Contains(Statics.DefaultAddonLocation) || Destination == "" )
             {
-                Destnation = null;
+                Destination = null;
             }
 
             // No ProviderType, assume Firefall fourm download
@@ -294,7 +294,7 @@ namespace Meldii.Views
                 ini.WriteLine(string.Format("version={0}", Version));
                 ini.WriteLine(string.Format("patch={0}", Patch));
                 ini.WriteLine(string.Format("url={0}", AddonPage));
-                ini.WriteLine(string.Format("destination={0}", Destnation));
+                ini.WriteLine(string.Format("destination={0}", Destination));
                 ini.WriteLine(string.Format("description={0}", Description));
                 ini.WriteLine(string.Format("providertype={0}", ProviderType.ToString()));
 
