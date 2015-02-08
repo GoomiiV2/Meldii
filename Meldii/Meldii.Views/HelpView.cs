@@ -111,7 +111,7 @@ namespace Meldii.Views
         {
             // If the user copied the whole forum attachment URL, extract the attachment number from it.
             string _MI_DLURL_P = _MI_DLURL;
-            if (_MI_DLURL.StartsWith("http"))
+            if (_MI_Provider == AddonProviderType.FirefallForums && _MI_DLURL.StartsWith("http"))
             {
                 Regex r = new Regex(@"https?:\/\/.+\/attachments\/.+\.(\d+)");
                 foreach (Match c in r.Matches(_MI_DLURL))
