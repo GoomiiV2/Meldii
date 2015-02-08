@@ -39,7 +39,7 @@
                     Text="{Binding AssemblyVersion}" />
                 </StackPanel>
             </Expander>
-            <Expander Grid.Row="1" x:Name="panel2" Header="Melder Info Genrator">
+            <Expander Grid.Row="1" x:Name="panel2" Header="Melder Info Generator">
                 <StackPanel Orientation="Vertical">
                     <Label Content="Addon Version:" />
                     <TextBox Text="{Binding Path=MI_AddonVersion}" Margin="5,0,0,5" />
