@@ -10,9 +10,19 @@
         Height="400" Width="800" MinHeight="400" MinWidth="800"
         FontFamily="Verdana" Loaded="MetroWindow_Loaded" ResizeMode="CanResizeWithGrip"
         >
-    
+
     <Controls:MetroWindow.RightWindowCommands>
         <Controls:WindowCommands>
+            <Button Click="Btt_LaunchFirefall">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Margin="0 0 4 0" VerticalAlignment="Center" Text="Launch Firefall" />
+                    <Rectangle Width="16" Height="16" Margin="0 2 0 0" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" VerticalAlignment="Top">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_app}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                </StackPanel>
+            </Button>
             <Button Click="Btt_OpenSettings">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Margin="0 0 4 0" VerticalAlignment="Center" Text="Settings" />
@@ -43,7 +53,7 @@
                 <p:SettingsFlyout DataContext="{Binding SettingsView}">
 
                 </p:SettingsFlyout>
-                
+
             </Controls:Flyout>
 
             <Controls:Flyout x:Name="helpFlyout"
@@ -54,9 +64,9 @@
                 AnimateOpacity="True">
 
                 <p:HelpFlyout DataContext="{Binding HelpViewa}">
-                    
+
                 </p:HelpFlyout>
-                
+
             </Controls:Flyout>
         </Controls:FlyoutsControl>
     </Controls:MetroWindow.Flyouts>
@@ -66,7 +76,7 @@
 
         <Grid x:Name="Overlay" Panel.ZIndex="1000" Visibility="Collapsed" HorizontalAlignment="Right" Width="300">
             <Rectangle Fill="#FF252525"></Rectangle>
-            
+
         </Grid>
 
         <Grid>
@@ -77,10 +87,16 @@
             </Grid.ColumnDefinitions>
 
             <Grid Grid.Column="0" Margin="0,1,0,0">
-
+<!--
+                <DockPanel VerticalAlignment="Top" HorizontalAlignment="Left">
+                    <DockPanel VerticalAlignment="Top" HorizontalAlignment="Left">
+                        <Button ToolTip="Launch Firefall" Content="Launch Firefall" RenderTransformOrigin="0.5,0.5" Height="22" Margin="10,0,0,0" FontSize="9.333" BorderThickness="0" MinHeight="22"/>
+                    </DockPanel>
+                </DockPanel>
+-->
                 <DockPanel VerticalAlignment="Top" HorizontalAlignment="Center">
                     <DockPanel VerticalAlignment="Top" HorizontalAlignment="Center" MouseDown="Btt_OpenAddonLibrary_Click">
-                    <Label Content="Addon Library" VerticalAlignment="Top" Margin="0" FontFamily="Verdana" FontWeight="Bold" HorizontalAlignment="Center"/>
+                        <Label Content="Addon Library" VerticalAlignment="Top" Margin="0" FontFamily="Verdana" FontWeight="Bold" HorizontalAlignment="Center"/>
                         <Rectangle VerticalAlignment="Center" Margin="0" HorizontalAlignment="Left" Opacity="1" Visibility="Visible" Width="12" Height="12">
                             <Rectangle.Stroke>
                                 <ImageBrush/>
@@ -90,12 +106,12 @@
                             </Rectangle.Fill>
                         </Rectangle>
                         <DockPanel.ToolTip>
-                        <ToolTip>
-                            <StackPanel>
-                                <TextBlock FontWeight="Bold"><Run Text="Open Addon library"/></TextBlock>
-                            </StackPanel>
-                        </ToolTip>
-                    </DockPanel.ToolTip>
+                            <ToolTip>
+                                <StackPanel>
+                                    <TextBlock FontWeight="Bold"><Run Text="Open Addon library"/></TextBlock>
+                                </StackPanel>
+                            </ToolTip>
+                        </DockPanel.ToolTip>
                         <DockPanel.Resources>
                             <Style TargetType="{x:Type DockPanel}">
                                 <Setter Property="Background" Value="Transparent"/>
@@ -136,7 +152,7 @@
                         </Rectangle.Resources>
                     </Rectangle>
                 </DockPanel>
-                
+
                 <Separator Height="3" Margin="10,22,10,0" VerticalAlignment="Top" HorizontalContentAlignment="Stretch"/>
                 <ListBox x:Name="AddonList" Margin="10,25" BorderThickness="0,0,0,1" FontFamily="Verdana" AlternationCount="1" Padding="5"
                      ItemsSource="{Binding LocalAddons}" SelectionChanged="AddonList_SelectionChanged" >
@@ -147,7 +163,7 @@
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                
+
                                 <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Stretch">
                                     <CheckBox IsChecked="{Binding Path=IsEnabled}">
                                         <CheckBox.ToolTip>
@@ -281,10 +297,10 @@
                                             </Rectangle.ToolTip>
                                         </Rectangle>
                                     </DockPanel>
-                                    
+
                                 </StackPanel>
                                 <TextBlock Grid.Column="1" Text="{Binding Path=Author}" HorizontalAlignment="Right" Margin="0,0,10,0"/>
-                                
+
 
                             </Grid>
                         </DataTemplate>

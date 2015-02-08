@@ -65,6 +65,33 @@ namespace Meldii
             SelfUpdater.ThreadUpdateAndCheck();
         }
 
+        private void Btt_LaunchFirefall(object sender, RoutedEventArgs e)
+        {
+            string[] paths = new string[] {
+                MeldiiSettings.Self.FirefallInstallPath,
+                "system",
+                "bin"
+            };
+            string p = System.IO.Path.Combine(paths);
+
+            // Our process information.
+            ProcessStartInfo info = new ProcessStartInfo();
+            info.FileName = System.IO.Path.Combine(p, "FirefallClient.exe");
+            info.WorkingDirectory = p;
+            info.UseShellExecute = false;
+
+            // Launch it now.
+            try
+            {
+                Process.Start(info);
+                //Application.Exit();
+            }
+            catch (System.ComponentModel.Win32Exception)
+            {
+                MessageBox.Show("Error launching application.  Could not find FirefallClient.exe.", "Launch error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
         private void Btt_OpenAddonPage_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.OnOpenAddonPage();
