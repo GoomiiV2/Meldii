@@ -88,7 +88,7 @@ namespace Meldii
             }
             catch (System.ComponentModel.Win32Exception)
             {
-                MessageBox.Show("Error launching application.  Could not find FirefallClient.exe.", "Launch error", MessageBoxButton.OK, MessageBoxImage.Error);
+                ShowAlert("Launch error", "Error launching application.\nCould not find FirefallClient.exe.\n\nSearch location: " + p);
             }
         }
 
