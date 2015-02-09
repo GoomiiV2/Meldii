@@ -38,6 +38,7 @@ namespace Meldii
         };
         public static string MelderProtcolRegex = "melder://(.*?)/(.*?):(.*)";
 
+        public static AddonProviderType OneClickInstallProvider;
         public static string OneClickAddonToInstall = null; // the url of a forum attachment to install
 
         public static AddonManager AddonManager = null;
@@ -88,7 +89,7 @@ namespace Meldii
 
         }
 
-        // Get the path to the addons fiels backup
+        // Get the path to the addons files backup
         public static string GetBackupPathForMod(string addonName)
         {
             return Path.Combine(new string[] 
@@ -99,7 +100,6 @@ namespace Meldii
             }) + AddonBackupPostfix;
         }
 
-        // Check if the path is safe
         public static bool IsPathSafe(string path)
         {
             string fullPath = Path.GetFullPath(path);

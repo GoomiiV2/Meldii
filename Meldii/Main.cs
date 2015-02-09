@@ -43,9 +43,22 @@ namespace Meldii
 
                     if (action == "download")
                     {
-                        if (provider == "forum")
+                        if (provider == "forum") // Backwards Melder compat
                         {
+                            Statics.OneClickInstallProvider = AddonProviders.AddonProviderType.FirefallForums;
                             Statics.OneClickAddonToInstall = url;
+                        }
+                        else // New stuff
+                        {
+                            try
+                            {
+                                Statics.OneClickInstallProvider = (AddonProviders.AddonProviderType)Enum.Parse(typeof(AddonProviders.AddonProviderType), provider, true);
+                                Statics.OneClickAddonToInstall = url;
+                            }
+                            catch (Exception e)
+                            {
+                                
+                            }
                         }
                     }
                 }

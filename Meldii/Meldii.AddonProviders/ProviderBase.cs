@@ -75,7 +75,7 @@ namespace Meldii.AddonProviders
                                         Info.Dlurl = value;
                                         break;
                                     case "providertype":
-                                        Info.ProviderType = (AddonProviderType)Enum.Parse(typeof(AddonProviderType), value);
+                                        Info.ProviderType = (AddonProviderType)Enum.Parse(typeof(AddonProviderType), value, true);
                                         break;
                                 }
                             }
