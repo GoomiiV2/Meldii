@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Meldii.AddonProviders;
 using Meldii.DataStructures;
+using System.Text.RegularExpressions;
 
 namespace Meldii.Views
 {
@@ -89,7 +90,7 @@ namespace Meldii.Views
         {
             get
             {
-                return GetMedlerInfo();
+                return GetMelderInfo();
             }
 
             set { _MI_Result = value;  }
@@ -106,12 +107,24 @@ namespace Meldii.Views
             set { }
         }
 
-        public string GetMedlerInfo()
+        public string GetMelderInfo()
         {
+            // If the user copied the whole forum attachment URL, extract the attachment number from it.
+            string _MI_DLURL_P = _MI_DLURL;
+            if (_MI_Provider == AddonProviderType.FirefallForums && _MI_DLURL.StartsWith("http"))
+            {
+                Regex r = new Regex(@"https?:\/\/.+\/attachments\/.+\.(\d+)");
+                foreach (Match c in r.Matches(_MI_DLURL))
+                {
+                    if (c.Groups.Count == 2)
+                        _MI_DLURL_P = c.Groups[1].Value;
+                }
+            }
+
             string info = "[center][url={0}?id={1}][img]{2}[/img][/url][size=1][color=#161C1C][melder_info]version={3};patch={4};dlurl={1};providertype={5}[/melder_info][/color][/size][/center]";
             info = string.Format(info,
                 Properties.Settings.Default.MI_HostURL, // host
-                _MI_DLURL, // Downlaod url
+                _MI_DLURL_P, // Download url
                 Properties.Settings.Default.MI_HostImgURL, // img
                 _MI_AddonVersion, // addon version
                 _MI_FirefallPatch, // Firefall Version
