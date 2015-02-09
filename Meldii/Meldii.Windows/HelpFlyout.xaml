@@ -28,7 +28,7 @@
             <Expander Grid.Row="0" x:Name="panel1" Header="About" Margin="5 5 5 0" IsExpanded="True">
                 <StackPanel Orientation="Vertical">
                     <TextBlock TextWrapping="Wrap" Margin="10"
-                    Text="Meldii is an addon manager for Firefall designed to be backwards compatable with the orignal Melder by RadthorDax." />
+                    Text="Meldii is an addon manager for Firefall designed to be backwards compatable with the original Melder by RadthorDax." />
                     <TextBlock TextWrapping="Wrap" Margin="10,0"
                     Text="Meldii however also has some extra features that Melder doesn't have and will hopefully serve as a viable replacement." />
                     <TextBlock TextWrapping="Wrap" Margin="10"
