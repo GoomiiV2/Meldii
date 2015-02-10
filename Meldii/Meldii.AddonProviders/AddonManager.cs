@@ -51,10 +51,9 @@ namespace Meldii.AddonProviders
             GetInstalledAddons();
             SetupFolderWatchers();
 
-            // Kinda hacky, has no suport for other addon providers, assumes forums
             if (Statics.OneClickAddonToInstall != null)
             {
-                Providers[AddonProviderType.FirefallForums].DownloadAddon(Statics.OneClickAddonToInstall);
+                Providers[Statics.OneClickInstallProvider].DownloadAddon(Statics.OneClickAddonToInstall);
                 App.Current.Shutdown();
             }
         }

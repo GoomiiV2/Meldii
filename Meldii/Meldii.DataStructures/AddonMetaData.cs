@@ -252,7 +252,7 @@ namespace Meldii.Views
                             Destination = value;
                             break;
                         case "providertype":
-                            try { ProviderType = (AddonProviderType)Enum.Parse(typeof(AddonProviderType), value); }
+                            try { ProviderType = (AddonProviderType)Enum.Parse(typeof(AddonProviderType), value, true); }
                             catch (Exception e) { ProviderType = AddonProviderType.FirefallForums; }
                             break;
                         case "installed":
