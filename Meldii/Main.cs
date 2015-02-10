@@ -63,7 +63,7 @@ namespace Meldii
                     }
                 }
             }
-            catch(Exception e)
+            catch(Exception)
             {
 
             }

@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using Meldii.AddonProviders;
 using Meldii.DataStructures;
-using Meldii.DataStructures;
 using Microsoft.Win32;
 
 namespace Meldii
@@ -159,7 +158,7 @@ namespace Meldii
                     key.CreateSubKey("shell").CreateSubKey("open").CreateSubKey("command").SetValue("", "\"" + Assembly.GetExecutingAssembly().Location + "\" \"%1\"");
                     key.Close();
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
 
                 }
@@ -174,7 +173,7 @@ namespace Meldii
                 {
                     Registry.ClassesRoot.DeleteSubKeyTree("melder");
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
 
                 }
@@ -229,7 +228,7 @@ namespace Meldii
                     return false;
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return true;
             }

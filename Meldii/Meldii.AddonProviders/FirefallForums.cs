@@ -21,7 +21,7 @@ namespace Meldii.AddonProviders
         private static string crsfTokenRegex = "(?:\r|\n|.)+<input id=\"lt\" name=\"lt\" type=\"hidden\" value=\"(.*?)\" />(?:\r|\n|.)+";
         private static int maxRetrys = 3;
         private int retrys = 0;
-        private string downloadsName = ""; // hack for one clcik downlaods
+        private string downloadsName = ""; // hack for one click downloads
 
         public FirefallForums()
         {
@@ -142,7 +142,7 @@ namespace Meldii.AddonProviders
                 {
                     App.Current.Dispatcher.BeginInvoke((Action)delegate()
                     {
-                        MainWindow.ShowAlert("Download Error", string.Format("There was an error when trying to download from the forums, please try again later.\n\nIf the error presists then the addon author more than likely has messed up the melder info in the thread so go bug them about it!\n\nAddon: {0}\nUrl: {1}", addonName, url));
+                        MainWindow.ShowAlert("Download Error", string.Format("There was an error when trying to download from the forums, please try again later.\n\nIf the error persists then the addon author more than likely has messed up the melder info in the thread so go bug them about it!\n\nAddon: {0}\nUrl: {1}", addonName, url));
                     });
 
                     return false;

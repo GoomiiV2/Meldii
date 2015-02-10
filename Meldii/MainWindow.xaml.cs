@@ -147,7 +147,7 @@ namespace Meldii
                             if (System.IO.Path.GetExtension(file) == ".zip")
                                 File.Copy(file, System.IO.Path.Combine(MeldiiSettings.Self.AddonLibaryPath, System.IO.Path.GetFileName(file)));
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
 
                         }
