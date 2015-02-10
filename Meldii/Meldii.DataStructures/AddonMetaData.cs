@@ -26,9 +26,9 @@ namespace Meldii.Views
         public string Author { get; set; }
         public string Description { get; set; }
         public string Destination { get; set; }
-        public string AddonPage { get; set; } // eg. Fourm post
+        public string AddonPage { get; set; } // eg. Forum post
         public string Patch { get; set; }
-        public AddonProviderType ProviderType;
+        public AddonProviderType ProviderType = AddonProviderType.FirefallForums;
         public List<string> InstalledFilesList;
         public List<string> RemoveFilesList;
         public List<string> IngoreFileList;
@@ -36,6 +36,23 @@ namespace Meldii.Views
         public bool IsPendingDelete = false;
         public string DownloadURL = null;
         public bool _IsUpdating = false;
+
+        private string _UpdateURL;
+        public string UpdateURL
+        {
+            get
+            {
+                if (String.IsNullOrEmpty(_UpdateURL))
+                    return AddonPage;
+                return _UpdateURL;
+            }
+
+            set
+            {
+                _UpdateURL = value;
+            }
+        }
+
         #endregion
 
         #region Ui Binding Helpers
@@ -217,11 +234,11 @@ namespace Meldii.Views
             while (reader.Peek() != -1)
             {
                 string line = reader.ReadLine();
-                if (line.Contains("="))
+                int sep = line.IndexOf('=');
+                if (sep != -1)
                 {
-                    string[] args = line.Split('=');
-                    string name = args[0].Trim().ToLower();
-                    string value = args[1].Trim();
+                    string name = line.Substring(0, sep).Trim().ToLower();
+                    string value = line.Substring(sep + 1).Trim();
                     isMultilineDesc = false;
 
                     switch (name)
@@ -242,6 +259,9 @@ namespace Meldii.Views
                         case "url":
                             AddonPage = value;
                             break;
+                        case "updateurl":
+                            UpdateURL = value;
+                            break;
                         case "desc":
                         case "description":
                             isMultilineDesc = true;
@@ -253,7 +273,7 @@ namespace Meldii.Views
                             break;
                         case "providertype":
                             try { ProviderType = (AddonProviderType)Enum.Parse(typeof(AddonProviderType), value, true); }
-                            catch (Exception e) { ProviderType = AddonProviderType.FirefallForums; }
+                            catch (Exception) { ProviderType = AddonProviderType.FirefallForums; }
                             break;
                         case "installed":
                             InstalledFilesList.Add(value);
@@ -278,8 +298,6 @@ namespace Meldii.Views
                 Destination = null;
             }
 
-            // No ProviderType, assume Firefall fourm download
-            ProviderType = AddonProviderType.FirefallForums;
             CheckIfAddonOrMod();
         }
 
@@ -297,6 +315,9 @@ namespace Meldii.Views
                 ini.WriteLine(string.Format("destination={0}", Destination));
                 ini.WriteLine(string.Format("description={0}", Description));
                 ini.WriteLine(string.Format("providertype={0}", ProviderType.ToString()));
+
+                if (!String.IsNullOrEmpty(_UpdateURL))
+                    ini.WriteLine(string.Format("updateurl={0}", _UpdateURL));
 
                 foreach (string str in InstalledFilesList)
                 {

@@ -75,7 +75,7 @@ namespace Meldii.Views
                     AddonManager.Self.CheckAddonsForUpdates();
                     AddonManager.Self.SetupFolderWatchers();
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
 
                 }

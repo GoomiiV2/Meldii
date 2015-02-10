@@ -19,13 +19,13 @@ namespace Meldii.AddonProviders
     public enum AddonProviderType
     {
         [Description("Firefall Forums Attachment")]
-        FirefallForums/*,
-        [Description("A Github Repo")]
+        FirefallForums,
+        /*,[Description("A Github Repo")]
         GitHub,
         [Description("A Bitbucket Repo")]
-        BitBucket,
-        [Description("A direct Download")]
-        DirectDownload*/
+        BitBucket,*/
+        [Description("Direct Download")]
+        DirectDownload
     }
 
     public class AddonManager
@@ -45,6 +45,7 @@ namespace Meldii.AddonProviders
 
             MainView = _MainView;
             Providers.Add(AddonProviderType.FirefallForums, new FirefallForums());
+            Providers.Add(AddonProviderType.DirectDownload, new DirectDownload());
 
             GetLocalAddons();
             CheckAddonsForUpdates();
@@ -145,7 +146,7 @@ namespace Meldii.AddonProviders
 
         private void GetAddonUpdateInfo(AddonMetaData addon)
         {
-            var info = Providers[addon.ProviderType].GetMelderInfo(addon.AddonPage);
+            var info = Providers[addon.ProviderType].GetMelderInfo(addon.UpdateURL);
             if (addon != null && !addon.IsPendingDelete)
             {
                 if (info != null)
@@ -192,7 +193,7 @@ namespace Meldii.AddonProviders
                                     GetAddonUpdateInfo(addon);
                                 }
                             }
-                            catch (Exception e)
+                            catch (Exception)
                             {
 
                             }
@@ -207,7 +208,7 @@ namespace Meldii.AddonProviders
                 t.IsBackground = true;
                 t.Start();
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
             }
@@ -222,7 +223,7 @@ namespace Meldii.AddonProviders
 
                 return current.CompareTo(newVer) == 0 || current.CompareTo(newVer) == 1;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }
@@ -443,7 +444,7 @@ namespace Meldii.AddonProviders
                     return false;
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 App.Current.Dispatcher.Invoke((Action)delegate 
                 {

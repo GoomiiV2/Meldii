@@ -28,7 +28,7 @@ namespace Meldii.DataStructures
                     Debug.WriteLine("AddonLibaryPathAddonLibaryPath: " + Self.AddonLibaryPath);
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 Debug.WriteLine("Error loading settings.json");
             }
@@ -44,7 +44,7 @@ namespace Meldii.DataStructures
                     serializer.WriteObject(fs, this);
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 Debug.WriteLine("Error saving settings.json");
             }
