@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using Meldii.AddonProviders;
-using Meldii.DataStructures;
 using System.Text.RegularExpressions;
+using Meldii.AddonProviders;
 
 namespace Meldii.Views
 {

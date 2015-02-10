@@ -25,7 +25,7 @@ namespace Meldii.Updater
                 {
                     File.Delete(MeldiiName);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     Console.WriteLine("Error trying to remove "+MeldiiName);
                     return;

@@ -10,9 +10,8 @@
 // http://www.mesta-automation.com/how-to-make-a-sortable-observablecollection-c/
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace Common.WPF
 {
