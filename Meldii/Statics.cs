@@ -182,9 +182,16 @@ namespace Meldii
             {
                 using (WebClient wc = new WebClient())
                 {
-                    using (Stream s = GenerateStreamFromString(wc.DownloadString("http://operator.firefallthegame.com/api/v1/products/Firefall_Beta")))
+                    try
                     {
-                        FirefallPatchData = FirefallPatchData.Create(s);
+                        using (Stream s = GenerateStreamFromString(wc.DownloadString("http://operator.firefallthegame.com/api/v1/products/Firefall_Beta")))
+                        {
+                            FirefallPatchData = FirefallPatchData.Create(s);
+                        }
+                    }
+                    catch (System.Net.WebException)
+                    {
+                        FirefallPatchData = FirefallPatchData.CreateError();
                     }
                 }
             }
