@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace Meldii
@@ -54,25 +56,49 @@ namespace Meldii
 
         public static void ThreadUpdateAndCheck()
         {
-            Thread updateCheck = new Thread(() => 
+            Task t = new Task(UpdateChecks);
+            t.Start();
+        }
+
+        private static async void UpdateChecks()
+        {
+            // If we aren't using a Steam install, check for a Firefall update.
+            if (!String.IsNullOrEmpty(Statics.GetFirefallInstallPath()))
+                await FirefallUpdate();
+
+            // Check for updater and remove it if it is there
+            if (File.Exists(Statics.UpdaterName))
             {
-                // Check for updater and remove it if it is there
-                if (File.Exists(Statics.UpdaterName))
-                {
-                    File.Delete(Statics.UpdaterName);
-                }
+                File.Delete(Statics.UpdaterName);
+            }
 
-                if (IsUpdateAvailable())
+            if (IsUpdateAvailable())
+            {
+                MainWindow.UpdatePrompt();
+            }
+        }
+
+        private static async Task<bool> FirefallUpdate()
+        {
+            // Check for a new Firefall patch.
+            if (!Statics.FirefallPatchData.error)
+            {
+                var view = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
+                using (var firefall = view.OpenSubKey(@"Software\Red 5 Studios\Firefall_Beta"))
                 {
-                    App.Current.Dispatcher.BeginInvoke((Action)delegate()
+                    var version = firefall.GetValue("InstalledVersion");
+                    if (version != null && (string)version != Statics.FirefallPatchData.build)
                     {
-                        MainWindow.UpdatePromt();
-                    });
+                        if (await MainWindow.ShowMessageDialogYesNo("Firefall update available", "Start the Launcher to download the update?"))
+                        {
+                            MainWindow.LaunchFirefallProcess("Launcher.exe");
+                            return true;
+                        }
+                    }
                 }
-           });
+            }
 
-            updateCheck.IsBackground = true;
-            updateCheck.Start();
+            return false;
         }
     }
 }

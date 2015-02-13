@@ -55,6 +55,11 @@ namespace Meldii
 
         private void Btt_LaunchFirefall(object sender, RoutedEventArgs e)
         {
+            LaunchFirefallProcess("FirefallClient.exe");
+        }
+
+        public static void LaunchFirefallProcess(string process)
+        {
             string[] paths = new string[] {
                 MeldiiSettings.Self.FirefallInstallPath,
                 "system",
@@ -64,7 +69,7 @@ namespace Meldii
 
             // Our process information.
             ProcessStartInfo info = new ProcessStartInfo();
-            info.FileName = System.IO.Path.Combine(p, "FirefallClient.exe");
+            info.FileName = System.IO.Path.Combine(p, process);
             info.WorkingDirectory = p;
             info.UseShellExecute = false;
 
@@ -76,7 +81,7 @@ namespace Meldii
             }
             catch (System.ComponentModel.Win32Exception)
             {
-                ShowAlert("Launch error", "Error launching application.\nCould not find FirefallClient.exe.\n\nSearch location: " + p);
+                ShowAlert("Launch error", "Error launching application.\nCould not find " + process + ".\n\nSearch location: " + p);
             }
         }
 
@@ -162,7 +167,7 @@ namespace Meldii
             Process.Start("http://forums.firefall.com/community/threads/addon-index-current-addons-mods-and-dev-resources.2625421/");
         }
 
-        public static async void UpdatePromt()
+        public static async void UpdatePrompt()
         {
             if (await MainWindow.ShowMessageDialogYesNo("Meldii update available", "Download Update?"))
             {
