@@ -56,8 +56,15 @@ namespace Meldii
 
         public static void ThreadUpdateAndCheck()
         {
-            Task t = new Task(UpdateChecks);
-            t.Start();
+            Thread updateCheck = new Thread(() =>
+            {
+                Task t = new Task(UpdateChecks);
+                t.Start();
+                t.Wait();
+            });
+
+            updateCheck.IsBackground = true;
+            updateCheck.Start();
         }
 
         private static async void UpdateChecks()
@@ -66,19 +73,23 @@ namespace Meldii
             if (!String.IsNullOrEmpty(Statics.GetFirefallInstallPath()))
                 await FirefallUpdate();
 
-            // Check for updater and remove it if it is there
+            // Check for updater and remove it if it is there.
             if (File.Exists(Statics.UpdaterName))
             {
                 File.Delete(Statics.UpdaterName);
             }
 
+            // See if there is a Meldii update.
             if (IsUpdateAvailable())
             {
-                MainWindow.UpdatePrompt();
+                await App.Current.Dispatcher.BeginInvoke((Action)delegate()
+                {
+                    MainWindow.UpdatePrompt();
+                });
             }
         }
 
-        private static async Task<bool> FirefallUpdate()
+        private static async Task FirefallUpdate()
         {
             // Check for a new Firefall patch.
             if (!Statics.FirefallPatchData.error)
@@ -86,19 +97,22 @@ namespace Meldii
                 var view = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
                 using (var firefall = view.OpenSubKey(@"Software\Red 5 Studios\Firefall_Beta"))
                 {
+                    // Check the installed version.
                     var version = firefall.GetValue("InstalledVersion");
                     if (version != null && (string)version != Statics.FirefallPatchData.build)
                     {
-                        if (await MainWindow.ShowMessageDialogYesNo("Firefall update available", "Start the Launcher to download the update?"))
+                        // Our versions differ.
+                        // C# await/async is going to kill me.
+                        await App.Current.Dispatcher.Invoke(async () =>
                         {
-                            MainWindow.LaunchFirefallProcess("Launcher.exe");
-                            return true;
-                        }
+                            if (await MainWindow.ShowMessageDialogYesNo("Firefall update available", "Start the Launcher to download the update?"))
+                            {
+                                MainWindow.LaunchFirefallProcess("Launcher.exe");
+                            }
+                        });
                     }
                 }
             }
-
-            return false;
         }
     }
 }
