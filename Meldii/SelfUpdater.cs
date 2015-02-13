@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace Meldii
@@ -54,25 +56,63 @@ namespace Meldii
 
         public static void ThreadUpdateAndCheck()
         {
-            Thread updateCheck = new Thread(() => 
+            Thread updateCheck = new Thread(() =>
             {
-                // Check for updater and remove it if it is there
-                if (File.Exists(Statics.UpdaterName))
-                {
-                    File.Delete(Statics.UpdaterName);
-                }
-
-                if (IsUpdateAvailable())
-                {
-                    App.Current.Dispatcher.BeginInvoke((Action)delegate()
-                    {
-                        MainWindow.UpdatePromt();
-                    });
-                }
-           });
+                Task t = new Task(UpdateChecks);
+                t.Start();
+                t.Wait();
+            });
 
             updateCheck.IsBackground = true;
             updateCheck.Start();
+        }
+
+        private static async void UpdateChecks()
+        {
+            // If we aren't using a Steam install, check for a Firefall update.
+            if (!String.IsNullOrEmpty(Statics.GetFirefallInstallPath()))
+                await FirefallUpdate();
+
+            // Check for updater and remove it if it is there.
+            if (File.Exists(Statics.UpdaterName))
+            {
+                File.Delete(Statics.UpdaterName);
+            }
+
+            // See if there is a Meldii update.
+            if (IsUpdateAvailable())
+            {
+                await App.Current.Dispatcher.BeginInvoke((Action)delegate()
+                {
+                    MainWindow.UpdatePrompt();
+                });
+            }
+        }
+
+        private static async Task FirefallUpdate()
+        {
+            // Check for a new Firefall patch.
+            if (!Statics.FirefallPatchData.error)
+            {
+                var view = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
+                using (var firefall = view.OpenSubKey(@"Software\Red 5 Studios\Firefall_Beta"))
+                {
+                    // Check the installed version.
+                    var version = firefall.GetValue("InstalledVersion");
+                    if (version != null && (string)version != Statics.FirefallPatchData.build)
+                    {
+                        // Our versions differ.
+                        // C# await/async is going to kill me.
+                        await App.Current.Dispatcher.Invoke(async () =>
+                        {
+                            if (await MainWindow.ShowMessageDialogYesNo("Firefall update available", "Start the Launcher to download the update?"))
+                            {
+                                MainWindow.LaunchFirefallProcess("Launcher.exe");
+                            }
+                        });
+                    }
+                }
+            }
         }
     }
 }

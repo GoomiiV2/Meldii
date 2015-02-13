@@ -211,10 +211,15 @@ namespace Meldii
 
         public static string GetFirefallInstallPath()
         {
-            string ffpath = (string)Registry.GetValue("HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Red 5 Studios\\Firefall_Beta", "InstallLocation", null);
+            string ffpath = String.Empty;
 
-            if (ffpath == null) // No reg entry
-                ffpath = "";
+            var view = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
+            using (var firefall = view.OpenSubKey(@"Software\Red 5 Studios\Firefall_Beta"))
+            {
+                // Get the install location and unbox.
+                var loc = firefall.GetValue("InstallLocation");
+                if (loc != null) ffpath = (string)loc;
+            }
 
             return ffpath;
         }
