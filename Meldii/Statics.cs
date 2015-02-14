@@ -58,7 +58,6 @@ namespace Meldii
             }
 
             AddonsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"Firefall\Addons");
-            GetFirefallPatchData();
         }
 
         public static string FixPathSlashes(string str)

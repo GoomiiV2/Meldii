@@ -38,18 +38,19 @@ namespace Meldii
             if (Statics.NeedAdmin())
                 Statics.RunAsAdmin(Statics.LaunchArgs);
 
-            ViewModel = new MainViewModel();
-
             this.AddHandler(MetroWindow.DragOverEvent, new DragEventHandler(OnFileDragOver), true);
             this.AddHandler(MetroWindow.DropEvent, new DragEventHandler(OnFileDrop), true);
         }
 
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            DataContext = ViewModel;
+            ViewModel = new MainViewModel();
             AddonManager = new AddonManager(ViewModel);
+
+            DataContext = ViewModel;
             Statics.AddonManager = AddonManager;
 
+            Statics.GetFirefallPatchData();
             SelfUpdater.ThreadUpdateAndCheck();
         }
 
