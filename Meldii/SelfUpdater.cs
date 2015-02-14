@@ -70,7 +70,7 @@ namespace Meldii
         private static async void UpdateChecks()
         {
             // If we aren't using a Steam install, check for a Firefall update.
-            if (!String.IsNullOrEmpty(Statics.GetFirefallInstallPath()))
+            if (!Statics.IsFirefallInstallSteam())
                 await FirefallUpdate();
 
             // Check for updater and remove it if it is there.

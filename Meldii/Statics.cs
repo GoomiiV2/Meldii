@@ -84,6 +84,15 @@ namespace Meldii
 
         }
 
+        public static bool IsFirefallInstallSteam()
+        {
+            var view = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
+            using (var firefall = view.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 227700")) // Firefall app id
+            {
+                return firefall != null;
+            }
+        }
+
         // Get the path to the addons files backup
         public static string GetBackupPathForMod(string addonName)
         {
