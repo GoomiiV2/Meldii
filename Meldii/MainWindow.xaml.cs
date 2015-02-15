@@ -21,8 +21,8 @@ namespace Meldii
     {
         public static MainWindow Self = null;
 
-        MainViewModel ViewModel = null;
-        AddonManager AddonManager = null;
+        public MainViewModel ViewModel = null;
+        public AddonManager AddonManager = null;
         public bool IsSettingsWindowOpen = false;
         public bool IsHelpWindowOpen = false;
 
