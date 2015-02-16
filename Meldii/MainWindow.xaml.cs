@@ -22,8 +22,8 @@ namespace Meldii
     {
         public static MainWindow Self = null;
 
-        MainViewModel ViewModel = null;
-        AddonManager AddonManager = null;
+        public MainViewModel ViewModel = null;
+        public AddonManager AddonManager = null;
         public bool IsSettingsWindowOpen = false;
         public bool IsHelpWindowOpen = false;
 
@@ -39,18 +39,19 @@ namespace Meldii
             if (Statics.NeedAdmin())
                 Statics.RunAsAdmin(Statics.LaunchArgs);
 
-            ViewModel = new MainViewModel();
-
             this.AddHandler(MetroWindow.DragOverEvent, new DragEventHandler(OnFileDragOver), true);
             this.AddHandler(MetroWindow.DropEvent, new DragEventHandler(OnFileDrop), true);
         }
 
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            DataContext = ViewModel;
+            ViewModel = new MainViewModel();
             AddonManager = new AddonManager(ViewModel);
+
+            DataContext = ViewModel;
             Statics.AddonManager = AddonManager;
 
+            Statics.GetFirefallPatchData();
             SelfUpdater.ThreadUpdateAndCheck();
         }
 
