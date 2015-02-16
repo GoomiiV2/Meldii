@@ -157,7 +157,9 @@ namespace Meldii.AddonProviders
 
                     if (!addon.IsUptoDate)
                     {
-                        AddonsToBeUpdatedCount++;
+                        if (!addon._IsNotSuported)
+                            AddonsToBeUpdatedCount++;
+
                         MainView.StatusMessage = string.Format("{0} Addons need to be updated", AddonsToBeUpdatedCount);
                     }
                 }
