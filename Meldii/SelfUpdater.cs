@@ -107,6 +107,12 @@ namespace Meldii
                         {
                             if (await MainWindow.ShowMessageDialogYesNo("Firefall update available", "Start the Launcher to download the update?"))
                             {
+                                // Remove all mods.
+                                foreach (var addon in MainWindow.Self.ViewModel.LocalAddons)
+                                {
+                                    if (!addon.IsAddon)
+                                        MainWindow.Self.AddonManager.UninstallAddon(addon);
+                                }
                                 MainWindow.LaunchFirefallProcess("Launcher.exe");
                             }
                         });
