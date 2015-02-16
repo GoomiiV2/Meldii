@@ -12,6 +12,8 @@ namespace Meldii.DataStructures
         public string FirefallInstallPath = "";
         public string AddonLibaryPath = "";
         public bool IsMelderProtcolEnabled = false;
+        public string Theme;
+        public string ThemeAccent;
 
         public void Load()
         {

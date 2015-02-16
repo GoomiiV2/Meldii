@@ -48,6 +48,7 @@
                 Width="350"
                 Header="Settings"
                 Position="Right"
+                Theme="Adapt"
                 AnimateOpacity="True">
 
                 <p:SettingsFlyout DataContext="{Binding SettingsView}">
@@ -61,6 +62,7 @@
                 Width="400"
                 Header="Help"
                 Position="Right"
+                Theme="Adapt"
                 AnimateOpacity="True">
 
                 <p:HelpFlyout DataContext="{Binding HelpViewa}">

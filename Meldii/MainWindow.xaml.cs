@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using MahApps.Metro;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using Meldii.AddonProviders;
@@ -237,6 +238,13 @@ namespace Meldii
                 return;
             }
             flyout.IsOpen = !flyout.IsOpen;
+        }
+
+        public static void SetAppTheme(string Theme, string Accent)
+        {
+            var theme = ThemeManager.GetAppTheme(Theme);
+            var accent = ThemeManager.GetAccent(Accent);
+            ThemeManager.ChangeAppStyle(Application.Current, accent, theme);
         }
     }
 }
