@@ -269,6 +269,16 @@ namespace Meldii.AddonProviders
                 BackupZip = new ZipFile();
 
                 // Back up files
+                foreach (string file in addon.RemoveFilesList)
+                {
+                    string modFilePath = Path.Combine(dest, file.ToLower().Replace(addon.Destination.ToLower(), ""));
+                    if (File.Exists(modFilePath) && Statics.IsPathSafe(modFilePath))
+                    {
+                        Debug.WriteLine("Install, backing up file: " + modFilePath);
+                        BackupZip.AddFile(modFilePath, addon.Destination);
+                    }
+                }
+
                 using (ZipFile zip = ZipFile.Read(addon.ZipName))
                 {
                     foreach (string file in zip.EntryFileNames)
@@ -289,6 +299,16 @@ namespace Meldii.AddonProviders
 
                 BackupZip.Save(backuppath);
                 BackupZip.Dispose();
+
+                foreach (string file in addon.RemoveFilesList)
+                {
+                    string modFilePath = Path.Combine(dest, file.ToLower().Replace(addon.Destination.ToLower(), ""));
+                    if (File.Exists(modFilePath) && Statics.IsPathSafe(modFilePath))
+                    {
+                        Debug.WriteLine("Install, removing file: " + modFilePath);
+                        File.Delete(modFilePath);
+                    }
+                }
             }
 
             // We go over the files one by one so that we can ingore files as we need to

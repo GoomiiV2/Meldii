@@ -10,6 +10,8 @@ V1.3
 	
 - Added the ability to change the theme used in Meldii.
 - Not supported addons no longer count towards the number of addons to update display.
+- Fixed an issue where a mod could uninstall default UI components, ooops.
+- Remove commands are no longer ignored.
 
 V1.2
 --
