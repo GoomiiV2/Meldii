@@ -276,6 +276,7 @@ namespace Meldii.AddonProviders
                         string modFilePath = Path.Combine(dest, file);
                         if (File.Exists(modFilePath) && Statics.IsPathSafe(modFilePath))
                         {
+                            Debug.WriteLine("Install, backing up file: " + modFilePath);
                             BackupZip.AddFile(modFilePath, addon.Destination);
                         }
                     }
@@ -357,11 +358,12 @@ namespace Meldii.AddonProviders
                     string modFilePath = Statics.FixPathSlashes(Path.Combine(MeldiiSettings.Self.FirefallInstallPath, "system", filePath));
                     if (File.Exists(modFilePath) && Statics.IsPathSafe(modFilePath))
                     {
+                        Debug.WriteLine("Uninstall, Deleting file: " + modFilePath);
                         File.Delete(modFilePath);
                     }
                     else if (Directory.Exists(modFilePath) && Statics.IsPathSafe(modFilePath) && Directory.GetFiles(modFilePath).Length == 0) // Make sure it is empty
                     {
-                        Directory.Delete(modFilePath, true);
+
                     }
                 }
 
