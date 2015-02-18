@@ -12,6 +12,21 @@ namespace Meldii
         [STAThreadAttribute]
         public static void Main(string[] arguments)
         {
+            Func<bool> net45 = () => {
+                // Class "ReflectionContext" exists from .NET 4.5 onwards.
+                return Type.GetType("System.Reflection.ReflectionContext", false) != null;
+            };
+
+            // .NET 4.5 is an in-place upgrade to .NET 4.0.  For some reason some .NET 4.0 systems are
+            // running Meldii, even though we are targetting .NET 4.5.  This will check to see if we are
+            // being run on a system that has the .NET 4.5 framework installed.
+            if (!net45())
+            {
+                if (MessageBox.Show("Meldii only supports .NET 4.5 or greater.\nDo you wish to download .NET 4.5?", "Runtime Version Error", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                    System.Diagnostics.Process.Start("http://www.microsoft.com/en-us/download/details.aspx?id=42643");
+                return;
+            }
+
             string args = "";
             for (int i = 0; i < arguments.Length; i++)
                 args += arguments[i] + " ";
