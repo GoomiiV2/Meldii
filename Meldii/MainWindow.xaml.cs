@@ -233,12 +233,21 @@ namespace Meldii
 
         private void ToggleFlyout(int index)
         {
-            var flyout = this.Flyouts.Items[index] as Flyout;
-            if (flyout == null)
+            var items = this.Flyouts.Items;
+
+            for (int i = 0; i < items.Count; i++)
             {
-                return;
+                var flyout = items[i] as Flyout;
+
+                if (i == index)
+                {
+                    flyout.IsOpen = !flyout.IsOpen;
+                }
+                else
+                {
+                    flyout.IsOpen = false;
+                }
             }
-            flyout.IsOpen = !flyout.IsOpen;
         }
 
         public static void SetAppTheme(string Theme, string Accent)
