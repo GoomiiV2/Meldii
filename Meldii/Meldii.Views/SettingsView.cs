@@ -2,6 +2,8 @@
 using System.ComponentModel;
 using Meldii.AddonProviders;
 using Meldii.DataStructures;
+using System.Runtime.InteropServices;
+using System.Windows.Media.Imaging;
 
 namespace Meldii.Views
 {
@@ -42,7 +44,8 @@ namespace Meldii.Views
     {
         private string _FirefallInstall;
         private string _AddonLibaryPath;
-        private bool _IsMelderProtcolEnabled;
+        private bool _IsMelderProtocolEnabled;
+        private bool _CloseMeldiiOnFirefallLaunch;
         private string _Theme;
         private string _ThemeAccent;
 
@@ -50,10 +53,67 @@ namespace Meldii.Views
         {
             FirefallInstall = MeldiiSettings.Self.FirefallInstallPath;
             AddonLibaryPath = MeldiiSettings.Self.AddonLibaryPath;
-            IsMelderProtcolEnabled = MeldiiSettings.Self.IsMelderProtcolEnabled;
+            IsMelderProtocolEnabled = MeldiiSettings.Self.IsMelderProtocolEnabled;
+            CloseMeldiiOnFirefallLaunch = MeldiiSettings.Self.CloseMeldiiOnFirefallLaunch;
             Theme = MeldiiSettings.Self.Theme != null ? MeldiiSettings.Self.Theme : "BaseDark";
             ThemeAccent = MeldiiSettings.Self.ThemeAccent != null ? MeldiiSettings.Self.ThemeAccent : "Purple";
         }
+
+        //---UAC---------------------------------------------------------------
+        #region DLL
+
+        private const int MAX_PATH = 0x00000104;
+
+        [StructLayoutAttribute(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        private struct SHSTOCKICONINFO
+        {
+            public UInt32 cbSize;
+            public IntPtr hIcon;
+            public Int32 iSysIconIndex;
+            public Int32 iIcon;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = MAX_PATH)]
+            public string szPath;
+        }
+
+        [DllImport("Shell32.dll", SetLastError = false)]
+        private static extern Int32 SHGetStockIconInfo(uint siid, uint uFlags, ref SHSTOCKICONINFO psii);
+
+        [DllImport("user32.dll", EntryPoint = "DestroyIcon", SetLastError = true)]
+        private static extern Int32 DestroyIcon(IntPtr hIcon);
+
+        public BitmapSource GetShieldIcon()
+        {
+            BitmapSource shield = null;
+
+            if (Environment.OSVersion.Version.Major >= 6)
+            {
+                const uint SIID_SHIELD = 77;
+                const uint SHGSI_ICON = 0x000000100;
+                const uint SHGSI_SMALLICON = 0x000000001;
+
+                SHSTOCKICONINFO sii = new SHSTOCKICONINFO();
+                sii.cbSize = (UInt32)Marshal.SizeOf(typeof(SHSTOCKICONINFO));
+
+                Marshal.ThrowExceptionForHR(SHGetStockIconInfo(SIID_SHIELD, SHGSI_ICON | SHGSI_SMALLICON, ref sii));
+
+                shield = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(sii.hIcon, System.Windows.Int32Rect.Empty,
+                    BitmapSizeOptions.FromEmptyOptions());
+
+                DestroyIcon(sii.hIcon);
+            }
+            else
+            {
+                shield = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(
+                    System.Drawing.SystemIcons.Shield.Handle,
+                    System.Windows.Int32Rect.Empty,
+                    BitmapSizeOptions.FromEmptyOptions());
+            }
+
+            return shield;
+        }
+
+        #endregion
+        //---------------------------------------------------------------------
 
         // Ui binding hooks
         public string FirefallInstall
@@ -78,14 +138,32 @@ namespace Meldii.Views
             }
         }
 
-        public bool IsMelderProtcolEnabled
+        public bool IsMelderProtocolEnabled
         {
-            get { return _IsMelderProtcolEnabled; }
+            get { return _IsMelderProtocolEnabled; }
 
             set
             {
-                _IsMelderProtcolEnabled = value;
-                NotifyPropertyChanged("AddonLibaryPath");
+                _IsMelderProtocolEnabled = value;
+                NotifyPropertyChanged("IsMelderProtocolEnabled");
+
+                // If we are changing our melder protocol, display the UAC shield.
+                var flyout = MainWindow.Self.Flyouts.Items[0] as MahApps.Metro.Controls.Flyout;
+                var settings = flyout.Content as Meldii.Windows.SettingsFlyout;
+                if (_IsMelderProtocolEnabled != MeldiiSettings.Self.IsMelderProtocolEnabled)
+                    settings.Img_UAC.Source = GetShieldIcon();
+                else settings.Img_UAC.Source = null;
+            }
+        }
+
+        public bool CloseMeldiiOnFirefallLaunch
+        {
+            get { return _CloseMeldiiOnFirefallLaunch; }
+
+            set
+            {
+                _CloseMeldiiOnFirefallLaunch = value;
+                NotifyPropertyChanged("CloseMeldiiOnFirefallLaunch");
             }
         }
 
@@ -120,10 +198,12 @@ namespace Meldii.Views
         public void SaveSettings()
         {
             bool hasAddonLibFolderChanged = (MeldiiSettings.Self.AddonLibaryPath != _AddonLibaryPath);
+            bool hasMelderProtocolChanged = MeldiiSettings.Self.IsMelderProtocolEnabled != _IsMelderProtocolEnabled;
 
             MeldiiSettings.Self.FirefallInstallPath = _FirefallInstall;
             MeldiiSettings.Self.AddonLibaryPath = _AddonLibaryPath;
-            MeldiiSettings.Self.IsMelderProtcolEnabled = _IsMelderProtcolEnabled;
+            MeldiiSettings.Self.IsMelderProtocolEnabled = _IsMelderProtocolEnabled;
+            MeldiiSettings.Self.CloseMeldiiOnFirefallLaunch = _CloseMeldiiOnFirefallLaunch;
             MeldiiSettings.Self.Theme = Theme;
             MeldiiSettings.Self.ThemeAccent = ThemeAccent;
             MeldiiSettings.Self.Save();
@@ -143,13 +223,13 @@ namespace Meldii.Views
                 }
             }
 
-            if (MeldiiSettings.Self.IsMelderProtcolEnabled)
+            if (hasMelderProtocolChanged)
             {
-                Statics.EnableMelderProtocol();
-            }
-            else
-            {
-                Statics.DisableMelderProtocol();
+                if (MeldiiSettings.Self.IsMelderProtocolEnabled)
+                    Statics.EnableMelderProtocol();
+                else Statics.DisableMelderProtocol();
+
+                IsMelderProtocolEnabled = IsMelderProtocolEnabled;
             }
         }
 

@@ -32,7 +32,7 @@ namespace Meldii.Windows
         private void Btt_AddonLibFind(object sender, RoutedEventArgs e)
         {
             FolderBrowserDialog fbd = new FolderBrowserDialog();
-           fbd.SelectedPath = View.AddonLibaryPath;
+            fbd.SelectedPath = View.AddonLibaryPath;
             var res = fbd.ShowDialog();
             View.AddonLibaryPath = fbd.SelectedPath;
         }

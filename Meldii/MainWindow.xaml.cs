@@ -79,7 +79,14 @@ namespace Meldii
             try
             {
                 Process.Start(info);
-                //Application.Exit();
+
+                if (MeldiiSettings.Self.CloseMeldiiOnFirefallLaunch)
+                {
+                    App.Current.Dispatcher.Invoke((Action)delegate()
+                    {
+                        Application.Current.Shutdown();
+                    });
+                }
             }
             catch (System.ComponentModel.Win32Exception)
             {

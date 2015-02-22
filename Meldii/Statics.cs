@@ -187,37 +187,64 @@ namespace Meldii
 
         public static void EnableMelderProtocol()
         {
-            if (Registry.ClassesRoot.OpenSubKey("melder") == null || (string)Registry.ClassesRoot.OpenSubKey("melder").OpenSubKey("shell").OpenSubKey("open").OpenSubKey("command").GetValue("") != "\"" + Assembly.GetExecutingAssembly().Location + "\" \"%1\"")
-            {
-                try
-                {
-                    RegistryKey key = Registry.ClassesRoot.CreateSubKey("melder");
-                    key.SetValue("", "URL:Melder Protocol");
-                    key.SetValue("URL Protocol", "");
-                    key.CreateSubKey("DefaultIcon").SetValue("", "Meldii.exe,1");
-                    key.CreateSubKey("shell").CreateSubKey("open").CreateSubKey("command").SetValue("", "\"" + Assembly.GetExecutingAssembly().Location + "\" \"%1\"");
-                    key.Close();
-                }
-                catch (Exception)
-                {
+            // Set some process start info.
+            // We want to launch as administrator so we can set some registry keys.
+            ProcessStartInfo proc = new ProcessStartInfo();
+            proc.UseShellExecute = true;
+            proc.WorkingDirectory = Environment.CurrentDirectory;
+            proc.FileName = System.Reflection.Assembly.GetEntryAssembly().Location;
+            proc.Arguments = "--enable-one-click";
+            proc.CreateNoWindow = false;
+            proc.Verb = "runas";
 
+            // Create the process object and bind some events.
+            Process p = new Process();
+            p.EnableRaisingEvents = true;
+            p.StartInfo = proc;
+            p.Exited += (sender, e) =>
+            {
+                // Check for failure.  If so, reset our settings.
+                if (p.ExitCode == 1)
+                {
+                    MainWindow.Self.ViewModel.SettingsView.IsMelderProtocolEnabled = false;
+                    MeldiiSettings.Self.IsMelderProtocolEnabled = false;
+                    MeldiiSettings.Self.Save();
                 }
-            }
+            };
+
+            // Kick it off!
+            p.Start();
         }
 
         public static void DisableMelderProtocol()
         {
-            if (Registry.ClassesRoot.OpenSubKey("melder") != null)
-            {
-                try
-                {
-                    Registry.ClassesRoot.DeleteSubKeyTree("melder");
-                }
-                catch (Exception)
-                {
+            // Set some process start info.
+            // We want to launch as administrator so we can set some registry keys.
+            ProcessStartInfo proc = new ProcessStartInfo();
+            proc.UseShellExecute = true;
+            proc.WorkingDirectory = Environment.CurrentDirectory;
+            proc.FileName = System.Reflection.Assembly.GetEntryAssembly().Location;
+            proc.Arguments = "--disable-one-click";
+            proc.CreateNoWindow = false;
+            proc.Verb = "runas";
 
+            // Create the process object and bind some events.
+            Process p = new Process();
+            p.EnableRaisingEvents = true;
+            p.StartInfo = proc;
+            p.Exited += (sender, e) =>
+            {
+                // Check for failure.  If so, reset our settings.
+                if (p.ExitCode == 1)
+                {
+                    MainWindow.Self.ViewModel.SettingsView.IsMelderProtocolEnabled = true;
+                    MeldiiSettings.Self.IsMelderProtocolEnabled = true;
+                    MeldiiSettings.Self.Save();
                 }
-            }
+            };
+
+            // Kick it off!
+            p.Start();
         }
 
         public static FirefallPatchData GetFirefallPatchData()
