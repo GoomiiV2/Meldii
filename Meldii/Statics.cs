@@ -83,6 +83,42 @@ namespace Meldii
 
         }
 
+        public static bool IsFirefallInstallLauncher()
+        {
+            string install = String.Empty;
+            bool launcher = false;
+
+            var view = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
+            using (var firefall = view.OpenSubKey(@"Software\Red 5 Studios\Firefall_Beta"))
+            {
+                if (firefall != null)
+                {
+                    install = Path.GetFullPath((string)firefall.GetValue("InstallLocation", String.Empty)).ToLowerInvariant();
+                    if (!String.IsNullOrWhiteSpace(install))
+                        launcher = true;
+                }
+            }
+
+            if (!launcher)
+                return false;
+
+            // Find our Steam install location to see if our launcher might be a Steam version.
+            // This should handle most cases.  Steam can have multiple library locations now, but I
+            // have no idea how to test for that.
+            view = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Default);
+            using (var steam = view.OpenSubKey(@"Software\Valve\Steam"))
+            {
+                if (steam != null)
+                {
+                    string steamInstall = Path.GetFullPath((string)steam.GetValue("SteamPath", String.Empty)).ToLowerInvariant();
+                    if (!String.IsNullOrEmpty(steamInstall) && install.StartsWith(steamInstall))
+                        launcher = false;
+                }
+            }
+
+            return launcher;
+        }
+
         public static bool IsFirefallInstallSteam()
         {
             var view = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
