@@ -21,6 +21,7 @@ namespace Meldii
             string[] lines = 
             {
                 ".Net Runtime Version: " + Environment.Version.ToString(),
+                "OS: " + Environment.OSVersion.ToString(),
                 "Source: " + e.Exception.Source,
                 "Target: " + e.Exception.TargetSite,
                 "Message: " + e.Exception.Message,

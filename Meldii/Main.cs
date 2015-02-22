@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
@@ -45,30 +46,64 @@ namespace Meldii
         {
             try
             {
-                Match match = Regex.Match(args, Statics.MelderProtcolRegex);
-                if (match.Success)
+                if (args == "--enable-one-click")
                 {
-                    string action = match.Groups[1].Value;
-                    string provider = match.Groups[2].Value;
-                    string url = match.Groups[3].Value;
-
-                    if (action == "download")
+                    try
                     {
-                        if (provider == "forum") // Backwards Melder compat
+                        RegistryKey key = Registry.ClassesRoot.CreateSubKey("melder", RegistryKeyPermissionCheck.ReadWriteSubTree);
+                        key.SetValue("", "URL:Melder Protocol");
+                        key.SetValue("URL Protocol", "");
+                        key.CreateSubKey("DefaultIcon").SetValue("", "Meldii.exe,1");
+                        key.CreateSubKey("shell").CreateSubKey("open").CreateSubKey("command").SetValue("", "\"" + Assembly.GetExecutingAssembly().Location + "\" \"%1\"");
+                        key.Close();
+                    }
+                    catch (Exception)
+                    {
+                        Environment.Exit(1);
+                    }
+
+                    Environment.Exit(0);
+                }
+                else if (args == "--disable-one-click")
+                {
+                    try
+                    {
+                        Registry.ClassesRoot.DeleteSubKeyTree("melder");
+                    }
+                    catch (Exception)
+                    {
+                        Environment.Exit(1);
+                    }
+
+                    Environment.Exit(0);
+                }
+                else
+                {
+                    Match match = Regex.Match(args, Statics.MelderProtcolRegex);
+                    if (match.Success)
+                    {
+                        string action = match.Groups[1].Value;
+                        string provider = match.Groups[2].Value;
+                        string url = match.Groups[3].Value;
+
+                        if (action == "download")
                         {
-                            Statics.OneClickInstallProvider = AddonProviders.AddonProviderType.FirefallForums;
-                            Statics.OneClickAddonToInstall = url;
-                        }
-                        else // New stuff
-                        {
-                            try
+                            if (provider == "forum") // Backwards Melder compat
                             {
-                                Statics.OneClickInstallProvider = (AddonProviders.AddonProviderType)Enum.Parse(typeof(AddonProviders.AddonProviderType), provider, true);
+                                Statics.OneClickInstallProvider = AddonProviders.AddonProviderType.FirefallForums;
                                 Statics.OneClickAddonToInstall = url;
                             }
-                            catch (Exception)
+                            else // New stuff
                             {
-                                
+                                try
+                                {
+                                    Statics.OneClickInstallProvider = (AddonProviders.AddonProviderType)Enum.Parse(typeof(AddonProviders.AddonProviderType), provider, true);
+                                    Statics.OneClickAddonToInstall = url;
+                                }
+                                catch (Exception)
+                                {
+
+                                }
                             }
                         }
                     }
@@ -87,6 +122,7 @@ namespace Meldii
             string[] lines = 
             {
                 ".Net Runtime Version: " + Environment.Version.ToString(),
+                "OS: " + Environment.OSVersion.ToString(),
                 "Source: " + e.Source,
                 "Target: " + e.TargetSite,
                 "Message: " + e.Message,
