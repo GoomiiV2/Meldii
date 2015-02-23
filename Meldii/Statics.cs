@@ -284,12 +284,35 @@ namespace Meldii
         {
             string ffpath = String.Empty;
 
-            var view = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
-            using (var firefall = view.OpenSubKey(@"Software\Red 5 Studios\Firefall_Beta"))
+            using (var view = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32))
             {
-                // Get the install location and unbox.
-                var loc = firefall.GetValue("InstallLocation");
-                if (loc != null) ffpath = (string)loc;
+                using (var firefall = view.OpenSubKey(@"Software\Red 5 Studios\Firefall_Test"))
+                {
+                    if (firefall != null)
+                    {
+                        // Get the install location and unbox.
+                        var loc = firefall.GetValue("InstallLocation");
+                        if (loc != null) ffpath = (string)loc;
+                    }
+                }
+            }
+
+            // Kinda hackish but it works ~freak
+            if (String.IsNullOrEmpty(ffpath))
+            {
+                using (var view = RegistryKey.OpenBaseKey(RegistryHive.ClassesRoot, RegistryView.Default))
+                {
+                    using (var firefall = view.OpenSubKey(@"firefall\shell\open\command"))
+                    {
+                        string path = firefall == null ? String.Empty : (string)firefall.GetValue("");
+                        if (!String.IsNullOrEmpty(path))
+                        {
+                            path = path.Split(new string[] { "\"firefall\" /D\"" }, StringSplitOptions.None)[1].Split('"')[0].Trim();
+                            path = path.Substring(0, path.Length - 11);
+                            ffpath = path;
+                        }
+                    }
+                }
             }
 
             return ffpath;
