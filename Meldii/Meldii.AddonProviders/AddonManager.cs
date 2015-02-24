@@ -555,7 +555,7 @@ namespace Meldii.AddonProviders
 
             if (MainView.LocalAddons != null && MainView.LocalAddons.Count != 0)
             {
-                addon = MainView.LocalAddons.First(x => x.ZipName == e.FullPath);
+                addon = MainView.LocalAddons.FirstOrDefault(x => x.ZipName == e.FullPath);
 
                 if (addon != null)
                 {
