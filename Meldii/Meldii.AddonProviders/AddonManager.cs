@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using Ionic.Zip;
 using Meldii.DataStructures;
 using Meldii.Views;
@@ -259,6 +260,8 @@ namespace Meldii.AddonProviders
 
             addon.InstalledFilesList.Clear();
 
+            MessageBox.Show("addon.Destination: " + addon.Destination);
+
             string dest = addon.IsAddon ? Statics.AddonsFolder : Statics.GetPathForMod(addon.Destination);
             string installInfoDest = addon.IsAddon ? Path.Combine(Statics.AddonsFolder, "melder_addons") : Path.Combine(MeldiiSettings.Self.FirefallInstallPath, Statics.ModDataStoreReltivePath);
             installInfoDest = Path.Combine(installInfoDest, Path.GetFileName(addon.ZipName) + ".ini");
@@ -276,7 +279,8 @@ namespace Meldii.AddonProviders
                     if (File.Exists(modFilePath) && Statics.IsPathSafe(modFilePath))
                     {
                         Debug.WriteLine("Install, backing up file: " + modFilePath);
-                        BackupZip.AddFile(modFilePath, addon.Destination);
+                        string basePath = Path.GetDirectoryName(modFilePath.Replace(Statics.GetFirefallSystemDir(), ""));
+                        BackupZip.AddFile(modFilePath, basePath);
                     }
                 }
 
@@ -288,7 +292,8 @@ namespace Meldii.AddonProviders
                         if (File.Exists(modFilePath) && Statics.IsPathSafe(modFilePath))
                         {
                             Debug.WriteLine("Install, backing up file: " + modFilePath);
-                            BackupZip.AddFile(modFilePath, addon.Destination);
+                            string basePath = Path.GetDirectoryName(modFilePath.Replace(Statics.GetFirefallSystemDir(), ""));
+                            BackupZip.AddFile(modFilePath, basePath);
                         }
                     }
                 }

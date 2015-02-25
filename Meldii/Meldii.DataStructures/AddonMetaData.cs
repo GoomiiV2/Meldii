@@ -222,15 +222,15 @@ namespace Meldii.Views
                         Debug.WriteLine(file + " : " + modFilePath + " : " + Statics.GetPathForMod(dest) + " : " + fileName);
                         if (File.Exists(modFilePath))
                         {
+                            // If an old addon remove the dest
+                            Destination = null;
+
                             IsAddon = false;
                             return false;
                         }
                     }
                 }
             }
-
-            // If an old addon remove the dest
-            Destination = null;
 
             return IsAddon;
         }
