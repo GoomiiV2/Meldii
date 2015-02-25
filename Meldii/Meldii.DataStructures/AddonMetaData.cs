@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using Ionic.Zip;
 using Meldii.AddonProviders;
 
 namespace Meldii.Views
@@ -203,14 +204,33 @@ namespace Meldii.Views
         {
             Debug.WriteLine("{3}: {0} {1} {2}", RemoveFilesList.Count, Destination, Destination == null, Name);
 
-            if (RemoveFilesList != null && RemoveFilesList.Count == 0 && Destination == null)
-            {
-                IsAddon = true;
-            }
-            else
+            IsAddon = true;
+
+            if (RemoveFilesList != null && RemoveFilesList.Count > 0)
             {
                 IsAddon = false;
             }
+            else if (Destination != null) // Check if any of the files would override
+            {
+                string dest = Destination;
+                using (ZipFile zip = ZipFile.Read(ZipName))
+                {
+                    foreach (string file in zip.EntryFileNames)
+                    {
+                        string fileName = file.Replace(Path.GetFileNameWithoutExtension(ZipName)+"/", "");
+                        string modFilePath = Path.Combine(Statics.GetPathForMod(dest), fileName);
+                        Debug.WriteLine(file + " : " + modFilePath + " : " + Statics.GetPathForMod(dest) + " : " + fileName);
+                        if (File.Exists(modFilePath))
+                        {
+                            IsAddon = false;
+                            return false;
+                        }
+                    }
+                }
+            }
+
+            // If an old addon remove the dest
+            Destination = null;
 
             return IsAddon;
         }
@@ -292,7 +312,8 @@ namespace Meldii.Views
                 Destination = null;
             }
 
-            CheckIfAddonOrMod();
+            if (Destination != null && Destination.ToLower().StartsWith("addons/"))
+                Destination = Destination.Substring(6);
         }
 
         public void WriteToIni(string path)

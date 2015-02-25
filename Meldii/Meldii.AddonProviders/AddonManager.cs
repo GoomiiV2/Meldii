@@ -80,6 +80,7 @@ namespace Meldii.AddonProviders
                     if (addon != null)
                     {
                         addon.ZipName = fileName;
+                        addon.CheckIfAddonOrMod();
                         MainView.LocalAddons.Add(addon);
                     }
                 }
@@ -358,7 +359,7 @@ namespace Meldii.AddonProviders
                     {
                         File.Delete(path);
                     }
-                    else if (Directory.Exists(path) && Statics.IsPathSafe(path))
+                    else if (Directory.Exists(path) && Statics.IsPathSafe(path) && Directory.GetFiles(path).Length == 0)
                     {
                         Directory.Delete(path, true);
                     }
