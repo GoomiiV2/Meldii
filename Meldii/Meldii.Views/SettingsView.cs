@@ -49,6 +49,7 @@ namespace Meldii.Views
         private string _Theme;
         private string _ThemeAccent;
         private bool _CheckForPatchs;
+        private bool _LaunchFirefallWithSteam;
 
         public SettingsView()
         {
@@ -59,6 +60,7 @@ namespace Meldii.Views
             Theme = MeldiiSettings.Self.Theme != null ? MeldiiSettings.Self.Theme : "BaseDark";
             ThemeAccent = MeldiiSettings.Self.ThemeAccent != null ? MeldiiSettings.Self.ThemeAccent : "Purple";
             CheckForPatchs = MeldiiSettings.Self.CheckForPatchs;
+            LaunchFirefallWithSteam = MeldiiSettings.Self.LaunchFirefallWithSteam;
         }
 
         //---UAC---------------------------------------------------------------
@@ -208,6 +210,17 @@ namespace Meldii.Views
             }
         }
 
+        public bool LaunchFirefallWithSteam
+        {
+            get { return _LaunchFirefallWithSteam; }
+
+            set
+            {
+                _LaunchFirefallWithSteam = value;
+                NotifyPropertyChanged("LaunchFirefallWithSteam");
+            }
+        }
+
         public void SaveSettings()
         {
             bool hasAddonLibFolderChanged = (MeldiiSettings.Self.AddonLibaryPath != _AddonLibaryPath);
@@ -220,6 +233,7 @@ namespace Meldii.Views
             MeldiiSettings.Self.Theme = Theme;
             MeldiiSettings.Self.ThemeAccent = ThemeAccent;
             MeldiiSettings.Self.CheckForPatchs = CheckForPatchs;
+            MeldiiSettings.Self.LaunchFirefallWithSteam = LaunchFirefallWithSteam;
             MeldiiSettings.Self.Save();
 
             if (hasAddonLibFolderChanged)

@@ -56,8 +56,10 @@
 
                     <CheckBox Content="Close Meldii on Firefall Launch" IsChecked="{Binding CloseMeldiiOnFirefallLaunch}" VerticalAlignment="Top" Margin="0,5,5,0"/>
 
-                    <CheckBox Content="Check for Firefall patchs on start?" IsChecked="{Binding CheckForPatchs}" VerticalAlignment="Top" Margin="0,5,5,0"/>
-                    
+                    <CheckBox Content="Check for Firefall patchs on start" IsChecked="{Binding CheckForPatchs}" VerticalAlignment="Top" Margin="0,5,5,0"/>
+
+                    <CheckBox Content="Launch Firefall with Steam" IsChecked="{Binding LaunchFirefallWithSteam}" VerticalAlignment="Top" Margin="0,5,5,0"/>
+
                     <Button Width="auto" VerticalAlignment="Top" Margin="0,10,0,0" Click="Btt_SaveSettings">
                         <StackPanel Orientation="Horizontal">
                             <Image MaxHeight="12" MaxWidth="12" Margin="0,0,10,0" Name="Img_UAC" />

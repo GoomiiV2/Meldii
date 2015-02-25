@@ -82,7 +82,10 @@ namespace Meldii
             // Launch it now.
             try
             {
-                Process.Start(info);
+                if (MeldiiSettings.Self.LaunchFirefallWithSteam)
+                    Process.Start("steam://run/227700");
+                else
+                    Process.Start(info);
 
                 if (MeldiiSettings.Self.CloseMeldiiOnFirefallLaunch)
                 {

@@ -16,6 +16,7 @@ namespace Meldii.DataStructures
         public string Theme;
         public string ThemeAccent;
         public bool CheckForPatchs = true;
+        public bool LaunchFirefallWithSteam = false;
 
         public void Load()
         {
