@@ -126,6 +126,11 @@ namespace Meldii
             ViewModel.AddonDeleteFromLibrary();
         }
 
+        private void Btt_OpenAddonLocation( object sender, MouseButtonEventArgs e)
+        {
+            ViewModel.OpenAddonLocation();
+        }
+
         private void OnFileDragOver(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
+using System.Windows.Forms;
 using Common.WPF;
 using Meldii.AddonProviders;
 
@@ -59,6 +61,15 @@ namespace Meldii.Views
         {
             if (SelectedAddon != null && SelectedAddon.AddonPage != null && SelectedAddon.AddonPage.Length > 0)
                 Process.Start(SelectedAddon.AddonPage);
+        }
+
+        public void OpenAddonLocation()
+        {
+             if (SelectedAddonIndex >= 0 && SelectedAddonIndex < LocalAddons.Count)
+             {
+                 string dest = SelectedAddon.IsAddon ? Statics.AddonsFolder : Statics.GetPathForMod(SelectedAddon.Destination);
+                 Process.Start(dest);
+             }
         }
 
         public void OnSelectedAddon(int SelectedIdx)
