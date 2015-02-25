@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using Meldii.DataStructures;
 
 namespace Meldii
 {
@@ -70,7 +71,7 @@ namespace Meldii
         private static async void UpdateChecks()
         {
             // If we have a launcher installation, check for a Firefall update.
-            if (Statics.IsFirefallInstallLauncher())
+            if (MeldiiSettings.Self.CheckForPatchs && Statics.IsFirefallInstallLauncher())
                 await FirefallUpdate();
 
             // Check for updater and remove it if it is there.

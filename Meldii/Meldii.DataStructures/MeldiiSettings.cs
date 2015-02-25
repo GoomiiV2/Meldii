@@ -15,6 +15,7 @@ namespace Meldii.DataStructures
         public bool CloseMeldiiOnFirefallLaunch = true;
         public string Theme;
         public string ThemeAccent;
+        public bool CheckForPatchs = true;
 
         public void Load()
         {

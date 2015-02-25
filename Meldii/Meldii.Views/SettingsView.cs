@@ -48,6 +48,7 @@ namespace Meldii.Views
         private bool _CloseMeldiiOnFirefallLaunch;
         private string _Theme;
         private string _ThemeAccent;
+        private bool _CheckForPatchs;
 
         public SettingsView()
         {
@@ -57,6 +58,7 @@ namespace Meldii.Views
             CloseMeldiiOnFirefallLaunch = MeldiiSettings.Self.CloseMeldiiOnFirefallLaunch;
             Theme = MeldiiSettings.Self.Theme != null ? MeldiiSettings.Self.Theme : "BaseDark";
             ThemeAccent = MeldiiSettings.Self.ThemeAccent != null ? MeldiiSettings.Self.ThemeAccent : "Purple";
+            CheckForPatchs = MeldiiSettings.Self.CheckForPatchs;
         }
 
         //---UAC---------------------------------------------------------------
@@ -195,6 +197,17 @@ namespace Meldii.Views
             }
         }
 
+        public bool CheckForPatchs
+        {
+            get { return _CheckForPatchs; }
+
+            set
+            {
+                _CheckForPatchs = value;
+                NotifyPropertyChanged("CheckForPatchs");
+            }
+        }
+
         public void SaveSettings()
         {
             bool hasAddonLibFolderChanged = (MeldiiSettings.Self.AddonLibaryPath != _AddonLibaryPath);
@@ -206,6 +219,7 @@ namespace Meldii.Views
             MeldiiSettings.Self.CloseMeldiiOnFirefallLaunch = _CloseMeldiiOnFirefallLaunch;
             MeldiiSettings.Self.Theme = Theme;
             MeldiiSettings.Self.ThemeAccent = ThemeAccent;
+            MeldiiSettings.Self.CheckForPatchs = CheckForPatchs;
             MeldiiSettings.Self.Save();
 
             if (hasAddonLibFolderChanged)
