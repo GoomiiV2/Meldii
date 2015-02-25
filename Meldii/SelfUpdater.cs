@@ -33,7 +33,10 @@ namespace Meldii
         {
             Thread Update = new Thread(() =>
             {
-                Stream output = File.OpenWrite(Statics.UpdaterName);
+                // Odd bug, if i don't wait a second then the updater won't get extracted.
+                Thread.Sleep(1500);
+
+                Stream output = File.OpenWrite(Path.Combine(Environment.CurrentDirectory, Statics.UpdaterName));
                 output.Write(Meldii.Properties.Resources.Meldii_Updater, 0, Meldii.Properties.Resources.Meldii_Updater.Length);
                 output.Flush();
                 output.Close();
@@ -53,6 +56,30 @@ namespace Meldii
 
             Update.IsBackground = true;
             Update.Start();
+
+            MainWindow.ShowUpdateProgress();
+        }
+
+        public static void RestartForUpdate()
+        {
+            ProcessStartInfo proc = new ProcessStartInfo();
+            proc.UseShellExecute = true;
+            proc.WorkingDirectory = Environment.CurrentDirectory;
+            proc.FileName = System.Reflection.Assembly.GetEntryAssembly().Location;
+            proc.Arguments = "--update";
+            proc.Verb = "runas";
+            proc.WindowStyle = ProcessWindowStyle.Normal;
+
+            Process p = new Process();
+            p.StartInfo = proc;
+
+            p.Start();
+
+            App.Current.Dispatcher.Invoke((Action)delegate()
+            {
+                Application.Current.Shutdown();
+            });
+
         }
 
         public static void ThreadUpdateAndCheck()

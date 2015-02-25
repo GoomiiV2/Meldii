@@ -52,6 +52,10 @@ namespace Meldii
             Statics.AddonManager = AddonManager;
 
             Statics.GetFirefallPatchData();
+
+            if (Statics.ShouldUpdate)
+                SelfUpdater.Update();
+
             SelfUpdater.ThreadUpdateAndCheck();
         }
 
@@ -180,10 +184,13 @@ namespace Meldii
         {
             if (await MainWindow.ShowMessageDialogYesNo("Meldii update available", "Download Update?"))
             {
-                var controller = await MainWindow.Self.ShowProgressAsync("Please wait...", "Downloading Meldii update\nMeldii will restart when it is done");
-
-                SelfUpdater.Update();
+                SelfUpdater.RestartForUpdate();
             }
+        }
+
+        public static async void ShowUpdateProgress()
+        {
+            await MainWindow.Self.ShowProgressAsync("Please wait...", "Downloading Meldii update\nMeldii will restart when it is done");
         }
 
         public static async void ShowAlert(string title, string msg)
