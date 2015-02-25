@@ -37,6 +37,10 @@ namespace Meldii
 
             ParseProtcol(args);
 
+            // Update as an admin
+            if (args == "--update")
+                Statics.ShouldUpdate = true;
+
             AppDomain.CurrentDomain.AssemblyResolve += OnResolveAssembly;
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(ErrorHandler);
             App.Main();

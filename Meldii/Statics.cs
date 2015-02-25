@@ -35,6 +35,7 @@ namespace Meldii
 
         public static AddonProviderType OneClickInstallProvider;
         public static string OneClickAddonToInstall = null; // the url of a forum attachment to install
+        public static bool ShouldUpdate = false;
 
         public static AddonManager AddonManager = null;
 
