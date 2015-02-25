@@ -69,11 +69,27 @@ namespace Meldii
         // Get the base path to install the addon at
         public static string GetPathForMod(string addonDest)
         {
+            if (addonDest != null)
+            {
+                return Path.Combine(new string[] 
+                {
+                    MeldiiSettings.Self.FirefallInstallPath,
+                    "system",
+                    addonDest
+                });
+            }
+            else
+            {
+                return GetFirefallSystemDir();
+            }
+        }
+
+        public static string GetFirefallSystemDir()
+        {
             return Path.Combine(new string[] 
             {
                 MeldiiSettings.Self.FirefallInstallPath,
-                "system",
-                addonDest
+                "system"
             });
         }
 
