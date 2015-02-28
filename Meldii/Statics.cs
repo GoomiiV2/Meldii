@@ -122,14 +122,18 @@ namespace Meldii
             // Find our Steam install location to see if our launcher might be a Steam version.
             // This should handle most cases.  Steam can have multiple library locations now, but I
             // have no idea how to test for that.
-            view = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Default);
+            view = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Registry64);
             using (var steam = view.OpenSubKey(@"Software\Valve\Steam"))
             {
                 if (steam != null)
                 {
-                    string steamInstall = Path.GetFullPath((string)steam.GetValue("SteamPath", String.Empty)).ToLowerInvariant();
-                    if (!String.IsNullOrEmpty(steamInstall) && install.StartsWith(steamInstall))
-                        launcher = false;
+                    string steamInstall = (string)steam.GetValue("SteamPath", String.Empty);
+                    if (!String.IsNullOrWhiteSpace(steamInstall))
+                    {
+                        steamInstall = Path.GetFullPath(steamInstall).ToLowerInvariant();
+                        if (!String.IsNullOrEmpty(steamInstall) && install.StartsWith(steamInstall))
+                            launcher = false;
+                    }
                 }
             }
 
