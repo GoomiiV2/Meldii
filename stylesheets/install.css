@@ -1,0 +1,64 @@
+html
+{
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+
+  background-color: rgb(22, 28, 28);
+  overflow-x: hidden;
+}
+
+body
+{
+  position: absolute;
+  top: -7px;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+
+  color: white;
+  font-size: 1.1em;
+}
+
+a:link 
+{
+    color: #8e44ad;
+}
+
+#header
+{
+
+}
+
+#headerImg
+{
+  margin-top: 50px;
+}
+
+#content
+{
+  position: absolute;
+  top: 292px;
+  width: 100%;
+}
+
+#descText
+{
+  margin-top: 10px;
+  width: 800px;
+}
+
+.centerBlock
+{
+  margin-left: auto;
+  margin-right: auto;
+
+  display: block;
+}
+
+.headerText
+{
+  color: rgb(255, 165, 0);
+  font-weight: bold;
+}

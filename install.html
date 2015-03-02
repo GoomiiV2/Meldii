@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Meldii One Click Install</title>
+    <link rel="stylesheet" href="stylesheets/install.css">
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  </head>
+  <body>
+    <div id="header">
+        <img id="headerImg" class="centerBlock" src="images/MeldiiHeader.png" />
+    </div>
+
+    <div id="content">
+      <img class="centerBlock" src="http://raw.githubusercontent.com/GoomiChan/Meldii/master/Media/ss1.png" />
+
+      <div id="descText" class="centerBlock">
+        <p>
+          Your addon should be downloading now :>
+        </p>
+        </br>
+
+        <p>
+          <span class="headerText">What is Meldii</span></br>
+
+          Meldii is a drop in replacement for the glorious Melder. </br>
+          What that means is that you can seamlessly swap over to Meldii with next to no effort (apart from the strenuous act of downloading it ofc).
+        </p>
+
+        <p>
+          <span class="headerText">Download Meldii</span></br>
+          
+          <a href="http://raw.githubusercontent.com/GoomiChan/Meldii/master/Release/Meldii.exe"> Click here to downlaod the latest version of Meldii</a>
+        </p>
+      </div>
+
+    </div>
+
+    <Script>
+      var dlId = getQueryParams(document.location.search).id
+
+      if (dlId)
+      {
+        window.location.replace("melder://download/forum:"+dlId);
+      }
+
+      // http://stackoverflow.com/a/1099670
+      function getQueryParams(qs) 
+      {
+          qs = qs.split("+").join(" ");
+
+          var params = {};
+          var tokens = null;
+          var re = /[?&]?([^=]+)=([^&]*)/g;
+
+          while (tokens = re.exec(qs)) 
+          {
+              params[decodeURIComponent(tokens[1])] = decodeURIComponent(tokens[2]);
+          }
+
+          return params;
+      }
+    </Script
+</html>
