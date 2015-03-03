@@ -21,10 +21,10 @@
       <Value Profile="(Default)">Meldii\temp</Value>
     </Setting>
     <Setting Name="MI_HostURL" Type="System.String" Scope="User">
-      <Value Profile="(Default)">http://astrekassociation.com/melder.php</Value>
+      <Value Profile="(Default)">http://goomichan.github.io/Meldii/install.html</Value>
     </Setting>
     <Setting Name="MI_HostImgURL" Type="System.String" Scope="User">
-      <Value Profile="(Default)">http://astrekassociation.com/images/melder.png</Value>
+      <Value Profile="(Default)">http://goomichan.github.io/Meldii/images/OneClick.png</Value>
     </Setting>
     <Setting Name="Useragent" Type="System.String" Scope="User">
       <Value Profile="(Default)">Meldii Addon Manager (Hi Tc :3c)</Value>

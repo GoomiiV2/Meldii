@@ -7,7 +7,8 @@ V1.5
 	- Fix a crash when retrieving the steam install path.
 
 - Arkii:
-	- Made the version number checking more robust
+	- Made the version number checking more robust.
+	- Updated the links to the new one click download redirect page.
 
 V1.4
 --

@@ -88,7 +88,7 @@ namespace Meldii.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://astrekassociation.com/melder.php")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://goomichan.github.io/Meldii/install.html")]
         public string MI_HostURL {
             get {
                 return ((string)(this["MI_HostURL"]));
@@ -100,7 +100,7 @@ namespace Meldii.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://astrekassociation.com/images/melder.png")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://goomichan.github.io/Meldii/images/OneClick.png")]
         public string MI_HostImgURL {
             get {
                 return ((string)(this["MI_HostImgURL"]));
