@@ -1,5 +1,14 @@
 # Change log
 
+V1.5
+--
+
+- Nalin:
+	- Fix a crash when retrieving the steam install path.
+
+- Arkii:
+	- Made the version number checking more robust
+
 V1.4
 --
 - Nalin:

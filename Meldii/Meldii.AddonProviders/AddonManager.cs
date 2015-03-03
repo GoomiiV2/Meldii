@@ -217,6 +217,11 @@ namespace Meldii.AddonProviders
 
         public bool IsAddonUptoDate(AddonMetaData addon, MelderInfo melderInfo)
         {
+            // There are many ways to make a bad version string :<
+            addon.Version = Statics.CleanVersionString(addon.Version);
+            melderInfo.Version = Statics.CleanVersionString(melderInfo.Version);
+
+
             try
             {
                 Version current = new Version(addon.Version);
@@ -469,8 +474,10 @@ namespace Meldii.AddonProviders
                     return false;
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                // MessageBox.Show(e.Message);
+
                 App.Current.Dispatcher.Invoke((Action)delegate 
                 {
                     MainWindow.ShowAlert("Addon Update Error", "There was an error updating this addon "+ addon.Name);

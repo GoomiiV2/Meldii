@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Windows;
 using Meldii.AddonProviders;
 using Meldii.DataStructures;
@@ -17,6 +18,7 @@ namespace Meldii
         public static string UpdaterName = "Meldii.Updater.exe";
         public static string LaunchArgs = "";
         public static FirefallPatchData FirefallPatchData = null;
+        private static Regex verStringRegex = new Regex(@"[^\d.]");
 
         public static string MeldiiAppData = "";
         public static string SettingsPath = "";
@@ -372,6 +374,18 @@ namespace Meldii
                 });
             }
             catch { }
+        }
+
+        public static string CleanVersionString(string verStr)
+        {
+            string str = verStringRegex.Replace(verStr, "");
+
+            if (!str.Contains("."))
+                str += ".0";
+
+            Debug.WriteLine("CleanVersionString: " + verStr + " " + str);
+
+            return str;
         }
     }
 }
