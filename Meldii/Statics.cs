@@ -387,5 +387,13 @@ namespace Meldii
 
             return str;
         }
+
+        public static bool CheckIfFileIsReadOnly(string filePath)
+        {
+            System.IO.FileInfo fi = new System.IO.FileInfo(filePath);
+
+            return (fi.Attributes == System.IO.FileAttributes.ReadOnly);
+        }
     }
+
 }

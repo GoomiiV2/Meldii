@@ -155,7 +155,7 @@ namespace Meldii.AddonProviders
                     addon.IsNotSuported = info.IsNotSuported;
                     addon.DownloadURL = info.Dlurl;
 
-                    Debug.WriteLine("Addon: {0}, Version: {1}, Patch: {2}, Dlurl: {3}, IsUptodate: {4}", addon.Name, info.Version, info.Patch, info.Dlurl, addon.IsUptoDate);
+                    Debug.WriteLine("Addon: {0}, Version: {1}, Patch: {2}, Dlurl: {3}, IsUptodate: {4}, IsNotSuported: {5}", addon.Name, info.Version, info.Patch, info.Dlurl, addon.IsUptoDate, addon.IsNotSuported);
 
                     if (!addon.IsUptoDate)
                     {
@@ -173,6 +173,7 @@ namespace Meldii.AddonProviders
         public void CheckAddonsForUpdates()
         {
             MainView.StatusMessage = "Checking Addons for updates......";
+            AddonsToBeUpdatedCount = 0;
 
             try
             {
@@ -203,7 +204,11 @@ namespace Meldii.AddonProviders
 
                     MainView.IsPendingVersionCheck = false;
 
-                    MainView.StatusMessage = string.Format("All Addons have been checked for updates, {0} can be updated", AddonsToBeUpdatedCount);
+                    if (AddonsToBeUpdatedCount > 0)
+                        MainView.StatusMessage = string.Format("All Addons have been checked for updates, {0} can be updated", AddonsToBeUpdatedCount);
+                    else
+                        MainView.StatusMessage = string.Format("All Addons have been checked for updates, no updates found :3");
+
                 }));
 
                 t.IsBackground = true;
@@ -452,6 +457,16 @@ namespace Meldii.AddonProviders
         {
             try
             {
+                if (Statics.CheckIfFileIsReadOnly(addon.ZipName))
+                {
+                    App.Current.Dispatcher.Invoke((Action)delegate
+                    {
+                        MainWindow.ShowAlert("Addon Update Error", "The addons zip is marked as read only. Addon:  " + addon.Name);
+                    });
+
+                    return false;
+                }
+
                 if (addon.DownloadURL != null && new Version(addon.Version) < new Version(addon.AvailableVersion))
                 {
                     bool isInstalled = addon.IsEnabled;
@@ -474,7 +489,7 @@ namespace Meldii.AddonProviders
                     return false;
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 // MessageBox.Show(e.Message);
 
@@ -501,7 +516,7 @@ namespace Meldii.AddonProviders
                         UninstallAddon(addon);
                 }
 
-                if (File.Exists(addon.ZipName))
+                if (File.Exists(addon.ZipName) && !Statics.CheckIfFileIsReadOnly(addon.ZipName))
                 {
                     MainView.StatusMessage = string.Format("Removed {0} Ver. {1} from the addon library", addon.Name, addon.Version);
                     File.Delete(addon.ZipName);

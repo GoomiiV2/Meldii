@@ -1,10 +1,11 @@
 # Change log
 
-V1.5
+V1.6
 --
 
 - Arkii:
 	- Fixed an issue that would cause freshly downloaded addon to alway be installed to the system folder.
+	- Added a button to check for addon updates.
 
 
 V1.5

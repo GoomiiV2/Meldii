@@ -131,6 +131,11 @@ namespace Meldii
             ViewModel.OpenAddonLocation();
         }
 
+        private void Btt_CheckForUpdates_Click( object sender, MouseButtonEventArgs e)
+        {
+            ViewModel.CheckForUpdates();
+        }
+
         private void OnFileDragOver(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
@@ -277,6 +282,11 @@ namespace Meldii
             var theme = ThemeManager.GetAppTheme(Theme);
             var accent = ThemeManager.GetAccent(Accent);
             ThemeManager.ChangeAppStyle(Application.Current, accent, theme);
+        }
+
+        private void DockPanel_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+
         }
     }
 }

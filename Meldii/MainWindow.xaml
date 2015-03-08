@@ -157,6 +157,38 @@
                     </Rectangle>
                 </DockPanel>
 
+                <DockPanel VerticalAlignment="Top" HorizontalAlignment="Right" MouseDown="Btt_CheckForUpdates_Click" Margin="0,0,10,0">
+                    <Label Content="Check For Updates" VerticalAlignment="Top" Margin="0" FontFamily="Verdana" FontWeight="Bold" HorizontalAlignment="Center"/>
+                    <Rectangle VerticalAlignment="Center" Margin="0" HorizontalAlignment="Left" Opacity="1" Visibility="Visible" Width="12" Height="12">
+                        <Rectangle.Stroke>
+                            <ImageBrush/>
+                        </Rectangle.Stroke>
+                        <Rectangle.Fill>
+                            <VisualBrush Visual="{StaticResource appbar_clock}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+                    <DockPanel.ToolTip>
+                        <ToolTip>
+                            <StackPanel>
+                                <TextBlock FontWeight="Bold"><Run Text="Check all your addons for updates"/></TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </DockPanel.ToolTip>
+                    <DockPanel.Resources>
+                        <Style TargetType="{x:Type DockPanel}">
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Cursor" Value="Hand" />
+                                </Trigger>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#26FFFFFF"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DockPanel.Resources>
+                </DockPanel>
+
                 <Separator Height="3" Margin="10,22,10,0" VerticalAlignment="Top" HorizontalContentAlignment="Stretch"/>
                 <ListBox x:Name="AddonList" Margin="10,25" BorderThickness="0,0,0,1" FontFamily="Verdana" AlternationCount="1" Padding="5"
                      ItemsSource="{Binding LocalAddons}" SelectionChanged="AddonList_SelectionChanged" >

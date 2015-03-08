@@ -72,6 +72,11 @@ namespace Meldii.Views
              }
         }
 
+        public void CheckForUpdates()
+        {
+            AddonManager.Self.CheckAddonsForUpdates();
+        }
+
         public void OnSelectedAddon(int SelectedIdx)
         {
             SelectedAddonIndex = SelectedIdx;
