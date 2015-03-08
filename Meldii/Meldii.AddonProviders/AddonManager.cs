@@ -543,6 +543,8 @@ namespace Meldii.AddonProviders
             if (addon != null)
             {
                 addon.ZipName = e.FullPath;
+                addon.CheckIfAddonOrMod(); // Important or else it will think it is a mod and will install to Firefall/system
+
                 App.Current.Dispatcher.Invoke((Action)delegate 
                 {
                     MainView.LocalAddons.Add(addon);

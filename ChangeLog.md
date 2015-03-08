@@ -3,6 +3,13 @@
 V1.5
 --
 
+- Arkii:
+	- Fixed an issue that would cause freshly downloaded addon to alway be installed to the system folder.
+
+
+V1.5
+--
+
 - Nalin:
 	- Fix a crash when retrieving the steam install path.
 
