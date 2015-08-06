@@ -1,8 +1,10 @@
-﻿using Microsoft.Win32;
+﻿using LibGit2Sharp;
+using Microsoft.Win32;
 using System;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Windows;
 
@@ -27,6 +29,8 @@ namespace Meldii
                     System.Diagnostics.Process.Start("http://www.microsoft.com/en-us/download/details.aspx?id=42643");
                 return;
             }
+
+            LoadNatives();
 
             string args = "";
             for (int i = 0; i < arguments.Length; i++)
@@ -159,5 +163,47 @@ namespace Meldii
                 return Assembly.Load(assemblyRawBytes);
             }
         }
+
+        #region Loading & Unloading native dlls (git binaries)
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern IntPtr LoadLibrary(string libname);
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
+        private static extern bool FreeLibrary(IntPtr hModule);
+
+        private static void WriteResourceToFile(string resourceName, string fileName)
+        {
+            string dir = new FileInfo(fileName).Directory.FullName;
+            if (!Directory.Exists(dir))
+            {
+                Directory.CreateDirectory(dir);
+            }
+            using (var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
+            {
+                using (var file = new FileStream(fileName, FileMode.Create, FileAccess.Write))
+                {
+                    resource.CopyTo(file);
+                }
+            }
+        }
+
+        private static IntPtr GitHandle;
+        private static void LoadNatives()
+        {
+            // Extract native git lib
+            string libPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Meldii", "bin");
+            string libgit2 = libPath + "\\git2-4d6362b.dll";
+
+            if(!File.Exists(libgit2))
+            {
+                WriteResourceToFile("Meldii.git2-4d6362b.dll", libgit2);
+            }
+
+            // Append ...AppData\Local\Meldii\bin to PATH
+            Environment.SetEnvironmentVariable("PATH", string.Format(CultureInfo.InvariantCulture, "{0}{1}{2}", libPath, Path.PathSeparator, Environment.GetEnvironmentVariable("PATH")));
+        }
+
+        #endregion
     }
 }

@@ -18,10 +18,8 @@ namespace Meldii.AddonProviders
     {
         [Description("Firefall Forums Attachment")]
         FirefallForums,
-        /*,[Description("A Github Repo")]
-        GitHub,
-        [Description("A Bitbucket Repo")]
-        BitBucket,*/
+        [Description("A Git Repository")]
+        Git,
         [Description("Direct Download")]
         DirectDownload
     }
@@ -44,6 +42,7 @@ namespace Meldii.AddonProviders
             MainView = _MainView;
             Providers.Add(AddonProviderType.FirefallForums, new FirefallForums());
             Providers.Add(AddonProviderType.DirectDownload, new DirectDownload());
+            Providers.Add(AddonProviderType.Git, new GitRepository());
 
             GetLocalAddons();
             CheckAddonsForUpdates();
@@ -123,7 +122,7 @@ namespace Meldii.AddonProviders
             }
         }
 
-        private AddonMetaData ParseZipForIni(string path)
+        public static AddonMetaData ParseZipForIni(string path)
         {
             using (ZipFile zip = ZipFile.Read(path))
             {
@@ -466,7 +465,6 @@ namespace Meldii.AddonProviders
 
                     return false;
                 }
-
                 if (addon.DownloadURL != null && new Version(addon.Version) < new Version(addon.AvailableVersion))
                 {
                     bool isInstalled = addon.IsEnabled;
@@ -479,7 +477,6 @@ namespace Meldii.AddonProviders
                     addon.IsUpdating = true;
                     Providers[addon.ProviderType].Update(addon);
                     addon.IsUpdating = false;
-
                     //if (isInstalled)
                     //addon.IsEnabled = isInstalled;
                     return true;
@@ -513,13 +510,17 @@ namespace Meldii.AddonProviders
                     bool result = await MainWindow.ShowMessageDialogYesNo("Do you want to uninstall this addon?", string.Format("The addon has been removed from the library but is still installed\n Select yes to uninstall the addon or no to keep it installed", addon.Name));
                     
                     if (result)
+                    {
                         UninstallAddon(addon);
+                    }
+                        
                 }
 
                 if (File.Exists(addon.ZipName) && !Statics.CheckIfFileIsReadOnly(addon.ZipName))
                 {
                     MainView.StatusMessage = string.Format("Removed {0} Ver. {1} from the addon library", addon.Name, addon.Version);
                     File.Delete(addon.ZipName);
+                    Providers[addon.ProviderType].PostDelete(addon); // cleaning up git repos
                     // Let the file watcher take care of updating the list?
                 }
             }
