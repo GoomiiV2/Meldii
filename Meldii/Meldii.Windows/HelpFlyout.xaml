@@ -36,7 +36,7 @@
                     <TextBlock TextWrapping="Wrap" Margin="10"
                     Text="Big thanks to Jotaro and Varixai for all their help in tracking down bugs!" />
                     <TextBlock TextWrapping="Wrap" Margin="10"
-                    Text="Contributors: Nalin, Varixai, Qowface, FreakByte "/>
+                    ><Run Text="Contributors: Nalin, Varixai, Qowface, freakbyte"/></TextBlock>
                     <TextBlock TextWrapping="Wrap" Margin="10"
                     Text="{Binding AssemblyVersion}" />
                 </StackPanel>

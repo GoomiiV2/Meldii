@@ -17,7 +17,7 @@ namespace Meldii.AddonProviders
             Directory.CreateDirectory(tempDlDir);
         }
 
-        public MelderInfo GetMelderInfo(string url)
+        public virtual MelderInfo GetMelderInfo(string url)
         {
             try
             {
@@ -99,6 +99,11 @@ namespace Meldii.AddonProviders
         public virtual void DownloadAddon(string url)
         {
             
+        }
+
+        public virtual void PostDelete(AddonMetaData addon)
+        {
+
         }
 
         public virtual void CopyUpdateToLibrary(string oldFile, string newFile)

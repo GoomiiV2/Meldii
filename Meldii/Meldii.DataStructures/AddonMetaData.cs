@@ -23,6 +23,7 @@ namespace Meldii.Views
         public string Destination { get; set; }
         public string AddonPage { get; set; } // eg. Forum post
         public string Patch { get; set; }
+        public string Source { get; set; }
         public AddonProviderType ProviderType = AddonProviderType.FirefallForums;
         public List<string> InstalledFilesList;
         public List<string> RemoveFilesList;
@@ -273,6 +274,9 @@ namespace Meldii.Views
                         case "url":
                             AddonPage = value;
                             break;
+                        case "source":
+                            Source = value;
+                            break;
                         case "updateurl":
                             UpdateURL = value;
                             break;
@@ -330,6 +334,9 @@ namespace Meldii.Views
                 ini.WriteLine(string.Format("destination={0}", Destination));
                 ini.WriteLine(string.Format("description={0}", Description));
                 ini.WriteLine(string.Format("providertype={0}", ProviderType.ToString()));
+
+                if (!String.IsNullOrEmpty(Source))
+                    ini.WriteLine(string.Format("source={0}", Source));
 
                 if (!String.IsNullOrEmpty(_UpdateURL))
                     ini.WriteLine(string.Format("updateurl={0}", _UpdateURL));
