@@ -166,12 +166,6 @@ namespace Meldii
 
         #region Loading & Unloading native dlls (git binaries)
 
-        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        private static extern IntPtr LoadLibrary(string libname);
-
-        [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
-        private static extern bool FreeLibrary(IntPtr hModule);
-
         private static void WriteResourceToFile(string resourceName, string fileName)
         {
             string dir = new FileInfo(fileName).Directory.FullName;
@@ -188,7 +182,6 @@ namespace Meldii
             }
         }
 
-        private static IntPtr GitHandle;
         private static void LoadNatives()
         {
             // Extract native git lib
@@ -197,7 +190,7 @@ namespace Meldii
 
             if(!File.Exists(libgit2))
             {
-                WriteResourceToFile("Meldii.git2-4d6362b.dll", libgit2);
+                WriteResourceToFile("Meldii.Resources.git2-4d6362b.dll", libgit2);
             }
 
             // Append ...AppData\Local\Meldii\bin to PATH
