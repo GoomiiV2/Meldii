@@ -134,6 +134,9 @@ namespace Meldii.AddonProviders
 
                         AddonMetaData addon = new AddonMetaData();
                         addon.ReadFromIni(reader);
+
+                        Debug.WriteLine("addon.Destination: " + addon.Destination);
+
                         return addon;
                     }
                 }
@@ -338,8 +341,12 @@ namespace Meldii.AddonProviders
 
                         string installedPath = file.FileName;
 
+                        Debug.WriteLine("addon.Destination: " + addon.Destination);
+
                         if (addon.Destination != null && !installedPath.Contains(addon.Destination))
                             installedPath = Path.Combine(addon.Destination, file.FileName);
+
+                        Debug.WriteLine("installedPath: "+installedPath);
 
                         addon.InstalledFilesList.Add(installedPath);
                     }

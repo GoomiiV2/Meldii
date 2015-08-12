@@ -224,7 +224,7 @@ namespace Meldii.Views
                         if (File.Exists(modFilePath))
                         {
                             // If an old addon remove the dest
-                            Destination = null;
+                            //Destination = null;
 
                             IsAddon = false;
                             return false;
@@ -314,10 +314,13 @@ namespace Meldii.Views
             if (Destination != null && Statics.FixPathSlashes(Destination).Contains(Statics.DefaultAddonLocation) || Destination == "" )
             {
                 Destination = null;
+                Debug.WriteLine("Fixed dest in addon/mod: "+Name);
             }
 
             if (Destination != null && Destination.ToLower().StartsWith("addons/"))
                 Destination = Destination.Substring(6);
+
+            Debug.WriteLine(Name + " Dest: " + Destination);
         }
 
         public void WriteToIni(string path)
