@@ -134,6 +134,7 @@ namespace Meldii.AddonProviders
                     {
                         string[] split = rPath.Split(new char[] { '\\', '/' });
                         string zipPath = split.Length == 1 ? "" : string.Join("\\", split, 0, split.Length - 1);
+                        zipPath = info.repoName + "\\" + zipPath;
 
                         zip.AddFile(file, zipPath);
                     }
