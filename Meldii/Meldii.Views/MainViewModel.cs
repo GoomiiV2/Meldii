@@ -57,10 +57,14 @@ namespace Meldii.Views
             }
         }
 
-        public void OnOpenAddonPage()
+        public async void OnOpenAddonPage()
         {
             if (SelectedAddon != null && SelectedAddon.AddonPage != null && SelectedAddon.AddonPage.Length > 0)
                 Process.Start(SelectedAddon.AddonPage);
+            else
+            {
+                await MainWindow.ShowMessageDialogYesNo("Error opening addon page", "Either this addon has no addon page set or it was a malformed url format");
+            }
         }
 
         public void OpenAddonLocation()

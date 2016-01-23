@@ -273,6 +273,14 @@ namespace Meldii.Views
                             break;
                         case "url":
                             AddonPage = value;
+                            // Valadate it
+                            Uri uriResult;
+                            bool isValidUrl = Uri.TryCreate(AddonPage, UriKind.Absolute, out uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+                            if (!isValidUrl)
+                            {
+                                AddonPage = "";
+                                //Debug.Assert(false);
+                            }
                             break;
                         case "source":
                             Source = value;
