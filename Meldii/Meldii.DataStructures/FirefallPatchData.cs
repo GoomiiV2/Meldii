@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Runtime.Serialization.Json;
 
 namespace Meldii.DataStructures
@@ -13,8 +14,20 @@ namespace Meldii.DataStructures
 
         public static FirefallPatchData Create(Stream data)
         {
-            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(FirefallPatchData));
-            return (FirefallPatchData)serializer.ReadObject(data);
+            try
+            {
+                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(FirefallPatchData));
+                return (FirefallPatchData)serializer.ReadObject(data);
+            }
+            catch (Exception e)
+            {
+                FirefallPatchData nullPatchData =  new FirefallPatchData();
+                nullPatchData.build = "none-0";
+                nullPatchData.environment = "none";
+                nullPatchData.region = "none";
+                nullPatchData.patch_level = "0";
+                return nullPatchData;
+            }
         }
 
         public static FirefallPatchData CreateError()

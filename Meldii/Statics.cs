@@ -278,7 +278,7 @@ namespace Meldii
                 {
                     try
                     {
-                        using (Stream s = GenerateStreamFromString(wc.DownloadString("http://operator.firefallthegame.com/api/v1/products/Firefall_Beta")))
+                        using (Stream s = GenerateStreamFromString(wc.DownloadString("http://operator.firefall.com/api/v1/products/Firefall_Beta")))
                         {
                             FirefallPatchData = FirefallPatchData.Create(s);
                         }
