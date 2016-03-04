@@ -123,23 +123,51 @@ namespace Meldii
             }
         }
 
+        public static string ParseException(Exception ex)
+        {
+            var sep = "---------------------------------------------------------";
+            var ret = new System.Text.StringBuilder();
+            var cur = ex;
+            int num = 1;
+            do
+            {
+                ret.AppendFormat("\r\n\r\n{0} - Exception\r\n{1}", num.ToString(), sep);
+                ret.AppendFormat("\r\n.NET Runtime Version: {0}", Environment.Version.ToString());
+                ret.AppendFormat("\r\nOS: {0}", Environment.OSVersion.ToString());
+                ret.AppendFormat("\r\nType: {0}", cur.GetType().FullName);
+
+                var ignore = new[] { "InnerException", "StackTrace", "Data", "HelpLink" };
+                var properties = ex.GetType().GetProperties();
+                foreach (var property in properties)
+                {
+                    if (ignore.Any(x => property.Name.Contains(x)))
+                        continue;
+
+                    var val = property.GetValue(cur, null);
+                    if (val == null)
+                        ret.AppendFormat("\r\n{0}: NULL", property.Name);
+                    else ret.AppendFormat("\r\n{0}: {1}", property.Name, val);
+                }
+
+                if (cur.StackTrace != null)
+                {
+                    ret.AppendFormat("\r\n\r\nStackTrace\r\n{0}", sep);
+                    ret.AppendFormat("\r\n{0}", cur.StackTrace);
+                }
+
+                cur = cur.InnerException;
+                ++num;
+            }
+            while (cur != null);
+
+            return ret.ToString();
+        }
+
         static void ErrorHandler(object sender, UnhandledExceptionEventArgs args)
         {
             Exception e = (Exception)args.ExceptionObject;
-            MessageBox.Show(e.StackTrace, e.Message);
-            string[] lines = 
-            {
-                ".Net Runtime Version: " + Environment.Version.ToString(),
-                "OS: " + Environment.OSVersion.ToString(),
-                "Source: " + e.Source,
-                "Target: " + e.TargetSite,
-                "Message: " + e.Message,
-                "\n",
-                e.StackTrace,
-                "\n"
-            };
-
-            System.IO.File.WriteAllLines(@"Meldii Errors make Arkii sad.txt", lines);
+            File.WriteAllText(@"Meldii Errors make Arkii sad.txt", ParseException(e));
+            MessageBox.Show("Meldii has encountered an error.  Please check the exception logs.", "Error");
         }
 
         private static Assembly OnResolveAssembly(object sender, ResolveEventArgs args)

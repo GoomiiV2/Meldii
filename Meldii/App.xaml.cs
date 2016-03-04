@@ -17,20 +17,8 @@ namespace Meldii
     {
         public void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
-            MessageBox.Show(e.Exception.StackTrace, e.Exception.Message);
-            string[] lines = 
-            {
-                ".Net Runtime Version: " + Environment.Version.ToString(),
-                "OS: " + Environment.OSVersion.ToString(),
-                "Source: " + e.Exception.Source,
-                "Target: " + e.Exception.TargetSite,
-                "Message: " + e.Exception.Message,
-                "\n",
-                e.Exception.StackTrace,
-                "\n"
-            };
-
-            System.IO.File.WriteAllLines(@"Meldii Crash more tears.txt", lines);
+            System.IO.File.WriteAllText(@"Meldii Crash more tears.txt", Program.ParseException(e.Exception));
+            MessageBox.Show("Meldii has encountered an error.  Please check the exception logs.", "Error");
         }
     }
 }
