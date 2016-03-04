@@ -55,8 +55,8 @@ namespace Meldii
 
             if (Statics.ShouldUpdate)
                 SelfUpdater.Update();
-
-            SelfUpdater.ThreadUpdateAndCheck();
+            else
+                SelfUpdater.ThreadUpdateAndCheck();
         }
 
         private void Btt_LaunchFirefall(object sender, RoutedEventArgs e)
