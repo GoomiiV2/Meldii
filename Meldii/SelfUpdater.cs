@@ -33,21 +33,29 @@ namespace Meldii
         {
             Thread Update = new Thread(() =>
             {
-                // Odd bug, if i don't wait a second then the updater won't get extracted.
-                Thread.Sleep(1500);
-
+                // Extract the updater.
                 Stream output = File.OpenWrite(Path.Combine(Environment.CurrentDirectory, Statics.UpdaterName));
                 output.Write(Meldii.Properties.Resources.Meldii_Updater, 0, Meldii.Properties.Resources.Meldii_Updater.Length);
                 output.Flush();
                 output.Close();
 
+                // Check if we have dirty files to delete.
+                if (File.Exists("Meldii_DL.exe"))
+                    File.Delete("Meldii_DL.exe");
+                if (File.Exists("Meldii_New.exe"))
+                    File.Delete("Meldii_New.exe");
+
+                // Download our new version of Meldii.
                 using (WebClient Client = new WebClient())
                 {
-                    Client.DownloadFile(Statics.UpdateExeUrl, "Meldii_New.exe");
+                    Client.DownloadFile(Statics.UpdateExeUrl, "Meldii_DL.exe");
                 }
 
+                // The download completed, rename the file and start the update.
+                File.Move("Meldii_DL.exe", "Meldii_New.exe");
                 Process.Start(Statics.UpdaterName);
 
+                // Close the app.
                 App.Current.Dispatcher.Invoke((Action)delegate()
                 {
                     Application.Current.Shutdown();
@@ -101,10 +109,17 @@ namespace Meldii
             if (MeldiiSettings.Self.CheckForPatchs && Statics.IsFirefallInstallLauncher())
                 await FirefallUpdate();
 
-            // Check for updater and remove it if it is there.
+            // Check for updater.  If it is there and we have a Meldii_New.exe, try running it again.
+            // Else, clean up after it.
             if (File.Exists(Statics.UpdaterName))
             {
-                File.Delete(Statics.UpdaterName);
+                if (File.Exists("Meldii_New.exe"))
+                {
+                    Process.Start(Statics.UpdaterName);
+                    App.Current.Dispatcher.Invoke((Action)delegate () { Application.Current.Shutdown(); });
+                    return;
+                }
+                else File.Delete(Statics.UpdaterName);
             }
 
             // See if there is a Meldii update.
