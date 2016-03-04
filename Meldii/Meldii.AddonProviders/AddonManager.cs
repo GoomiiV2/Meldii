@@ -124,25 +124,30 @@ namespace Meldii.AddonProviders
 
         public static AddonMetaData ParseZipForIni(string path)
         {
-            using (ZipFile zip = ZipFile.Read(path))
+            try
             {
-                foreach (ZipEntry file in zip)
+                using (ZipFile zip = ZipFile.Read(path))
                 {
-                    if (file.FileName.ToUpper().Contains(Properties.Settings.Default.MelderInfoName.ToUpper()))
+                    foreach (ZipEntry file in zip)
                     {
-                        TextReader reader = new StreamReader(file.OpenReader());
+                        if (file.FileName.ToUpper().Contains(Properties.Settings.Default.MelderInfoName.ToUpper()))
+                        {
+                            TextReader reader = new StreamReader(file.OpenReader());
 
-                        AddonMetaData addon = new AddonMetaData();
-                        addon.ReadFromIni(reader);
+                            AddonMetaData addon = new AddonMetaData();
+                            addon.ReadFromIni(reader);
 
-                        Debug.WriteLine("addon.Destination: " + addon.Destination);
+                            Debug.WriteLine("addon.Destination: " + addon.Destination);
 
-                        return addon;
+                            return addon;
+                        }
                     }
                 }
             }
-            return null;
+            catch (ZipException)
+            { }
 
+            return null;
         }
 
         private void GetAddonUpdateInfo(AddonMetaData addon)
@@ -327,7 +332,7 @@ namespace Meldii.AddonProviders
                 }
             }
 
-            // We go over the files one by one so that we can ingore files as we need to
+            // We go over the files one by one so that we can ignore files as we need to
             using (ZipFile zip = ZipFile.Read(addon.ZipName))
             {
                 foreach (ZipEntry file in zip)

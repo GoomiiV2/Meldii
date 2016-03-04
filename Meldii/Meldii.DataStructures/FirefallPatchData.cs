@@ -19,7 +19,7 @@ namespace Meldii.DataStructures
                 DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(FirefallPatchData));
                 return (FirefallPatchData)serializer.ReadObject(data);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 FirefallPatchData nullPatchData =  new FirefallPatchData();
                 nullPatchData.build = "none-0";
