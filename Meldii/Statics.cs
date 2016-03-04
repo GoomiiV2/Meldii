@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.IO;
 using System.Net;
-using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows;
 using Meldii.AddonProviders;
