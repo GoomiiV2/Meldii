@@ -16,16 +16,30 @@ namespace Meldii
         // Check for an update
         public static bool IsUpdateAvailable()
         {
-            WebClient client = new WebClient();
-            string PageData = client.DownloadString(Statics.UpdateCheckUrl);
+            try
+            {
+                WebClient client = new WebClient();
+                string PageData = client.DownloadString(Statics.UpdateCheckUrl);
 
-            Version webVersion = new Version(PageData);
+                Version webVersion = new Version(PageData);
 
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
-            Version LocalVersion = new Version(fvi.FileVersion);
+                Assembly assembly = Assembly.GetExecutingAssembly();
+                FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
+                Version LocalVersion = new Version(fvi.FileVersion);
+                Debug.WriteLine(string.Format("Retrived Meldii version, Latest: ({0}), Current: ({1}))", webVersion.ToString(), LocalVersion.ToString()));
 
-            return (webVersion > LocalVersion);
+                return (webVersion > LocalVersion);
+            }
+            catch (WebException e)
+            {
+                Debug.WriteLine(string.Format("IsUpdateAvailable WebException: {0}", e.Message));
+
+                App.Current.Dispatcher.Invoke((Action)delegate
+                {
+                    MainWindow.ShowAlert("Error", "Error checking for a new version.");
+                });
+                return false;
+            }
         }
 
         // Start the updater

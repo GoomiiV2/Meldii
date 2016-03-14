@@ -4,20 +4,32 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Meldii.AddonProviders;
+using System.Threading;
 
 namespace Meldii.Views
 {
     public class HelpView : INotifyPropertyChanged
     {
         private string _MI_AddonVersion = "1.0";
-        private string _MI_FirefallPatch = Statics.GetFirefallPatchData().build;
+        private string _MI_FirefallPatch = null;
         private AddonProviderType _MI_Provider = AddonProviderType.FirefallForums;
         private string _MI_Result = "";
         private string _MI_DLURL = "";
+        private Thread PatchInfoThread = null;
 
         public HelpView()
         {
+            // Getting the patch info can take a reallllly long time now :/
+            PatchInfoThread = new Thread(() =>
+                {
+                    _MI_FirefallPatch = Statics.GetFirefallPatchData().build;
+                    NotifyPropertyChanged("MI_Result");
+                    NotifyPropertyChanged("MI_FirefallPatch");
+                    Debug.WriteLine("Retrived firefall patch info for the info gen");
+                });
 
+            PatchInfoThread.IsBackground = true;
+            PatchInfoThread.Start();
         }
 
         public string MI_AddonVersion

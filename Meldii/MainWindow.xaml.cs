@@ -51,7 +51,8 @@ namespace Meldii
             DataContext = ViewModel;
             Statics.AddonManager = AddonManager;
 
-            Statics.GetFirefallPatchData();
+            if (MeldiiSettings.Self.CheckForPatchs)
+                Statics.GetFirefallPatchData();
 
             if (Statics.ShouldUpdate)
                 SelfUpdater.Update();
