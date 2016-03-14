@@ -193,7 +193,7 @@ namespace Meldii
             FileStream stream = null;
             try
             {
-                stream = file.Open(FileMode.Open, FileAccess.ReadWrite, FileShare.None);
+                stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None);
             }
             catch (IOException)
             {

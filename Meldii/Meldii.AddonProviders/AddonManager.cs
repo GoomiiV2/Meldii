@@ -561,33 +561,51 @@ namespace Meldii.AddonProviders
 
         private void WatcherAdd(object source, FileSystemEventArgs e)
         {
+            var retires = 3;
+
             // Yo block untill its not in use! 
             while (Statics.IsFileLocked(new FileInfo(e.FullPath)))
             {
                 Thread.Sleep(500);
             }
 
-            AddonMetaData addon = ParseZipForIni(e.FullPath);
-            if (addon != null)
+            while (retires > 0)
             {
-                addon.ZipName = e.FullPath;
-                addon.CheckIfAddonOrMod(); // Important or else it will think it is a mod and will install to Firefall/system
-
-                App.Current.Dispatcher.Invoke((Action)delegate 
+                try
                 {
-                    MainView.LocalAddons.Add(addon);
-                });
+                    AddonMetaData addon = ParseZipForIni(e.FullPath);
+                    if (addon != null)
+                    {
+                        addon.ZipName = e.FullPath;
+                        addon.CheckIfAddonOrMod(); // Important or else it will think it is a mod and will install to Firefall/system
 
-                // Should we reenable this addon?
-                if (AddonsToRenableAfterUpdate.Contains(addon.Name))
-                {
-                    addon.IsEnabled = true;
-                    AddonsToRenableAfterUpdate.Remove(addon.Name);
+                        App.Current.Dispatcher.Invoke((Action)delegate
+                        {
+                            MainView.LocalAddons.Add(addon);
+                        });
+
+                        // Should we reenable this addon?
+                        if (AddonsToRenableAfterUpdate.Contains(addon.Name))
+                        {
+                            addon.IsEnabled = true;
+                            AddonsToRenableAfterUpdate.Remove(addon.Name);
+                        }
+
+                        MainView.SortAddonList();
+                        GetAddonUpdateInfo(addon);
+                        return;
+                    }
                 }
-
-                MainView.SortAddonList();
-                GetAddonUpdateInfo(addon);
+                catch (IOException)
+                {
+                    retires--;
+                }
             }
+
+            App.Current.Dispatcher.Invoke((Action)delegate
+            {
+                MainWindow.ShowAlert("Error", string.Format("Failed to open file {0}", e.FullPath));
+            });
         }
 
         private void WatcherRemove(object source, FileSystemEventArgs e)
