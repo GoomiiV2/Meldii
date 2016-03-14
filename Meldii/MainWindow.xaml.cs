@@ -185,7 +185,15 @@ namespace Meldii
         {
             if (MeldiiSettings.Self.AddonLibaryPath != null || MeldiiSettings.Self.AddonLibaryPath != "" || MeldiiSettings.Self.AddonLibaryPath != " ")
             {
-                Process.Start(MeldiiSettings.Self.AddonLibaryPath);
+                ProcessStartInfo info = new ProcessStartInfo();
+                if (Statics.IsAdministrator())
+                {
+                    info.UseShellExecute = true;
+                    info.Verb = "runas";
+                }
+                info.FileName = "explorer.exe";
+                info.Arguments = MeldiiSettings.Self.AddonLibaryPath;
+                Process.Start(info);
             }
         }
 

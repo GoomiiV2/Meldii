@@ -7,6 +7,7 @@ using System.Windows;
 using Meldii.AddonProviders;
 using Meldii.DataStructures;
 using Microsoft.Win32;
+using System.Security.Principal;
 
 namespace Meldii
 {
@@ -392,6 +393,12 @@ namespace Meldii
             System.IO.FileInfo fi = new System.IO.FileInfo(filePath);
 
             return (fi.Attributes == System.IO.FileAttributes.ReadOnly);
+        }
+
+        public static bool IsAdministrator()
+        {
+            return (new WindowsPrincipal(WindowsIdentity.GetCurrent()))
+                    .IsInRole(WindowsBuiltInRole.Administrator);
         }
     }
 
