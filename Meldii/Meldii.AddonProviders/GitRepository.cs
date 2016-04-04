@@ -9,21 +9,22 @@ namespace Meldii.AddonProviders
 {
     class GitRepository : ProviderBase
     {
-        private Info info;
 
         public GitRepository()
         {
         }
 
-        private bool Init(string url)
+        private Info Init(string url)
         {
-            info = new Info(url);
-            return info.ok;
+            Info info = new Info(url);
+            return info;
         }
 
         public override void PostDelete(AddonMetaData addon)
         {
-            if (Init(addon.UpdateURL))
+            Info info = Init(addon.UpdateURL);
+
+            if (info.ok)
             {
                 if (Directory.Exists(info.dlPath))
                 {
@@ -36,15 +37,16 @@ namespace Meldii.AddonProviders
             }
         }
         public override MelderInfo GetMelderInfo(string url)
-        {       
-            if (Init(url))
+        {
+            Info info = Init(url);
+            if (info.ok)
             {
-                DownloadAddon();
+                DownloadAddon(info);
                 AddonMetaData meta = AddonManager.ParseZipForIni(info.packedFile);
                 if (meta != null)
                 {
                     MelderInfo mInfo = new MelderInfo();
-                    mInfo.IsNotSuported = !IsSupported();
+                    mInfo.IsNotSuported = !IsSupported(info);
                     mInfo.Version = meta.Version;
                     mInfo.Patch = meta.Patch;
                     mInfo.ProviderType = meta.ProviderType;
@@ -56,20 +58,22 @@ namespace Meldii.AddonProviders
         }
         public override void Update(AddonMetaData addon)
         {
-            if(Init(addon.UpdateURL))
+            Info info = Init(addon.UpdateURL);
+            if (info.ok)
             {
                 _Copy(Path.Combine(MeldiiSettings.Self.AddonLibaryPath, info.repoName) + ".zip", info.packedFile);
             }
         }
         public override void DownloadAddon(string url)
-        {        
-            if(!Init(url))
+        {
+            Info info = Init(url);
+                if (!info.ok)
             {
                 return;
             }
-            DownloadAddon();
+            DownloadAddon(info);
         }
-        private void DownloadAddon()
+        private void DownloadAddon(Info info)
         {
             bool updated = false;
             bool cloned = false;
@@ -168,7 +172,7 @@ namespace Meldii.AddonProviders
 
             File.Copy(source, dest);
         }
-        public bool IsSupported()
+        private bool IsSupported(Info info)
         {
             foreach (string file in Directory.EnumerateFiles(info.dlPath, "*.*", SearchOption.AllDirectories))
             {
