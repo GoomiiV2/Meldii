@@ -519,7 +519,7 @@ namespace Meldii.AddonProviders
             {
                 if (addon.IsEnabled)
                 {
-                    bool result = await MainWindow.ShowMessageDialogYesNo("Do you want to uninstall this addon?", string.Format("The addon has been removed from the library but is still installed\n Select yes to uninstall the addon or no to keep it installed", addon.Name));
+                    bool result = await MainWindow.ShowMessageDialogYesNo("Do you want to uninstall this addon?", string.Format("The {0} addon has been removed from the library but is still installed\n Select yes to uninstall the addon or no to keep it installed", addon.Name));
                     
                     if (result)
                     {
